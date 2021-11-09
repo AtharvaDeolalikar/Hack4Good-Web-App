@@ -47,6 +47,8 @@ function AuthContextProvider({children}){
             console.log("TeamData",teamData.data())
             if(teamData.data() && window.location.pathname =="/team"){
               navigate("/profile")
+            }else{
+              navigate("/team")
             }
             setTeam(teamData.data())
             setLoading(false)

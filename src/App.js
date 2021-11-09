@@ -1,64 +1,40 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import { initializeApp } from "firebase/app";
-import firebaseConfig from "./config";
-import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut, onAuthStateChanged, updateProfile} from "firebase/auth";
 import './App.css';
-import Dashboard from "./Dashboard";
+import Submission from "./Submission";
+import { ThemeProvider } from '@mui/material/styles'
+import Theme from "./Theme";
+import { Box } from "@mui/system";
+import { CssBaseline, Paper, Typography } from "@mui/material";
+import Team from './Team'
+import { AuthContext } from "./Contexts/AuthContext"
+import SignUp from "./Signup";
+import Profile from "./Profile"
 
 function App() {
-  const [currentUser, setCurrentUser] = useState()
-  const [loading, setLoading] = useState(true)
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth();
+  const context = useContext(AuthContext)
 
-  const provider = new GoogleAuthProvider();
-  
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log(user)
-        setCurrentUser(user)
-        setLoading(false)
-      } else {
-        console.log("No user exist")
-        setLoading(false)
-        login()
-      }
-    })
-  }, [])
-
-  function login(){
-    signInWithRedirect(auth, provider);
-    getRedirectResult(auth)
-    .then((result) => {
-      setCurrentUser(result.user)
-    }).catch((error) => {
-      console.log(error)
-    })
-  }
-  
-  function logOut(){
-    signOut(auth).then(() => {
-      console.log("Sign-out successful")
-      window.location = "https://ieee-cis-sbc.org"
-    }).catch((error) => {
-      console.log(error)
-    })
-  }
-
-  const authFunctions = {
-    login : login,
-    currentUser: currentUser,
-    logOut: logOut
-  }
-
-  if (!loading && currentUser){
+  if (context.currentUser){
     return (
-      <Routes>
-        <Route path="/" element={<Dashboard authFunctions={authFunctions}/>}>
-        </Route>
-      </Routes>
+      <>
+        <ThemeProvider theme={Theme}>
+          <CssBaseline/>
+            <Paper sx={{borderRadius : 0, minHeight: "100vh"}}>
+              <Routes>
+                <Route path="Submission" element={<Submission />}>
+                  <Route path="" element={<Box>CC</Box>} />
+                  <Route path="Round-1" element={<Box><Typography variant="h1">A</Typography></Box>} />
+                  <Route path="Round-2" element={<Box><Typography variant="h1">B</Typography></Box>} />
+                </Route>
+                <Route path="/team" element={<Team />}>
+                </Route> 
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/profile" element={<Profile />} />  
+                <Route path="*" element={<Typography variant="h4"> Not Found </Typography>} />
+              </Routes>
+            </Paper>
+        </ThemeProvider>
+    </>
     )} else {
     return "Loading..."
   }

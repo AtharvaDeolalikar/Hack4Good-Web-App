@@ -8,9 +8,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 
 function Round1(){
     const context = useContext(AuthContext) 
-    const [noLinks, setNoLinks] = useState(context.team.round1 || ["link"])
+    const [noLinks, setNoLinks] = useState(["link"])
     const [technologies, setTechnologies] = useState([])
-    const [start, setStart] = useState(context.team.round1 ? true : false)
+    const [start, setStart] = useState( false)
 
     const names=[
         "JavaScript",

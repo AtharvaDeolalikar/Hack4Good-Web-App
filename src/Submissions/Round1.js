@@ -111,14 +111,14 @@ function Round1(){
                             {noLinks.map((item, index) => 
                                 <TextField 
                                     label={`Link #${index + 1}`} 
-                                    defaultValue={context.team.round1 ? item : ""}
+                                    defaultValue={context.team ? item : ""}
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end"><IconButton onClick={() => deleteLink(index)}><DeleteIcon /></IconButton></InputAdornment>,
                                       }}
                                 ></TextField>
                             )}
                             <Button onClick={() => addLink()} startIcon={<AddIcon />}>Add link</Button>
-                            <Button variant="contained">{context.team.round1 ? "Update" : "Submit"}</Button>
+                            <Button variant="contained">{context.team ? "Update" : "Submit"}</Button>
                         </Stack>
                     </Box>
                 </Stack> : 

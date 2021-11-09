@@ -27,7 +27,7 @@ function SignUp(){
                     <Typography variant="p" color="#cacbcc">by IEEE CIS SBC - GHRCE</Typography>
                 </Grid> 
                 <Grid item xl={12} xs={12} sx={{display: "flex", justifyContent: "center"}}>    
-                    <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", padding:3, textAlign: "center", width: 350, borderRadius: 5, border: (theme) => `1px solid ${theme.palette.divider}`}}>
+                    <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", padding:3, textAlign: "center", width: 350, borderRadius: 3, border: (theme) => `1px solid ${theme.palette.divider}`}}>
                         <Stack sx={{width: 1}} spacing={3}>
                         <Typography variant="h5">Sign up</Typography>
                         <TextField

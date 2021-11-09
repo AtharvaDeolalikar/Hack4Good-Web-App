@@ -6,6 +6,8 @@ import { getFirestore , collection, addDoc, updateDoc, arrayUnion, doc, getDoc, 
 import { useNavigate } from "react-router";
 import ShowAlert from "../ShowAlert";
 import Loading from "../Loading";
+import { ThemeProvider } from '@mui/material/styles'
+import Theme from "./Theme";
 
 export const AuthContext = createContext();
 
@@ -42,7 +44,10 @@ function AuthContextProvider({children}){
         const getUserTeam = async (userData) => {
           try {
             const teamData = await getDoc(doc(db, "teams", userData.teamID));
-            console.log(teamData.data())
+            console.log("TeamData",teamData.data())
+            if(teamData.data() && window.location.pathname =="/team"){
+              navigate("/profile")
+            }
             setTeam(teamData.data())
             setLoading(false)
         }
@@ -57,10 +62,8 @@ function AuthContextProvider({children}){
             const userData = await getDoc(doc(db, "users", user.uid));
             console.log("UserData",userData.data())
             if(userData.data()){
-              console.log("YES")
               getUserTeam(userData.data())
             }else{
-              console.log("No")
               navigate("/signup", { replace: true })
               setLoading(false)
             }
@@ -164,9 +167,20 @@ function AuthContextProvider({children}){
             console.log("Team created with ID: ", docRef.id);
             connectTeam(name, docRef.id)
             setAlert({severity: "success", message: "New team has been successfully created!", show: true})
+            window.location.pathname = "/profile"
           } catch (e) {
             console.error("Error adding document: ", e);
           }
+    }
+
+    async function Round1Submission(data){
+      try {
+          const docRef = await setDoc(doc(db, "teams", userData.teamID), {round1: data});
+          //console.log("User added with ID: ", docRef.id);
+          //navigate("/team", {replace: true})
+        } catch (e) {
+          console.error("Error adding user: ", e);
+        }
     }
 
     async function addUser(data){
@@ -179,9 +193,9 @@ function AuthContextProvider({children}){
           }
     }
 
-    async function connectTeam(teamName, teamID){
+    async function connectTeam(teamID){
       try {
-          const docRef = await updateDoc(doc(db, "users", currentUser.uid), {teamName: teamName, teamID : teamID});
+          const docRef = await updateDoc(doc(db, "users", currentUser.uid), {teamID : teamID});
           //console.log("User added with ID: ", docRef.id);
         } catch (e) {
           console.error("Error adding user: ", e);
@@ -191,19 +205,24 @@ function AuthContextProvider({children}){
     async function updateUser(data){
       try {
           const docRef = await updateDoc(doc(db, "users", currentUser.uid), {uid: currentUser.uid, ...data});
-          //console.log("User added with ID: ", docRef.id);
+          showAlert("success", "Profile has been updated successfully")
         } catch (e) {
           console.error("Error adding user: ", e);
         }
     }
 
-    async function updateTeam(id, newName){
-      try {
-          const docRef = await updateDoc(doc(db, "teams", id), {teamName: newName });
+    async function updateTeam(newName){
+      if(team.teamName != newName){
+        try {
+          const docRef = await updateDoc(doc(db, "teams", userData.teamID), {teamName: newName});
           //console.log("User added with ID: ", docRef.id);
+          showAlert("success", "Team name has been updated successfully")
         } catch (e) {
-          console.error("Error adding user: ", e);
+          console.error("Error updating team name: ", e);
         }
+      }else{
+        showAlert("error","Current wala bhi wahi hai")
+      }
     }
     
 
@@ -227,7 +246,7 @@ function AuthContextProvider({children}){
                 members: arrayUnion({name: currentUser.displayName, emailID: currentUser.email, uid: currentUser.uid})
             });
             console.log("Added member with teamID: ", teamRef.id);
-            connectTeam(teamData.teamName, teamRef.id)
+            connectTeam(teamRef.id)
           } catch (e) {
             console.error("Error:", e);
           }
@@ -251,6 +270,7 @@ function AuthContextProvider({children}){
         joinTeam,
         addUser,
         updateUser,
+        updateTeam,
         team,
         userData,
         showAlert,
@@ -258,11 +278,13 @@ function AuthContextProvider({children}){
     }
     
     return (
+      <ThemeProvider theme={Theme}>
         <AuthContext.Provider value={values}>
             {alert && <ShowAlert props={alert} hide ={hideMessage} />}
             {loading && <Loading />}
             {!loading && children}
         </AuthContext.Provider>
+        </ThemeProvider>
     )
 }
 

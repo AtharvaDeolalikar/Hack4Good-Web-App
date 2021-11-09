@@ -1,6 +1,6 @@
-import { AppBar, Typography, Toolbar, Avatar } from "@mui/material"
+import { AppBar, Typography, Toolbar, Avatar} from "@mui/material"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Link } from "react-router-dom";
+import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useContext, useState } from "react";
@@ -8,6 +8,8 @@ import { Divider } from "@mui/material";
 import Logout from '@mui/icons-material/Logout'
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { AuthContext } from "./Contexts/AuthContext";
+import { Link } from "react-router-dom";
+
 
 function NavBar(){
     const context = useContext(AuthContext)
@@ -31,7 +33,9 @@ function NavBar(){
             <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
                 Hack4Good
             </Typography>
-            
+            <Link className="tabLink" to="/Submissions">
+                <Typography sx={{ mx: 2, display:{xs: "none", sm:"block"  }}}>Submissions</Typography>
+            </Link>
             <Avatar onClick={handleClick} sx={{ bgcolor: "#fafafa" }}>
                 <AccountCircleIcon />
             </Avatar>
@@ -70,9 +74,19 @@ function NavBar(){
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
             <MenuItem>
+            <Link to="/Submissions" className="tabLink">
+                <ListItemIcon>
+                <AddToQueueIcon fontSize="small" />
+            </ListItemIcon>
+            Submissions</Link>
+            </MenuItem>
+            <Divider />
+            <MenuItem>
             <Avatar /> <Link to="/profile" className="tabLink">My Profile </Link>
             </MenuItem>
-            <Divider />            
+            
+            <Divider /> 
+
             <MenuItem onClick={() => context.logOut()}>
             <ListItemIcon>
                 <Logout fontSize="small" />

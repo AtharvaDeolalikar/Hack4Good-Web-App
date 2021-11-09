@@ -1,12 +1,14 @@
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import { AuthContext } from './Contexts/AuthContext';
+import NavBar from './Navbar';
 
 
-function Submission(props){
-    const currentUser = props.authFunctions.currentUser
+function Submission(){
+    const contex = useContext(AuthContext)
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {
@@ -14,11 +16,12 @@ function Submission(props){
     };
 
     return (
-        <>
+        <>  
+        <NavBar />
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange}>
-                    <Tab component={Link} to="/Submission/Round-1" label="Round - 1" />
-                    <Tab component={Link} to="/Submission/Round-2" label="Round - 2" />
+                    <Tab component={Link} to="/Submissions/Round-1" label="Round - 1" />
+                    <Tab component={Link} to="/Submissions/Round-2" label="Round - 2" />
                 </Tabs>
             </Box>
             <Outlet />

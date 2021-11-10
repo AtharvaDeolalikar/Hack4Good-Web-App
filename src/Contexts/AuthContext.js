@@ -45,7 +45,6 @@ function AuthContextProvider({children}){
           try {
             const teamData = await getDoc(doc(db, "teams", userData.teamID));
             console.log("TeamData",teamData.data())
-            console.log(window.location.pathname)
             if(teamData.data()){
               if(window.location.pathname =="/team"){
                 navigate("/profile")

@@ -1,16 +1,28 @@
-import {Box, TextField, Typography, Stack, Button, Divider, FormLabel, InputAdornment, IconButton, Select, Chip, InputLabel, FormControl, Input, FormHelperText} from "@mui/material"
-import { useContext, useRef, useState } from "react"
+import {Box, TextField, Typography, Stack, Button, Divider, FormLabel, InputAdornment, IconButton, Select, Chip, InputLabel, FormControl, CircularProgress} from "@mui/material"
+import { useContext, useEffect, useRef, useState } from "react"
 import MenuItem from '@mui/material/MenuItem';
 import AddIcon from '@mui/icons-material/Add';
 import { AuthContext } from "../Contexts/AuthContext";
 import DeleteIcon from '@mui/icons-material/Delete';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import countdown from "countdown";
+import Timer from "../Timer";
+import Temp from "../temp";
+
 
 function Round1(){
     const context = useContext(AuthContext) 
     const [noLinks, setNoLinks] = useState(["link"])
     const [technologies, setTechnologies] = useState([])
     const [start, setStart] = useState( false)
+    const [timer, setTimer] = useState()
+
+    useEffect(() => {
+        setInterval(function(){ 
+            setTimer(Timer("Nov 15, 2021 23:59:59 GMT+0530"))
+            //console.log(timer)
+        }, 1000);
+    }, [])
 
     const names=[
         "JavaScript",
@@ -123,15 +135,15 @@ function Round1(){
                     </Box>
                 </Stack> : 
 
-                <>
+                <>{timer ?
                     <Box sx={{textAlign: "center"}}>
                         <Stack spacing={1}>
-                            <Typography >You can make your submission by</Typography>
-                            <Typography variant="h5"> November 15, 2021</Typography>
-                            <Box sx={{pt: 2}}>
-                            <Button variant="outlined" fullWidth onClick={() => {setStart(true)}}>Start</Button></Box>
+                            <Typography variant="h5">Time left to Submit</Typography>
+                            <Temp time={timer}/>
+                              <Box>  
+                            <Button variant="outlined"  sx={{minWidth: 200}} onClick={() => {setStart(true)}}>Start</Button> </Box>
                         </Stack>
-                    </Box>
+                    </Box>  : <CircularProgress />}
                 </>
                 
                 }

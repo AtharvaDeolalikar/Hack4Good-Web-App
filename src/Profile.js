@@ -47,6 +47,7 @@ function Profile(){
                         defaultValue={context.userData.teamID}
                         InputProps={{
                             endAdornment: <InputAdornment position="end"><IconButton ><ContentCopyIcon /></IconButton></InputAdornment>,
+                            readOnly: true
                           }}
                         
                         ></TextField>

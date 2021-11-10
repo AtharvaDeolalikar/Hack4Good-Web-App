@@ -167,9 +167,8 @@ function AuthContextProvider({children}){
               members: [{name: currentUser.displayName, emailID: currentUser.email, uid: currentUser.uid}]
             });
             console.log("Team created with ID: ", docRef.id);
-            connectTeam(name, docRef.id)
             setAlert({severity: "success", message: "New team has been successfully created!", show: true})
-            window.location.pathname = "/profile"
+            connectTeam(docRef.id)
           } catch (e) {
             console.error("Error adding document: ", e);
           }
@@ -196,8 +195,11 @@ function AuthContextProvider({children}){
     }
 
     async function connectTeam(teamID){
+      console.log(teamID)
       try {
           const docRef = await updateDoc(doc(db, "users", currentUser.uid), {teamID : teamID});
+          window.location.reload()
+          //window.location.pathname = "/profile"
           //console.log("User added with ID: ", docRef.id);
         } catch (e) {
           console.error("Error adding user: ", e);

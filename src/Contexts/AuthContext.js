@@ -162,6 +162,10 @@ function AuthContextProvider({children}){
 
     
     async function createTeam(name){
+        if(name.length == 0){
+          showAlert("error", "Enter the team name first!")
+          return false
+        }
         try {
             const docRef = await addDoc(collection(db, "teams"), {
               teamName: name,
@@ -233,7 +237,10 @@ function AuthContextProvider({children}){
     
 
     async function joinTeam(teamID){
-        console.log(teamID)
+      if(teamID.length == 0){
+        showAlert("error", "Enter the Team ID first!")
+        return false
+      }
         try {
             const teamRef = doc(db, "teams", teamID);
             const docSnap = await getDoc(teamRef)
@@ -241,20 +248,23 @@ function AuthContextProvider({children}){
             if (docSnap.exists()) {
                 teamData.members.map((member) => {
                   if (member.uid == currentUser.uid) {
-                      throw "It seems that you are already a member of the team " + teamData.teamName;
+                      //throw "It seems that you are already a member of the team " + teamData.teamName;
+                      showAlert("error", `It seems that you are already a member of the team ${teamData.teamName}`)
                   }
                 })
               } else {
-                throw "Team does not exist!"
+                showAlert("error", `Team does not exist!`)
+                //throw "Team does not exist!"
               }
 
             await updateDoc(teamRef, {
                 members: arrayUnion({name: currentUser.displayName, emailID: currentUser.email, uid: currentUser.uid})
             });
             console.log("Added member with teamID: ", teamRef.id);
+            showAlert("success", `You have been successfully connected to the team ${teamData.teamName}`)
             connectTeam(teamRef.id)
           } catch (e) {
-            console.error("Error:", e);
+            //console.error("Error:", e);
           }
 
     }

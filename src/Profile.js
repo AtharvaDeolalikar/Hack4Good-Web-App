@@ -63,7 +63,7 @@ function Profile(){
                     var currentIndex = (index + 1 ).toString() + ". "
                     return (
                         <> 
-                        <Chip key={item.uid} sx={{ fontSize: 17, p:3}} variant="outlined" label={currentIndex + item.name}></Chip> <br />
+                        <Chip key={item.uid} sx={{ fontSize: 17, p:3, my:1}} variant="outlined" label={currentIndex + item.name}></Chip> <br />
                         </>
                     )
                 }) }
@@ -72,8 +72,8 @@ function Profile(){
             </Box> : 
             <>
             <Box textAlign="center">
-            <Typography variant="h6" maxWidth={400} >Create or join a team first in order to make your submissions!</Typography>
-            <Button onClick={() => navigate("/team")}>Start</Button></Box>
+            <Typography fontSize={20} maxWidth={400} >Create or join a team first in order to make your submissions!</Typography>
+            <Button sx={{my:2}} variant="outlined" onClick={() => navigate("/team")}>Start</Button></Box>
             </>}
 
             <Box>

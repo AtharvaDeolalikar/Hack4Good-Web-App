@@ -84,7 +84,7 @@ function Round1(){
                 {start ? 
                 <Stack>
                     <Typography variant="h3" fontSize={{xs: 30, sm:35, md: 45}}>Round - 1 Submission</Typography>
-                    <Box sx={{ my: 4}}>
+                    <Box sx={{ my: 4, mx: {xs: 1, md: 0}}}>
                         <Stack spacing={2}>
                             <FormLabel component="legend">Basic Details</FormLabel>
                             <TextField inputRef={projectTitleRef} label="Project Title" required></TextField>
@@ -97,6 +97,7 @@ function Round1(){
                             <Select
                                 multiple
                                 value={technologies}
+                                
                                 onChange={handleTechChange}
                                 input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
                                 renderValue={(selected) => (
@@ -126,7 +127,7 @@ function Round1(){
                                     defaultValue={context.team ? item : ""}
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end"><IconButton onClick={() => deleteLink(index)}><DeleteIcon /></IconButton></InputAdornment>,
-                                      }}
+                                    }}
                                 ></TextField>
                             )}
                             <Button onClick={() => addLink()} startIcon={<AddIcon />}>Add link</Button>

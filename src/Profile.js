@@ -1,142 +1,131 @@
-import { Grid, Box, Typography, Chip, Divider, Stack, TextField, Button, Alert, InputAdornment, IconButton } from "@mui/material"
+import { Box, Typography, Stack, TextField, FormControlLabel, FormLabel, RadioGroup, FormControl, Radio } from "@mui/material"
 import { useRef, useContext, useState } from "react";
 import NavBar from "./Navbar"
 import { AuthContext } from "./Contexts/AuthContext";
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { useNavigate } from "react-router";
+import { LoadingButton } from "@mui/lab";
+import moment from "moment";
 
 function Profile(){
     const context = useContext(AuthContext);
-    const navigate = useNavigate()
     const nameRef = useRef();
     const emailRef = useRef();
     const institutionRef = useRef();
-    const teamNameRef = useRef();
-    const [load, setLoad] = useState(true)
+    const phoneRef = useRef();
+    const cityRef = useRef();
+    const ageRef = useRef();
+    const [gender, setGender] = useState(context.userData.gender);
+    const [buttonLoading, setButtonLoading] = useState(false);
+    const [edit, setEdit] = useState(false)
 
-    function updateProfile(){
+    function ToggleButtonLoad(){
+        setButtonLoading(buttonLoading => !buttonLoading)
+    }
+
+    async function updateProfile(){
+        if(!edit){
+            setEdit(true)
+            return false
+        }
+        ToggleButtonLoad()
         const data = {
             name: nameRef.current.value, 
             email: emailRef.current.value, 
-            instition: institutionRef.current.value
+            phoneNo: phoneRef.current.value,
+            institution: institutionRef.current.value,
+            city: cityRef.current.value,
+            gender : gender,
+            age: ageRef.current.value, 
+            updatedAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a')
         }
+        for (const property in data) {
+            if(data[property].length === 0){
+              context.showAlert("error", `Enter ${property} first!`)
+              ToggleButtonLoad()
+              return false
+            } 
+          }
         
-       context.updateUser(data)
+       await context.updateUser(data, ToggleButtonLoad)
+       ToggleButtonLoad()
     }
 
-    function updateTeamName(){
-        context.updateTeam(teamNameRef.current.value)
-    }
 
     return (
         <>
         <NavBar />
         
-        <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "80vh"}}>     
-        {context.team ? 
-            <Box sx={{textAlign: "center"}}>
-                <Chip sx={{fontSize: {xs: 17, md: 22}, p:3.5 , my:2}} label={`Team: ${context.team.teamName}`}></Chip>
-                <Box >
-                <Alert sx={{borderRadius:3,  maxWidth: 350, my:2}} severity="info">This hackathon let’s you have upto 4 teammates. Share the code below to add teammates.</Alert>
-                <CopyToClipboard
-                    options={{ debug: true, message: "" }}
-                    text={context.userData.teamID}
-                    onCopy={() => context.showAlert("success", "Team ID has been copied to Clipboard!")}>
-                    <TextField 
-                        defaultValue={context.userData.teamID}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end"><IconButton ><ContentCopyIcon /></IconButton></InputAdornment>,
-                            readOnly: true
-                          }}
-                        
-                        ></TextField>
-                </CopyToClipboard>
-            
-                    {/* <Typography sx={{bgcolor:"blue", maxWidth: 450, borderRadius:3, p:2}} >This hackathon let’s you have upto 4 teammates. Share the code below to add teammates.</Typography> */}
-                </Box>
-
-                <Divider sx={{my:2}}/>
-                <Stack sx={{display: "inline-block"}}>
-
-                {context.team.members.map((item, index) => {
-                    var currentIndex = (index + 1 ).toString() + ". "
-                    return (
-                        <> 
-                        <Chip key={item.uid} sx={{ fontSize: 17, p:3, my:1}} variant="outlined" label={currentIndex + item.name}></Chip> <br />
-                        </>
-                    )
-                }) }
-                    
-                </Stack>
-            </Box> : 
-            <>
-            <Box textAlign="center">
-            <Typography fontSize={20} maxWidth={400} >Create or join a team first in order to make your submissions!</Typography>
-            <Button sx={{my:2}} variant="outlined" onClick={() => navigate("/team")}>Start</Button></Box>
-            </>}
-
-            <Box>
-                <Divider orientation="vertical" sx={{height: 300, display:{xs: "none", sm:"block" } }} flexItem ></Divider>
-                <Divider orientation="horizontal" sx={{width:300, my:6, display:{sm: "none", xs:"block" } }} flexItem ></Divider>
+        <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "100vh"}}>               
+            <Box sx={{width:{xs: "100%", md: "500px"}}} >
+                <Typography variant="h5" align="center" my={2}>Update Profile</Typography>
+                    <Box sx={{borderRadius: 3, border: (theme) => `1px solid ${theme.palette.divider}`, padding:3, my:3}}>
+                    <Stack sx={{width: 1}} spacing={3}>
+                        <TextField
+                            margin="normal"
+                            id="Name"
+                            label="Name"
+                            disabled={!edit}
+                            defaultValue= {context.userData.name}
+                            name= "name"
+                            inputRef={nameRef}          
+                        />
+                        <TextField
+                            margin="normal"
+                            id="Name"
+                            label="Email"
+                            name="Email"
+                            defaultValue = {context.userData.email}
+                            disabled
+                            inputRef={emailRef}         
+                        />
+                        <TextField
+                            margin="normal"
+                            id="PhoneNo"
+                            label="Phone No"
+                            name="PhoneNo"
+                            disabled={!edit}
+                            defaultValue = {context.userData.phoneNo}
+                            inputRef={phoneRef}        
+                        />
+                        <FormLabel component="legend" sx={{textAlign : "left"}} >Additional Details</FormLabel>
+                        <TextField
+                            margin="normal"
+                            id="Name"
+                            label="Institution"
+                            name="Institution" 
+                            disabled={!edit}
+                            defaultValue = {context.userData.institution} 
+                            inputRef={institutionRef}        
+                        />
+                        <TextField
+                            margin="normal"
+                            id="City"
+                            label="City / Town"
+                            name="City/Town"  
+                            disabled={!edit}
+                            defaultValue = {context.userData.city} 
+                            inputRef={cityRef}        
+                        />
+                        <Box sx={{display: "flex", justifyContent : "space-between", flexDirection : "row"}}>
+                            <FormControl disabled={!edit} component="fieldset">
+                                <FormLabel sx={{textAlign : "left"}} component="legend">Gender</FormLabel>
+                                    <RadioGroup
+                                        row
+                                        aria-label="gender"
+                                        name="controlled-radio-buttons-group"
+                                        value={gender}
+                                        defaultValue = "male"
+                                        onChange={(e) => setGender(e.target.value)}
+                                    >
+                                    <Box><FormControlLabel value="male" control={<Radio />} label="Male" />
+                                    <FormControlLabel value="female" control={<Radio />} label="Female" /> </Box>   
+                                </RadioGroup>
+                            </FormControl>
+                        <TextField sx={{maxWidth : 100}}  disabled={!edit} inputRef={ageRef} defaultValue={context.userData.age} type="number" label="Age" />
+                        </Box>
+                        <LoadingButton size="large" loading={buttonLoading} onClick={updateProfile}  variant="contained" >{!edit ? "Edit" : "Update"} Profile</LoadingButton>
+                    </Stack>  
+                </Box>              
             </Box>
-               
-            <Box width={350} >
-                <Typography variant="h5" align="center">Update Profile</Typography>
-                <Stack sx={{width: 1}} spacing={3}>
-                    <TextField
-                        margin="normal"
-                        id="Name"
-                        label="Name"
-                        defaultValue= {context.currentUser.displayName}
-                        name= "name"
-                        required 
-                        inputRef={nameRef}          
-                    />
-                    <TextField
-                        margin="normal"
-                        id="Name"
-                        label="Email"
-                        name="Email"
-                        defaultValue = {context.currentUser.email}
-                        disabled
-                        inputRef={emailRef}         
-                    />
-                    <TextField
-                        margin="normal"
-                        id="Name"
-                        label="Institution"
-                        name="Institution"
-                        defaultValue = {context.userData.instition}
-                        required  
-                        inputRef={institutionRef}
-                    />
-                    <Button variant="contained" onClick={updateProfile} size="large">Update</Button>
-                </Stack>                
-            </Box>
-            
-            {context.team ?
-            <Box>
-                <Divider orientation="vertical" sx={{height: 300, display:{xs: "none", sm:"block" } }} flexItem ></Divider>
-                <Divider orientation="horizontal" sx={{width:300, my:6, display:{sm: "none", xs:"block" } }} flexItem ></Divider>
-            </Box> : < > </>}
-
-            {context.team ? 
-            <Box width={350} >
-                <Typography variant="h5" align="center">Update Team</Typography>
-                <Stack sx={{width: 1}} spacing={3}>
-                    <TextField
-                        margin="normal"
-                        id="TeamName"
-                        label="Team Name"
-                        defaultValue= {context.team.teamName}
-                        name= "TeamName"
-                        required 
-                        inputRef={teamNameRef}          
-                    />
-                    <Button variant="contained" onClick={updateTeamName} size="large">Update</Button>
-                </Stack> 
-            </Box> : < > </>}
         </Box> 
     </>
     )

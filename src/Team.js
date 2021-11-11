@@ -1,22 +1,21 @@
-import { Box } from "@mui/system"
-import { Typography, TextField, Divider, Button, Grid, Stack, Chip } from "@mui/material"
+import { Typography, TextField, Divider, Button, Grid, Stack, Chip, Box } from "@mui/material"
 import { useContext, useRef } from "react"
 import { AuthContext } from "./Contexts/AuthContext"
 import NavBar from "./Navbar"
-import countdown from "countdown"
+import TeamManage from "./TeamManage"
+
 
 function Team(){
     const context = useContext(AuthContext) 
     const createTeamNameRef= useRef()
     const joinTeamIDRef= useRef()
 
-    
-
     //console.log(countdown( Date.now(), new Date(2021, 10, 15)).toString() )
 
     return (
         <>
         <NavBar />
+        {context.team ? <TeamManage /> :
         <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "75vh", width : "100%"}}>        
             <Box sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>   
                 <Grid container sx={{textAlign: 'center'}}>
@@ -57,12 +56,13 @@ function Team(){
                                 name="teamID"
                                 inputRef = {joinTeamIDRef}
                             />
+                            
                             <Button variant="outlined" onClick={() => context.joinTeam(joinTeamIDRef.current.value)}>Join</Button>
                         </Stack>
                     </Grid>
                 </Grid>
             </Box>
-        </Box>
+        </Box>}
     </>
     )
 }

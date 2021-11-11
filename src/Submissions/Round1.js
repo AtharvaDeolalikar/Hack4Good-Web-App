@@ -5,7 +5,6 @@ import AddIcon from '@mui/icons-material/Add';
 import { AuthContext } from "../Contexts/AuthContext";
 import DeleteIcon from '@mui/icons-material/Delete';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import countdown from "countdown";
 import Timer from "../Timer";
 import Temp from "../temp";
 
@@ -23,6 +22,7 @@ function Round1(){
             //console.log(timer)
         }, 1000);
     }, [])
+    
 
     const names=[
         "JavaScript",
@@ -42,7 +42,7 @@ function Round1(){
     const projectDescriptionRef = useRef()
 
     function addLink(){
-        if(noLinks.length == 5){
+        if(noLinks.length === 5){
             context.showAlert("error", "You can add upto 5 links.")
             return false
         }
@@ -66,17 +66,6 @@ function Round1(){
         );
     };
 
-    const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
-
-    const MenuProps = {
-        PaperProps: {
-          style: {
-            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-            width: 250,
-          },
-        },
-      };
     
     return (
         <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "75vh", width : "100%"}}>     
@@ -97,7 +86,6 @@ function Round1(){
                             <Select
                                 multiple
                                 value={technologies}
-                                
                                 onChange={handleTechChange}
                                 input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
                                 renderValue={(selected) => (
@@ -139,7 +127,7 @@ function Round1(){
                 <>{timer ?
                     <Box sx={{textAlign: "center"}}>
                         <Stack spacing={1}>
-                            <Typography variant="h5">Time left to Submit</Typography>
+                            <Typography sx={{fontSize: {xs:22, sm: 30}}}>Time left for Round - 1 Submission</Typography>
                             <Temp time={timer}/>
                               <Box>  
                             <Button variant="outlined"  sx={{minWidth: 200}} onClick={() => {setStart(true)}}>Start</Button> </Box>

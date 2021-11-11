@@ -1,12 +1,10 @@
 import { Box, Stack, Typography } from "@mui/material"
 
 function Temp({time}){
-    console.log(time)
     const timerStyles = {
-        bgcolor: "black",
         borderRadius: 4,
         p:3, 
-        minWidth: 100,
+        minWidth: 130,
         m: 2,
         bgcolor: "#101c2c"
     }

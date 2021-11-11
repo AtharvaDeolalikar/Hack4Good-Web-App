@@ -25,76 +25,74 @@ function AuthContextProvider({children}){
     initializeApp(firebaseConfig);
     const auth = getAuth();
     const db = getFirestore();
-    const provider = new GoogleAuthProvider();
+    
     let navigate = useNavigate()
     
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log(user)
                 setCurrentUser(user)
-                //checkifNewUser()
                 getUserData(user)
             } else {
                 console.log("No user exist")
-                login()
+                setLoading(false)
+                navigate("/login")
             }
         })
         
-        const getUserTeam = async (userData) => {
+        const getUserTeam = async (teamID) => {
           try {
-            const teamData = await getDoc(doc(db, "teams", userData.teamID));
-            console.log("TeamData",teamData.data())
-            if(teamData.data()){
-              if(window.location.pathname =="/team"){
-                navigate("/profile")
-              }
-            }else{  
+            const teamData = await getDoc(doc(db, "teams", teamID));
+            const temp = teamData.data()
+            if(!teamData.data()){ 
               navigate("/team")
             }
-            setTeam(teamData.data())
-            setLoading(false)
+            setTeam(temp)
+            //setLoading(false)
         }
           catch(e){
             console.log(e)
-            setLoading(false)
+            //setLoading(false)
           }
         };
 
         const getUserData = async (user) => {
           try {
             const userData = await getDoc(doc(db, "users", user.uid));
-            console.log("UserData",userData.data())
-            if(userData.data()){
-              getUserTeam(userData.data())
-            }else{
+            const temp = userData.data()
+            setUserData(temp)
+            if(!temp){
               navigate("/signup", { replace: true })
               setLoading(false)
+            }else if(temp.teamID){
+              await getUserTeam(temp.teamID)
             }
-            setUserData(userData.data())
+            setLoading(false)
           }
           catch(e){
             console.log(e)
           }
         };
         
-    }, []);
+    }, [auth, db, navigate]);
 
     //console.log(getAuth().currentUser)
 
     function login(){
-        signInWithRedirect(auth, provider)
-        getRedirectResult(auth)
-        .then((result) => {
-        setCurrentUser(result.user)
-        }).catch((error) => {
-        console.log(error)
-        })
+      var provider =  new GoogleAuthProvider()
+      signInWithRedirect(auth, provider)
+      getRedirectResult(auth)
+      .then((result) => {
+      setCurrentUser(result.user)
+      }).catch((error) => {
+      console.log(error)
+      })
     }
 
     function logOut(){
       signOut(auth).then(() => {
       console.log("Sign-out successful")
+      navigate("/login")
 
       }).catch((error) => {
       console.log(error)
@@ -162,7 +160,7 @@ function AuthContextProvider({children}){
 
     
     async function createTeam(name){
-        if(name.length == 0){
+        if(name.length === 0){
           showAlert("error", "Enter the team name first!")
           return false
         }
@@ -182,7 +180,7 @@ function AuthContextProvider({children}){
 
     async function Round1Submission(data){
       try {
-          const docRef = await setDoc(doc(db, "teams", userData.teamID), {round1: data});
+          await setDoc(doc(db, "teams", userData.teamID), {round1: data});
           //console.log("User added with ID: ", docRef.id);
           //navigate("/team", {replace: true})
         } catch (e) {
@@ -191,19 +189,19 @@ function AuthContextProvider({children}){
     }
 
     async function addUser(data){
-        try {
-            const docRef = await setDoc(doc(db, "users", currentUser.uid), {uid: currentUser.uid, ...data});
-            //console.log("User added with ID: ", docRef.id);
-            navigate("/team", {replace: true})
-          } catch (e) {
-            console.error("Error adding user: ", e);
-          }
+      try {
+          await setDoc(doc(db, "users", currentUser.uid), {uid: currentUser.uid, ...data});
+          showAlert("success", "Data has been uploaded successfully!")
+          navigate("/team", {replace: true})
+        } catch (e) {
+          console.error("Error adding user: ", e);
+        }
     }
 
     async function connectTeam(teamID){
       console.log(teamID)
       try {
-          const docRef = await updateDoc(doc(db, "users", currentUser.uid), {teamID : teamID});
+          await updateDoc(doc(db, "users", currentUser.uid), {teamID : teamID});
           window.location.reload()
           //window.location.pathname = "/profile"
           //console.log("User added with ID: ", docRef.id);
@@ -214,7 +212,7 @@ function AuthContextProvider({children}){
 
     async function updateUser(data){
       try {
-          const docRef = await updateDoc(doc(db, "users", currentUser.uid), {uid: currentUser.uid, ...data});
+          await updateDoc(doc(db, "users", currentUser.uid), {uid: currentUser.uid, ...data});
           showAlert("success", "Profile has been updated successfully")
         } catch (e) {
           console.error("Error adding user: ", e);
@@ -222,22 +220,22 @@ function AuthContextProvider({children}){
     }
 
     async function updateTeam(newName){
-      if(team.teamName != newName){
+      if(team.teamName !== newName){
         try {
-          const docRef = await updateDoc(doc(db, "teams", userData.teamID), {teamName: newName});
+          await updateDoc(doc(db, "teams", userData.teamID), {teamName: newName});
           //console.log("User added with ID: ", docRef.id);
           showAlert("success", "Team name has been updated successfully")
         } catch (e) {
           console.error("Error updating team name: ", e);
         }
       }else{
-        showAlert("error","Current wala bhi wahi hai")
+        showAlert("error","New team name cannot be same as current team name.")
       }
     }
     
 
     async function joinTeam(teamID){
-      if(teamID.length == 0){
+      if(teamID.length === 0){
         showAlert("error", "Enter the Team ID first!")
         return false
       }
@@ -246,17 +244,22 @@ function AuthContextProvider({children}){
             const docSnap = await getDoc(teamRef)
             const teamData = docSnap.data()
             if (docSnap.exists()) {
-                teamData.members.map((member) => {
-                  if (member.uid == currentUser.uid) {
-                      //throw "It seems that you are already a member of the team " + teamData.teamName;
-                      showAlert("error", `It seems that you are already a member of the team ${teamData.teamName}`)
-                  }
-                })
-              } else {
-                showAlert("error", `Team does not exist!`)
-                //throw "Team does not exist!"
+              if (teamData.members.length === 4){
+                showAlert("error", "A team can have a maximum of 4 members only!" )
+                return false
               }
-
+              for (var member = 0 ; member < teamData.members.length ; member++){
+                if (teamData.members[member].uid === currentUser.uid) {
+                  showAlert("error", `It seems that you are already a member of the team ${teamData.teamName}`)
+                  return false
+                }
+              }
+            } else {
+                console.log("team does not exist")
+                showAlert("error", "Team ID does not exist")
+                return false
+              }
+            
             await updateDoc(teamRef, {
                 members: arrayUnion({name: currentUser.displayName, emailID: currentUser.email, uid: currentUser.uid})
             });
@@ -290,7 +293,9 @@ function AuthContextProvider({children}){
         team,
         userData,
         showAlert,
-        hideMessage
+        navigate,
+        hideMessage,
+        Round1Submission
     }
     
     return (

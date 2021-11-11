@@ -55,7 +55,7 @@ function Profile(){
         <NavBar />
         
         <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "100vh"}}>               
-            <Box sx={{width:{xs: "100%", md: "500px"}}} >
+            <Box sx={{width:{xs: "100%", sm: "500px"}}} >
                 <Typography variant="h5" align="center" my={2}>Update Profile</Typography>
                     <Box sx={{borderRadius: 3, border: (theme) => `1px solid ${theme.palette.divider}`, padding:3, my:3}}>
                     <Stack sx={{width: 1}} spacing={3}>

@@ -25,6 +25,7 @@ function AuthContextProvider({children}){
     initializeApp(firebaseConfig);
     const auth = getAuth();
     const db = getFirestore();
+    const provider =  new GoogleAuthProvider()
     
     let navigate = useNavigate()
     
@@ -35,8 +36,9 @@ function AuthContextProvider({children}){
                 getUserData(user)
             } else {
                 console.log("No user exist")
-                setLoading(false)
-                navigate("/login")
+                login()
+                //setLoading(false)
+                //navigate("/login")
             }
         })
         
@@ -79,7 +81,6 @@ function AuthContextProvider({children}){
     //console.log(getAuth().currentUser)
 
     function login(){
-      var provider =  new GoogleAuthProvider()
       signInWithRedirect(auth, provider)
       getRedirectResult(auth)
       .then((result) => {
@@ -92,8 +93,7 @@ function AuthContextProvider({children}){
     function logOut(){
       signOut(auth).then(() => {
       console.log("Sign-out successful")
-      navigate("/login")
-
+      //navigate("login")
       }).catch((error) => {
       console.log(error)
       })

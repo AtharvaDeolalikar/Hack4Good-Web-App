@@ -29,7 +29,7 @@ function App() {
                 </Route> 
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/profile" element={<Profile />} />  
-                <Route path="*" element={<Navigate to="/Submissions" /> } />
+                <Route path="*" element={<Navigate to="/profile" /> } />
               </Routes>
             </Paper>
     </>

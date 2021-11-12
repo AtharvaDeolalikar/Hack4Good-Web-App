@@ -225,7 +225,7 @@ function AuthContextProvider({children}){
           console.log(tempArray)
           for (var member = 0; member < temp.members.length ; member++){
             //console.log("temp.members[member].uid", temp.members[member].uid, "UserData.uid",  userData.uid)
-            if(temp.members[member].uid == userData.uid){
+            if(temp.members[member].uid === userData.uid){
               tempArray[member] = {name: data.name, emailID: currentUser.email, uid: currentUser.uid}
               console.log(tempArray)
               await updateDoc(doc(db, "teams", userData.teamID), {members: tempArray})

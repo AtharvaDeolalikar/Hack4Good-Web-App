@@ -1,4 +1,3 @@
-import { AppRegistration } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { TextField, Typography, Stack, Grid, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import { Box } from "@mui/system";
@@ -115,7 +114,7 @@ function SignUp(){
                         </FormControl>
                         <TextField sx={{maxWidth : 100}} inputRef={ageRef} type="number" label="Age" />
                         </Box>
-                        <LoadingButton size="large" loading={buttonLoading} startIcon={<AppRegistration />} onClick={handleChange} loadingPosition="start" variant="contained" >Sign Up </LoadingButton>
+                        <LoadingButton size="large" loading={buttonLoading} onClick={handleChange} variant="contained" >Sign Up </LoadingButton>
                         {/* <Button variant="contained" onClick={handleChange} size="large">Register</Button> */}
                         </Stack>
                     </Box>

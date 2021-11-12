@@ -167,6 +167,7 @@ function AuthContextProvider({children}){
         try {
             const docRef = await addDoc(collection(db, "teams"), {
               teamName: name,
+              submissions: {round1: false, round2: false},
               leader: {name: currentUser.displayName, email: currentUser.email, uid: currentUser.uid},
               members: [{name: currentUser.displayName, emailID: currentUser.email, uid: currentUser.uid}]
             });
@@ -179,9 +180,10 @@ function AuthContextProvider({children}){
     }
 
     async function Round1Submission(data){
+      console.log("received round 1 data: ", data)
       try {
-          await setDoc(doc(db, "teams", userData.teamID), {round1: data});
-          //console.log("User added with ID: ", docRef.id);
+          await updateDoc(doc(db, "teams", userData.teamID), {submissions : {round1: true}, round1: data});
+          console.log("Submissions added");
           //navigate("/team", {replace: true})
         } catch (e) {
           console.error("Error adding user: ", e);
@@ -211,8 +213,27 @@ function AuthContextProvider({children}){
     }
 
     async function updateUser(data){
+      console.log(data)
       try {
-          await updateDoc(doc(db, "users", currentUser.uid), {uid: currentUser.uid, ...data});
+          setUserData({uid: currentUser.uid, teamID: userData.teamID, ...data})
+          //const tempUser = {name: userData.name, emailID: currentUser.email, uid: currentUser.uid}
+          await updateDoc(doc(db, "users", currentUser.uid), { ...data})
+          //await updateDoc(doc(db, "teams", userData.teamID), {uid: currentUser.uid, ...data});
+          const tempRef = await getDoc(doc(db, "teams", userData.teamID))
+          const temp = tempRef.data()
+          const tempArray = temp.members
+          console.log(tempArray)
+          for (var member = 0; member < temp.members.length ; member++){
+            //console.log("temp.members[member].uid", temp.members[member].uid, "UserData.uid",  userData.uid)
+            if(temp.members[member].uid == userData.uid){
+              tempArray[member] = {name: data.name, emailID: currentUser.email, uid: currentUser.uid}
+              console.log(tempArray)
+              await updateDoc(doc(db, "teams", userData.teamID), {members: tempArray})
+            }
+          }
+          /* await updateDoc(doc(db, "teams", userData.teamID), {
+            members: arrayUnion({name: userData.name, emailID: currentUser.email, uid: currentUser.uid})
+          }); */
           showAlert("success", "Profile has been updated successfully")
         } catch (e) {
           console.error("Error adding user: ", e);
@@ -261,7 +282,7 @@ function AuthContextProvider({children}){
               }
             
             await updateDoc(teamRef, {
-                members: arrayUnion({name: currentUser.displayName, emailID: currentUser.email, uid: currentUser.uid})
+                members: arrayUnion({name: userData.name, emailID: currentUser.email, uid: currentUser.uid})
             });
             console.log("Added member with teamID: ", teamRef.id);
             showAlert("success", `You have been successfully connected to the team ${teamData.teamName}`)

@@ -10,7 +10,7 @@ function SubmissionsList(){
                     <Box sx={{display: "block"}}>
                         <Chip sx={{px:2}} label="Deadline: November 15, 2021"></Chip>
                     </Box>
-                    <Typography color="grey">In Round - 1, your team is required to submit a slide deck on your project.</Typography>
+                    <Typography color="grey">In Round - 1, your team is required to submit a slide deck on your project topic.</Typography>
                     <Button component={Link} to="Round-1" variant="outlined">Submit Now</Button> 
                 </Stack>
             </Box>

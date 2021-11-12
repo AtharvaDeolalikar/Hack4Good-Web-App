@@ -6,10 +6,8 @@ import { CssBaseline, Paper } from "@mui/material";
 import Team from './Team'
 import SignUp from "./Signup";
 import Profile from "./Profile"
-
 import Round1 from "./Submissions/Round1";
 import Round2 from "./Submissions/Round2";
-import Login from "./Login";
 import SubmissionsList from "./SubmissionsList";
 
 function App() {
@@ -19,7 +17,6 @@ function App() {
           <CssBaseline/>
             <Paper sx={{borderRadius : 0, minHeight: "100vh"}}>
               <Routes>
-                <Route path="login" element={<Login /> } />
                 <Route path="Submissions" element={<Submission />}>
                   <Route path="" element={<SubmissionsList />} />
                   <Route path="Round-1" element={<Round1 />} />

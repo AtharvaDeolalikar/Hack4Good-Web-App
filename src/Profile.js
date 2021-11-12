@@ -47,6 +47,7 @@ function Profile(){
         
        await context.updateUser(data, ToggleButtonLoad)
        ToggleButtonLoad()
+       setEdit(false)
     }
 
 

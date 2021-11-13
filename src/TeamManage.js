@@ -54,7 +54,7 @@ function TeamManage(){
                                 </Tooltip>
                             </CopyToClipboard>
 
-                        <Divider orientation="horizontal"><Chip label="Or"> </Chip></Divider>
+                        <Divider orientation="horizontal"><Chip label="Or" /></Divider>
 
                         <DialogContentText sx={{mt:2}} color="white">2. Share the team code </DialogContentText>
                         

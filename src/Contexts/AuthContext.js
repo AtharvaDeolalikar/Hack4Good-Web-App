@@ -213,6 +213,7 @@ function AuthContextProvider({children}){
             const teamRef = doc(db, "teams", teamID);
             const docSnap = await getDoc(teamRef)
             const teamData = docSnap.data()
+            console.log(userData.teamID)
             if(userData.teamID){
               showAlert("error" , "You are already a member of a team!")
               return false

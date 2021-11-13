@@ -22,7 +22,6 @@ function TeamJoin(){
         }else{
             setTeamName(result)
         }
-        console.log(result)
         //setTeamName(teamID)
     }, [])
 

@@ -30,7 +30,7 @@ function TeamManage(){
                 <Dialog open={inviteDiag}  fullWidth="xs">
                     <DialogTitle>Invite people to join your team</DialogTitle>
                     <DialogContent>    
-                        <DialogContentText color="white" sx={{mt:2}}>1. Invite share link </DialogContentText>
+                        <DialogContentText color="white" sx={{mt:2}}>1. Share the team invite link</DialogContentText>
                             <CopyToClipboard
                                 options={{ debug: true, message: "" }}
                                 text={`https://hack4good.ieee-cis-sbc.org/team/join?teamID=${context.userData.teamID}`}

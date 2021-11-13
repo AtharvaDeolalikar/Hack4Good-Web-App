@@ -75,29 +75,29 @@ function NavBar(){
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-            <MenuItem>
+            <MenuItem component={Link} to="/Submissions">
                 <ListItemIcon>
                     <AddToQueueIcon fontSize="small" />
                 </ListItemIcon>
-                <Link to="/Submissions" className="tabLink">Submissions</Link>
+                    Submissions
             </MenuItem>
 
 
             <Divider />
 
-            <MenuItem>
+            <MenuItem component={Link} to="/profile">
                 <ListItemIcon>
                     <AccountBoxIcon fontSize="small" />
                 </ListItemIcon>
-                <Link to="/profile" className="tabLink">My Profile </Link>
+                My Profile
             </MenuItem>
 
 
-            <MenuItem >
+            <MenuItem component={Link} to="/team">
                 <ListItemIcon>
                     <GroupIcon fontSize="small" />
                 </ListItemIcon>
-                <Link to="/team" className="tabLink">My Team</Link>
+                My Team
             </MenuItem>
             
             <Divider /> 

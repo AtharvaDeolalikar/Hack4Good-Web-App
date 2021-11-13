@@ -10,6 +10,7 @@ import Round1 from "./Submissions/Round1";
 import Round2 from "./Submissions/Round2";
 import SubmissionsList from "./SubmissionsList";
 import TeamJoin from "./TeamJoin";
+import { ContactUs } from "./sendMail";
 
 function App() {
 
@@ -26,7 +27,8 @@ function App() {
                 <Route path="/team" element={<Team />} />
                 <Route path="/team/join" element ={<TeamJoin />} />
                 <Route path="/signup" element={<SignUp />} />
-                <Route path="/profile" element={<Profile />} />  
+                <Route path="/profile" element={<Profile />} /> 
+                <Route path="/temp" element={<ContactUs />} />  
                 <Route path="*" element={<Navigate to="/profile" /> } />
               </Routes>
             </Paper>

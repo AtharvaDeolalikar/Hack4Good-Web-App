@@ -67,8 +67,6 @@ function AuthContextProvider({children}){
             }else if(temp.teamID){
               await getUserTeam(temp.teamID)
             }else if(!temp.teamID && window.location.pathname == "/"){
-              console.info(window.location.pathname)
-              console.log("A")
               navigate("/team")
             }
             setLoading(false)

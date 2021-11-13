@@ -45,7 +45,7 @@ function Team(){
                         </Divider>
                     </Grid>
                 
-                    <Grid item xl={5} xs={12} m={{xs: 2, md: 0}}>
+                    <Grid item xl={5} xs={12}  mb={4} md={5} m={{xs: 2, md: 0}}>
                         <Stack spacing={3}>
                             <Typography variant="h5" >
                                 Join Team

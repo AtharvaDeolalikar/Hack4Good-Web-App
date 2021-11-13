@@ -18,10 +18,9 @@ function TeamManage(){
     }
 
     return (
-        <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "80vh", textAlign: "center"}}>      
+        <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "80vh", textAlign: "center" }}>      
             <Box>
-                <Chip sx={{fontSize: {xs: 17, md: 22}, p:3.5 , my:2}} label={`Team: ${context.team.teamName}`}></Chip>
-                
+                <Chip sx={{fontSize: {xs: 17, md: 22}, p:3.5 , my:2}} label={`Team: ${context.team.teamName}`}></Chip> 
                 <Alert sx={{borderRadius:3,  maxWidth: 350, my:2}} severity="info">This hackathon let’s you have upto 4 teammates. Share the code below to add teammates.</Alert>
                 <CopyToClipboard
                     options={{ debug: true, message: "" }}
@@ -53,7 +52,7 @@ function TeamManage(){
                 var currentIndex = (index + 1 ).toString() + ". "
                 return (
                     <> 
-                    <Chip key={item.uid} sx={{ fontSize: 17, p:3, my:1}} variant="outlined" label={currentIndex + item.name}></Chip> <br />
+                        <Chip key={item.uid} sx={{ fontSize: 17, p:3, my:1}} variant="outlined" label={currentIndex + item.name}></Chip> <br />
                     </>
                 )
             }) }

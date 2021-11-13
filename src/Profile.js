@@ -4,6 +4,7 @@ import NavBar from "./Navbar"
 import { AuthContext } from "./Contexts/AuthContext";
 import { LoadingButton } from "@mui/lab";
 import moment from "moment";
+import Footer from "./Footer";
 
 function Profile(){
     const context = useContext(AuthContext);
@@ -37,6 +38,11 @@ function Profile(){
             age: ageRef.current.value, 
             updatedAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a')
         }
+        if (phoneRef.current.value && !phoneRef.current.value.startsWith("+")){
+            context.showAlert("error", "The phone number must start with the country code. Eg. +91")
+            ToggleButtonLoad()
+            return false
+        }
         for (const property in data) {
             if(data[property].length === 0){
               context.showAlert("error", `Enter ${property} first!`)
@@ -55,7 +61,7 @@ function Profile(){
         <>
         <NavBar />
         
-        <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "100vh"}}>               
+        <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "100vh",  mt:{xs:7, sm:8} , mb: 8}}>               
             <Box sx={{width:{xs: "100%", sm: "500px"}}} >
                 <Typography variant="h5" align="center" my={2}>Update Profile</Typography>
                     <Box sx={{borderRadius: 3, border: (theme) => `1px solid ${theme.palette.divider}`, padding:3, my:3}}>
@@ -128,6 +134,7 @@ function Profile(){
                 </Box>              
             </Box>
         </Box> 
+        <Footer />
     </>
     )
 }

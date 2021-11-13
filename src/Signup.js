@@ -4,6 +4,7 @@ import { Box } from "@mui/system";
 import moment from "moment";
 import { useContext, useState, useRef, useEffect} from "react";
 import { AuthContext } from "./Contexts/AuthContext";
+import Footer from "./Footer";
 
 function SignUp(){
     const context = useContext(AuthContext);
@@ -31,8 +32,12 @@ function SignUp(){
             institution: institutionRef.current.value,
             city: cityRef.current.value,
             gender : gender,
-            age: ageRef.current.value, 
-            registeredAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a')
+            age: ageRef.current.value
+        }
+        if (phoneRef.current.value && !phoneRef.current.value.startsWith("+")){
+            context.showAlert("error", "The phone number must start with the country code. Eg. +91")
+            setButtonLoading(false)
+            return false
         }
         for (const property in data) {
             if(data[property].length === 0){
@@ -46,6 +51,7 @@ function SignUp(){
     }
 
     return (
+        <>
         <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "100vh", width : "100%"}}>
             <Box sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>
             
@@ -122,6 +128,8 @@ function SignUp(){
             </Grid>
         </Box>
     </Box>
+    <Footer />
+    </>
     )
 }
 

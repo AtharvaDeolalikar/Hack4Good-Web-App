@@ -13,7 +13,7 @@ import DynamicButton from "../DynamicButton";
 function Round1(){
     const context = useContext(AuthContext) 
     //console.log(context.team.round1)
-    const isSubmitted = context.team.submissions.round1
+    const isSubmitted = context.team.round1.submitted
     const [noLinks, setNoLinks] = useState((isSubmitted && context.team.round1.projectLinks) || [""])
     const [technologies, setTechnologies] = useState((isSubmitted && context.team.round1.technologiesUsed) || [])
     const [start, setStart] = useState(isSubmitted)
@@ -37,6 +37,7 @@ function Round1(){
     }, [])
 
     async function MakeSubmission(){
+        console.info(technologies, noLinks)
         if(timer.expired){
             //console.log("timer expired")
             return false
@@ -50,6 +51,19 @@ function Round1(){
             projectDescription : projectDescriptionRef.current.value,
             technologiesUsed : technologies,
             projectLinks: noLinks
+        }
+
+        for (const property in round1data) {
+            if(round1data[property].length === 0){
+              context.showAlert("error", `Enter ${property} first!`)
+              return false
+            } 
+        }
+        for (var link = 0; link< noLinks.length; link++){
+            if(noLinks[link].length === 0){
+                context.showAlert("error", "Enter the link(s) before submission.")
+                return false
+            }
         }
         await context.Round1Submission(round1data)
         setEditable(false)
@@ -114,7 +128,7 @@ function Round1(){
 
     
     return (
-        <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "75vh", width : "100%"}}>     
+        <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "75vh", width : "100%" , mb:4}}>     
             <Box my={3}>
                 {start ? 
                 <Stack>

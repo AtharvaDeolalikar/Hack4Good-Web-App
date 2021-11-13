@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { AuthContext } from './Contexts/AuthContext';
 import NavBar from './Navbar';
+import Footer from './Footer';
 
 
 function Submission(){
@@ -25,7 +26,7 @@ function Submission(){
     return (
         <>  
         <NavBar />
-            <Box sx={{ borderBottom: 1, borderColor: 'divider'}}>
+            <Box sx={{ borderBottom: 1, mt:{xs:7, sm:8}, borderColor: 'divider'}}>
                 <Tabs value={value} onChange={handleChange}>
                     <Tab component={Link} to="/Submissions/" label="Rounds" />
                     <Tab component={Link} to="/Submissions/Round-1" label="Round - 1" />
@@ -33,6 +34,7 @@ function Submission(){
                 </Tabs>
             </Box>
             <Outlet />
+            <Footer />
         </>
     )
 }

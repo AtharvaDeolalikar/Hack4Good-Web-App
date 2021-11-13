@@ -1,6 +1,7 @@
 import { Typography, TextField, Divider, Button, Grid, Stack, Chip, Box } from "@mui/material"
 import { useContext, useRef } from "react"
 import { AuthContext } from "./Contexts/AuthContext"
+import Footer from "./Footer"
 import NavBar from "./Navbar"
 import TeamManage from "./TeamManage"
 
@@ -63,6 +64,7 @@ function Team(){
                 </Grid>
             </Box>
         </Box>}
+        <Footer />
     </>
     )
 }

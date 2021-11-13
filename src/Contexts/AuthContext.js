@@ -47,9 +47,6 @@ function AuthContextProvider({children}){
           try {
             const teamData = await getDoc(doc(db, "teams", teamID));
             const temp = teamData.data()
-            if(temp){ 
-              navigate("/team")
-            }
             setTeam(temp)
             //setLoading(false)
         }
@@ -69,7 +66,9 @@ function AuthContextProvider({children}){
               setLoading(false)
             }else if(temp.teamID){
               await getUserTeam(temp.teamID)
-            }else if(!temp.teamID){
+            }else if(!temp.teamID && window.location.pathname == "/"){
+              console.info(window.location.pathname)
+              console.log("A")
               navigate("/team")
             }
             setLoading(false)

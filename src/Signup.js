@@ -1,7 +1,6 @@
 import { LoadingButton } from "@mui/lab";
 import { TextField, Typography, Stack, Grid, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import { Box } from "@mui/system";
-import moment from "moment";
 import { useContext, useState, useRef, useEffect} from "react";
 import { AuthContext } from "./Contexts/AuthContext";
 import Footer from "./Footer";
@@ -52,7 +51,7 @@ function SignUp(){
 
     return (
         <>
-        <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "100vh", width : "100%"}}>
+        <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "100vh", width : "100%", mb:8}}>
             <Box sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>
             
             <Grid container sx={{textAlign: 'center'}}>

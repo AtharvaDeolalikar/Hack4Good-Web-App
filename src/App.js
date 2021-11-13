@@ -23,6 +23,7 @@ function App() {
                   <Route path="Round-2" element={<Round2 />} />
                 </Route>
                 <Route path="/team" element={<Team />}>
+                  {/* <Route path="/join" element ={} */}
                 </Route> 
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/profile" element={<Profile />} />  

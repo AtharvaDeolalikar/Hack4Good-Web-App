@@ -47,7 +47,7 @@ function AuthContextProvider({children}){
           try {
             const teamData = await getDoc(doc(db, "teams", teamID));
             const temp = teamData.data()
-            if(!teamData.data()){ 
+            if(temp){ 
               navigate("/team")
             }
             setTeam(temp)
@@ -69,6 +69,8 @@ function AuthContextProvider({children}){
               setLoading(false)
             }else if(temp.teamID){
               await getUserTeam(temp.teamID)
+            }else if(!temp.teamID){
+              navigate("/team")
             }
             setLoading(false)
           }

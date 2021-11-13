@@ -1,5 +1,27 @@
 body {
   margin: 0;
-  background-color: #162534;
+  background-color: #162534; 
 }
+
+
+/* *::-webkit-scrollbar{
+  display: none;
+} */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #303030;
+
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(85, 85, 85);
+  border-radius: 5px;
+}
+
 

@@ -1,15 +1,17 @@
-import { Alert, Chip, Divider, IconButton, InputAdornment, Stack, TextField, Typography } from "@mui/material"
+import { Alert, Button, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, InputAdornment, Stack, TextField, Tooltip, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import { useContext, useRef, useState } from "react"
 import CopyToClipboard from "react-copy-to-clipboard"
 import { AuthContext } from "./Contexts/AuthContext"
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { LoadingButton } from "@mui/lab"
+import LinkIcon from '@mui/icons-material/Link';
 
 function TeamManage(){
     const context = useContext(AuthContext)
     const [buttonLoading, setButtonLoading] = useState(false);
     const teamNameRef = useRef();
+    const [inviteDiag, setInviteDiag] = useState(false)
 
     async function handleClick(){
         setButtonLoading(true)
@@ -18,25 +20,55 @@ function TeamManage(){
     }
 
     return (
-        <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "80vh", textAlign: "center" , my:7 }}>      
+        <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "80vh", textAlign: "center" , my:7 , py:3}}>      
             <Box>
                 <Chip sx={{fontSize: {xs: 17, md: 22}, p:3.5 , my:2}} label={`Team: ${context.team.teamName}`}></Chip> 
-                <Alert sx={{borderRadius:3,  maxWidth: 350, my:2}} severity="info">This hackathon let’s you have upto 4 teammates. Share the code below to add teammates.</Alert>
-                <CopyToClipboard
-                    options={{ debug: true, message: "" }}
-                    text={context.userData.teamID}
-                    onCopy={() => context.showAlert("success", "Team ID has been copied to Clipboard!")}>
-                    <TextField 
-                        defaultValue={context.userData.teamID}
-                        InputProps={{
-                            endAdornment: <InputAdornment position="end"><IconButton ><ContentCopyIcon /></IconButton></InputAdornment>,
-                            readOnly: true
-                          }}
-                        
-                    ></TextField>
-                </CopyToClipboard>
-            
-                    {/* <Typography sx={{bgcolor:"blue", maxWidth: 450, borderRadius:3, p:2}} >This hackathon let’s you have upto 4 teammates. Share the code below to add teammates.</Typography> */}
+                <Alert sx={{borderRadius:3,  maxWidth: 400, my:2}} severity="info">This hackathon let’s you have upto 4 teammates. You can invite people to join your team by clicking the button below.</Alert>
+                <Button variant="outlined" onClick={() => setInviteDiag(true)}>Invite people</Button>
+                <Dialog open={inviteDiag}  fullWidth="xs">
+                    <DialogTitle>Invite people to join your team</DialogTitle>
+                    <DialogContent>    
+                        <DialogContentText color="white" sx={{mt:2}}>1. Invite share link </DialogContentText>
+                            <CopyToClipboard
+                                options={{ debug: true, message: "" }}
+                                text={`https://hack4good.ieee-cis-sbc.org/team/join?teamID=${context.userData.teamID}`}
+                                onCopy={() => context.showAlert("success", "Invite link has been copied to Clipboard!")}>
+                                <TextField 
+                                    defaultValue={`https://hack4good.ieee-cis-sbc.org/team/join?teamID=${context.userData.teamID}`}
+                                    disabled
+                                    sx={{mt:1, mb:3}}
+                                    fullWidth
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end"><IconButton ><LinkIcon /></IconButton></InputAdornment>
+                                    }}
+                                    
+                                ></TextField>
+                            </CopyToClipboard>
+
+                        <Divider orientation="horizontal"><Chip label="Or"> </Chip></Divider>
+
+                        <DialogContentText sx={{mt:2}} color="white">2. Share the team code </DialogContentText>
+                            <CopyToClipboard
+                                options={{ debug: true, message: "" }}
+                                text={context.userData.teamID}
+                                onCopy={() => context.showAlert("success", "Team ID has been copied to Clipboard!")}>
+                                <TextField 
+                                    defaultValue={context.userData.teamID}
+                                    sx={{mt:1, mb:3}}
+                                    disabled
+                                    fullWidth
+                                    InputProps={{
+                                        endAdornment: <Tooltip title="Copy" arrow><InputAdornment position="end"><IconButton ><ContentCopyIcon /></IconButton></InputAdornment></Tooltip>
+                                    }}
+                            ></TextField>
+                            </CopyToClipboard>
+                        <DialogActions >
+                            <Button variant="outlined"  onClick={() => setInviteDiag(false)}>
+                                Done
+                            </Button> 
+                        </DialogActions>
+                    </DialogContent>      
+                </Dialog>
             </Box>
                 
 

@@ -1,4 +1,4 @@
-import { Typography, TextField, Divider, Button, Grid, Stack, Chip, Box } from "@mui/material"
+import { Typography, TextField, Divider, Button, Grid, Stack, Chip, Box, Dialog, DialogTitle } from "@mui/material"
 import { useContext, useRef } from "react"
 import { AuthContext } from "./Contexts/AuthContext"
 import Footer from "./Footer"
@@ -17,7 +17,7 @@ function Team(){
         <>
         <NavBar />
         {context.team ? <TeamManage /> :
-        <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "75vh", width : "100%" , my: 7}}>        
+        <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "75vh", width : "100%" , my: 7, pb:5}}>        
             <Box sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>   
                 <Grid container sx={{textAlign: 'center'}}>
                     <Grid item xl={12} xs={12} sx={{mb : 7, mt: {xs: 3, md: 0}}}> 
@@ -58,7 +58,7 @@ function Team(){
                                 inputRef = {joinTeamIDRef}
                             />
                             
-                            <Button variant="outlined" onClick={() => context.joinTeam(joinTeamIDRef.current.value)}>Join</Button>
+                            <Button variant="outlined" onClick={() => context.navigate(`/team/join?teamID=${joinTeamIDRef.current.value}`)}>Join</Button>
                         </Stack>
                     </Grid>
                 </Grid>

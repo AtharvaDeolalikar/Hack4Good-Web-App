@@ -101,67 +101,7 @@ function AuthContextProvider({children}){
       console.log(error)
       })
     }
-
-    /* async function getUserData(){
-      try {
-          const userRef = doc(db, "users", currentUser.uid);
-          const docSnap = await getDoc(userRef)
-          const temp = docSnap.data()
-          if (docSnap.exists()) {
-              setUserData(temp)
-              console.log("Userdata", userData)
-              const teamRef = doc(db, "teams", temp.teamID);
-              const docSnap = await getDoc(teamRef)
-              const teamData = docSnap.data()
-              console.log(teamData)
-              setTeam(teamData)
-              setLoading(false)
-            } else {
-              console.log("Data not exists")
-          }
-        } catch (e) {
-          console.error("Error:", e);
-      }
-    }
- */
-    
-
-    /* async function getUserTeam(){
-      try {
-          console.log(userData.teamID)
-          const teamRef = doc(db, "teams", userData.teamID);
-          const docSnap = await getDoc(teamRef)
-          const teamData = docSnap.data()
-          setTeam(teamData)
-          console.log(teamData)
-          return true
-        } catch (e) {
-          console.error("Error:", e);
-        }
-  } */
-    
-    /* async function checkifNewUser(){
-        try {
-            const userRef = doc(db, "users", currentUser.uid);
-            const docSnap = await getDoc(userRef)
-            if (docSnap.exists()) {
-                console.log("Data exists")
-                if (window.location.pathname == "/signup"){
-                    navigate("/team", { replace: true })
-                }
-              } else {
-                console.log("Data not exists")
-                navigate("/signup", { replace: true })
-            }
-          } catch (e) {
-            console.error("Error:", e);
-        }
-    } */
-
-
-    
-
-    
+ 
     async function createTeam(name){
         if(name.length === 0){
           showAlert("error", "Enter the team name first!")
@@ -207,7 +147,13 @@ function AuthContextProvider({children}){
       console.log(teamID)
       try {
           await updateDoc(doc(db, "users", currentUser.uid), {connectedWithTeamAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a'), TeamLeader: isLeader, teamID : teamID});
-          window.location.reload()
+          if(window.location.pathname == "/team"){
+            window.location.reload()
+          }else{
+            console.log("A")
+            navigate("/team")
+          }
+          
           //window.location.pathname = "/profile"
           //console.log("User added with ID: ", docRef.id);
         } catch (e) {
@@ -258,7 +204,62 @@ function AuthContextProvider({children}){
     }
     
 
-    async function joinTeam(teamID){
+    async function findTeam(teamID){
+      if(teamID.length === 0){
+        showAlert("error", "Enter the Team ID first!")
+        return false
+      }
+        try {
+            const teamRef = doc(db, "teams", teamID);
+            const docSnap = await getDoc(teamRef)
+            const teamData = docSnap.data()
+            if(userData.teamID){
+              showAlert("error" , "You are already a member of a team!")
+              return false
+            }
+            if (docSnap.exists()) {
+              if (teamData.members.length === 4){
+                showAlert("error", "A team can have a maximum of 4 members only!" )
+                return false
+              }
+                return teamData.teamName
+              /* for (var member = 0 ; member < teamData.members.length ; member++){
+                if (teamData.members[member].uid === currentUser.uid) {
+                  showAlert("error", `It seems that you are already a member of the team ${teamData.teamName}`)
+                  return false
+                }
+              } */
+            } else {
+                showAlert("error", "Team ID does not exist!")
+                return false
+              }
+            
+            /* await updateDoc(doc(db, "teams", teamID), {
+                members: arrayUnion({name: userData.name, emailID: currentUser.email, uid: currentUser.uid})
+            });
+            console.log("Added member with teamID: ", teamRef.id);
+            showAlert("success", `You have been successfully connected to the team ${teamData.teamName}`)
+            connectTeam(teamRef.id, false) */
+          } catch (e) {
+            //console.error("Error:", e);
+          }
+
+    }
+
+    async function joinTeam(teamID, teamName){
+      try{
+        await updateDoc(doc(db, "teams", teamID), {
+            members: arrayUnion({name: userData.name, emailID: currentUser.email, uid: currentUser.uid})
+        });
+        //console.log("Added member with teamID: ", teamRef.id);
+        showAlert("success", `You have been successfully connected to the team ${teamName}`)
+        connectTeam(teamID, false)
+      } catch (e) {
+        //console.error("Error:", e);
+      }
+    }
+
+    /* async function joinTeam(teamID){
       if(teamID.length === 0){
         showAlert("error", "Enter the Team ID first!")
         return false
@@ -280,11 +281,11 @@ function AuthContextProvider({children}){
               }
             } else {
                 console.log("team does not exist")
-                showAlert("error", "Team ID does not exist")
+                showAlert("error", "Team ID does not exist!")
                 return false
               }
             
-            await updateDoc(teamRef, {
+            await updateDoc(doc(db, "teams", teamID), {
                 members: arrayUnion({name: userData.name, emailID: currentUser.email, uid: currentUser.uid})
             });
             console.log("Added member with teamID: ", teamRef.id);
@@ -294,7 +295,7 @@ function AuthContextProvider({children}){
             //console.error("Error:", e);
           }
 
-    }
+    } */
 
     function showAlert(severity, message){
       setAlert({severity: severity, message: message, show: true})
@@ -309,7 +310,8 @@ function AuthContextProvider({children}){
         login,
         currentUser,
         logOut,
-        createTeam, 
+        createTeam,
+        findTeam, 
         joinTeam,
         addUser,
         updateUser,

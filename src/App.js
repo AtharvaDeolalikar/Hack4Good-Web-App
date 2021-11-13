@@ -9,6 +9,7 @@ import Profile from "./Profile"
 import Round1 from "./Submissions/Round1";
 import Round2 from "./Submissions/Round2";
 import SubmissionsList from "./SubmissionsList";
+import TeamJoin from "./TeamJoin";
 
 function App() {
 
@@ -22,9 +23,8 @@ function App() {
                   <Route path="Round-1" element={<Round1 />} />
                   <Route path="Round-2" element={<Round2 />} />
                 </Route>
-                <Route path="/team" element={<Team />}>
-                  {/* <Route path="/join" element ={} */}
-                </Route> 
+                <Route path="/team" element={<Team />} />
+                <Route path="/team/join" element ={<TeamJoin />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/profile" element={<Profile />} />  
                 <Route path="*" element={<Navigate to="/profile" /> } />

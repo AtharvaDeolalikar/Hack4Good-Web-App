@@ -11,7 +11,7 @@ import { AuthContext } from "./Contexts/AuthContext";
 import { Link } from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-
+import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 
 function NavBar(){
     const context = useContext(AuthContext)
@@ -77,7 +77,7 @@ function NavBar(){
             >
             <MenuItem component={Link} to="/Submissions">
                 <ListItemIcon>
-                    <AddToQueueIcon fontSize="small" />
+                    <AssignmentOutlinedIcon  />
                 </ListItemIcon>
                     Submissions
             </MenuItem>
@@ -87,7 +87,7 @@ function NavBar(){
 
             <MenuItem component={Link} to="/profile">
                 <ListItemIcon>
-                    <AccountBoxIcon fontSize="small" />
+                    <AccountBoxIcon  />
                 </ListItemIcon>
                 My Profile
             </MenuItem>
@@ -95,7 +95,7 @@ function NavBar(){
 
             <MenuItem component={Link} to="/team">
                 <ListItemIcon>
-                    <GroupIcon fontSize="small" />
+                    <GroupIcon  />
                 </ListItemIcon>
                 My Team
             </MenuItem>
@@ -104,7 +104,7 @@ function NavBar(){
 
             <MenuItem onClick={() => context.logOut()}>
                 <ListItemIcon>
-                    <Logout fontSize="small" />
+                    <Logout  />
                 </ListItemIcon>
                 Logout
             </MenuItem>

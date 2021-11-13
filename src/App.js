@@ -16,7 +16,7 @@ function App() {
     return (
       <>
           <CssBaseline/>
-            <Paper sx={{borderRadius : 0, minHeight: "100vh"}}>
+            <Paper sx={{borderRadius : 0}}>
               <Routes>
                 <Route path="Submissions" element={<Submission />}>
                   <Route path="" element={<SubmissionsList />} />

@@ -119,7 +119,7 @@ function Round1(){
 
     if(!timer){
         return(
-            <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "75vh", width : "100%"}}>
+            <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "85vh", width : "100%"}}>
                 <CircularProgress />
             </Box>
         )
@@ -128,7 +128,7 @@ function Round1(){
 
     
     return (
-        <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "75vh", width : "100%" , mb:4}}>     
+        <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "80vh", width : "100%" , mb:4}}>     
             <Box my={3}>
                 {start ? 
                 <Stack>

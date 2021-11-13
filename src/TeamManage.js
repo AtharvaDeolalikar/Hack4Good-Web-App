@@ -20,7 +20,7 @@ function TeamManage(){
     }
 
     return (
-        <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "80vh", textAlign: "center" , my:7 , py:3}}>      
+        <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "85vh", textAlign: "center" , my:7 , py:3}}>      
             <Box>
                 <Chip sx={{fontSize: {xs: 17, md: 22}, p:3.5 , my:2}} label={`Team: ${context.team.teamName}`}></Chip> 
                 <Alert sx={{borderRadius:3,  maxWidth: 380, my:2}} severity="info">This hackathon let’s you have upto 4 teammates. You can invite people to join your team by clicking the button below.</Alert>

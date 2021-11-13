@@ -3,7 +3,7 @@ import { AppBar, Link, Toolbar, Typography } from "@mui/material";
 function Footer(){
     return (
         <AppBar
-            sx={{position:"fixed",top: "auto", bottom: 0, borderUp: (theme) => `1px solid ${theme.palette.divider}`}}
+            sx={{position:"fixed",top: "auto", maxHeight: 60, bottom: 0, borderUp: (theme) => `1px solid ${theme.palette.divider}`}}
             elevation={0}
         >
             <Toolbar sx={{ flexWrap: 'wrap' }}>

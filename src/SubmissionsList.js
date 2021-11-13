@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function SubmissionsList(){
     return (
-        <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", minHeight : "75vh", width : "100%", textAlign: "center" , mb:7}}>
+        <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", minHeight : "77vh", width : "100%", textAlign: "center" , mb:7}}>
             <Box sx={{padding:4, m:3, borderRadius: 3, border: (theme) => `1px solid ${theme.palette.divider}`, maxWidth: 450}}>
                 <Stack spacing={2}>
                     <Typography variant="h4">Round - 1</Typography>

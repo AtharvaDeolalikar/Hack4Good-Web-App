@@ -51,7 +51,7 @@ function SignUp(){
 
     return (
         <>
-        <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "100vh", width : "100%", mb:8}}>
+        <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", minHeight : "100vh", width : "100%", mb:8 , pb:2}}>
             <Box sx={{display: "flex", justifyContent: "center", alignItems: "center"}}>
             
             <Grid container sx={{textAlign: 'center'}}>

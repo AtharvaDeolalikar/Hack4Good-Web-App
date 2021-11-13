@@ -192,7 +192,7 @@ function Round1(){
                                     disabled={!(!timer.expired && editable)}
                                     onChange= {(event) => updateLinksArray(index, event.target.value)}
                                     InputProps={{
-                                        endAdornment: <InputAdornment position="end"><IconButton onClick={() => deleteLink(index)}><DeleteIcon /></IconButton></InputAdornment>,
+                                        endAdornment: <InputAdornment position="end"><IconButton  disabled={!(!timer.expired && editable)} onClick={() => deleteLink(index)}><DeleteIcon /></IconButton></InputAdornment>,
                                     }}
                                 ></TextField>
                             )}

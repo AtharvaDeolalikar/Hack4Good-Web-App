@@ -22,6 +22,7 @@ function AuthContextProvider({children}){
     const [team, setTeam] = useState()
     const [alert, setAlert] = useState(false)
     const [loading, setLoading] = useState(true)
+    const [redirect, setRedirect] = useState({navigate : null})
 
     initializeApp(firebaseConfig);
     const auth = getAuth();
@@ -62,14 +63,19 @@ function AuthContextProvider({children}){
             const temp = userData.data()
             setUserData(temp)
             if(!temp){
+              if(window.location.pathname == "/team/join"){
+                setRedirect({navigate: window.location.pathname + window.location.search})
+                showAlert("info", "You'll require to sign up first!")
+                //console.log(window.location.pathname + window.location.search)
+              }
               navigate("/signup", { replace: true })
               setLoading(false)
             }else if(temp.teamID){
               await getUserTeam(temp.teamID)
-              if(window.location.pathname == "/"){
+              if(window.location.pathname === "/"){
                 navigate("/Submissions")
               }
-            }else if(!temp.teamID && window.location.pathname == "/"){
+            }else if(window.location.pathname === "/"){
               navigate("/team")
             }
             setLoading(false)
@@ -137,7 +143,11 @@ function AuthContextProvider({children}){
       try {
           await setDoc(doc(db, "users", currentUser.uid), {uid: currentUser.uid, registeredAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a'), ...data});
           showAlert("success", "Data has been uploaded successfully!")
+          if(redirect.navigate){
+            navigate(redirect.navigate)
+          }else{
           navigate("/team", {replace: true})
+          }
         } catch (e) {
           console.error("Error adding user: ", e);
         }

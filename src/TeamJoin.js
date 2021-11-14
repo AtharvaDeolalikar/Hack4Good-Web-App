@@ -10,7 +10,8 @@ function TeamJoin(){
     const context = useContext(AuthContext)
     const teamID = new URLSearchParams(window.location.search).get("teamID")
 
-    useEffect(async ()=> {
+    useEffect(()=> {
+    async function _useEffect(){
         if(!teamID){
             context.showAlert("error", "Enter the team ID first.")
             context.navigate("/team")
@@ -22,8 +23,10 @@ function TeamJoin(){
         }else{
             setTeamName(result)
         }
+    }
+    _useEffect()
         //setTeamName(teamID)
-    }, [])
+    }, [context, teamID])
 
     return(
         <>

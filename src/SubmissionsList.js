@@ -22,7 +22,7 @@ function SubmissionsList(){
                         <Chip sx={{px:2}} label="Deadline: November 20, 2021"></Chip>
                     </Box>
                     <Typography color="grey">In Round - 2, your team is required to submit the prototype of your project.</Typography>
-                    <Button component={Link} to="Round-2" disabled variant="outlined">Submissions starts on November 17, 21</Button> 
+                    <Button component={Link} to="Round-2" disabled variant="outlined">Submission starts on November 17, 21</Button> 
                 </Stack>
             </Box>
         </Box>

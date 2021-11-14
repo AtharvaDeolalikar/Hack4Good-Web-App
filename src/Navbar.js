@@ -1,6 +1,5 @@
 import { AppBar, Typography, Toolbar, Avatar} from "@mui/material"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import AddToQueueIcon from '@mui/icons-material/AddToQueue';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useContext, useState } from "react";

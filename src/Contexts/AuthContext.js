@@ -37,10 +37,7 @@ function AuthContextProvider({children}){
                 setCurrentUser(user)
                 getUserData(user)
             } else {
-                console.log("No user exist")
                 login()
-                //setLoading(false)
-                //navigate("/login")
             }
         })
         
@@ -49,13 +46,11 @@ function AuthContextProvider({children}){
             const teamData = await getDoc(doc(db, "teams", teamID));
             const temp = teamData.data()
             setTeam(temp)
-            //setLoading(false)
         }
           catch(e){
             console.log(e)
-            //setLoading(false)
           }
-        };
+        }
 
         const getUserData = async (user) => {
           try {
@@ -66,7 +61,6 @@ function AuthContextProvider({children}){
               if(window.location.pathname == "/team/join"){
                 setRedirect({navigate: window.location.pathname + window.location.search})
                 showAlert("info", "You'll require to sign up first!")
-                //console.log(window.location.pathname + window.location.search)
               }
               navigate("/signup", { replace: true })
               setLoading(false)
@@ -87,8 +81,6 @@ function AuthContextProvider({children}){
         
     }, [auth, db, navigate]);
 
-    //console.log(getAuth().currentUser)
-
     function login(){
       signInWithRedirect(auth, provider)
       getRedirectResult(auth)
@@ -101,8 +93,6 @@ function AuthContextProvider({children}){
 
     function logOut(){
       signOut(auth).then(() => {
-      console.log("Sign-out successful")
-      //navigate("login")
       }).catch((error) => {
       console.log(error)
       })
@@ -119,8 +109,7 @@ function AuthContextProvider({children}){
               createdAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a'),
               round1: {submitted: false},
               round2: {submitted: false},
-              leader: {name: currentUser.displayName, email: currentUser.email, uid: currentUser.uid},
-              members: [{name: currentUser.displayName, emailID: currentUser.email, uid: currentUser.uid}]
+              members: [{name: currentUser.displayName, emailID: currentUser.email, uid: currentUser.uid, teamLeader: true}]
             });
             console.log("Team created with ID: ", docRef.id);
             setAlert({severity: "success", message: "New team has been successfully created!", show: true})
@@ -132,7 +121,7 @@ function AuthContextProvider({children}){
 
     async function Round1Submission(data){
       try {
-          await updateDoc(doc(db, "teams", userData.teamID), {round1 : {submitted: true, lastUpdatedAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a'), ...data}});
+          await updateDoc(doc(db, "teams", userData.teamID), {round1 : {...data, submitted: true, lastUpdatedAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a')}});
           showAlert("success", "Your submission has been saved successfully. However you can make the changes before the deadline.")
         } catch (e) {
           console.error("Error adding user: ", e);
@@ -141,58 +130,47 @@ function AuthContextProvider({children}){
 
     async function addUser(data){
       try {
-          await setDoc(doc(db, "users", currentUser.uid), {uid: currentUser.uid, registeredAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a'), ...data});
-          showAlert("success", "Data has been uploaded successfully!")
+          const newUserData = {...data, uid: currentUser.uid, registeredAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a')}
+          await setDoc(doc(db, "users", currentUser.uid), newUserData);
+          setUserData(newUserData)
+          showAlert("success", "You have been signed up successfully!")
           if(redirect.navigate){
             navigate(redirect.navigate)
           }else{
-          navigate("/team", {replace: true})
+            navigate("/team", {replace: true})
           }
         } catch (e) {
           console.error("Error adding user: ", e);
         }
     }
 
-    async function connectTeam(teamID, isLeader){
+    async function connectTeam(teamID, teamLeader){
       console.log(teamID)
       try {
-          await updateDoc(doc(db, "users", currentUser.uid), {connectedWithTeamAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a'), TeamLeader: isLeader, teamID : teamID});
+          await updateDoc(doc(db, "users", currentUser.uid), {connectedWithTeamAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a'), teamLeader: teamLeader, teamID : teamID});
           if(window.location.pathname == "/team"){
             window.location.reload()
           }else{
-            console.log("A")
             navigate("/team")
           }
-          
-          //window.location.pathname = "/profile"
-          //console.log("User added with ID: ", docRef.id);
         } catch (e) {
           console.error("Error adding user: ", e);
         }
     }
 
     async function updateUser(data){
-      console.log(data)
       try {
-          setUserData({uid: currentUser.uid, teamID: userData.teamID, ...data})
-          //const tempUser = {name: userData.name, emailID: currentUser.email, uid: currentUser.uid}
-          await updateDoc(doc(db, "users", currentUser.uid), {lastUpdatedAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a'), ...data})
-          //await updateDoc(doc(db, "teams", userData.teamID), {uid: currentUser.uid, ...data});
+          setUserData({...data, uid: currentUser.uid, teamID: userData.teamID})
+          await updateDoc(doc(db, "users", currentUser.uid), {...data, lastUpdatedAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a')})
           const tempRef = await getDoc(doc(db, "teams", userData.teamID))
           const temp = tempRef.data()
           const tempArray = temp.members
-          console.log(tempArray)
           for (var member = 0; member < temp.members.length ; member++){
-            //console.log("temp.members[member].uid", temp.members[member].uid, "UserData.uid",  userData.uid)
             if(temp.members[member].uid === userData.uid){
-              tempArray[member] = {name: data.name, emailID: currentUser.email, uid: currentUser.uid}
-              console.log(tempArray)
+              tempArray[member] = {name: data.name, emailID: currentUser.email, uid: currentUser.uid, teamLeader: userData.teamLeader}
               await updateDoc(doc(db, "teams", userData.teamID), {members: tempArray})
             }
           }
-          /* await updateDoc(doc(db, "teams", userData.teamID), {
-            members: arrayUnion({name: userData.name, emailID: currentUser.email, uid: currentUser.uid})
-          }); */
           showAlert("success", "Profile has been updated successfully")
         } catch (e) {
           console.error("Error adding user: ", e);
@@ -202,8 +180,8 @@ function AuthContextProvider({children}){
     async function updateTeam(newName){
       if(team.teamName !== newName){
         try {
-          await updateDoc(doc(db, "teams", userData.teamID), {lastUpdatedAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a'), teamName: newName});
-          //console.log("User added with ID: ", docRef.id);
+          await updateDoc(doc(db, "teams", userData.teamID), {lastUpdatedAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a'), teamName: newName})
+          setTeam({ ...team, teamName : newName})
           showAlert("success", "Team name has been updated successfully")
         } catch (e) {
           console.error("Error updating team name: ", e);
@@ -219,40 +197,28 @@ function AuthContextProvider({children}){
         showAlert("error", "Enter the Team ID first!")
         return false
       }
+      if(userData.teamID){
+        showAlert("error" , "You are already a member of a team!")
+        return false
+      }
         try {
             const teamRef = doc(db, "teams", teamID);
             const docSnap = await getDoc(teamRef)
             const teamData = docSnap.data()
-            console.log(userData.teamID)
-            if(userData.teamID){
-              showAlert("error" , "You are already a member of a team!")
-              return false
-            }
+            
             if (docSnap.exists()) {
               if (teamData.members.length === 4){
                 showAlert("error", "A team can have a maximum of 4 members only!" )
                 return false
               }
-                return teamData.teamName
-              /* for (var member = 0 ; member < teamData.members.length ; member++){
-                if (teamData.members[member].uid === currentUser.uid) {
-                  showAlert("error", `It seems that you are already a member of the team ${teamData.teamName}`)
-                  return false
-                }
-              } */
+              return teamData.teamName
             } else {
                 showAlert("error", "Team ID does not exist!")
                 return false
               }
-            
-            /* await updateDoc(doc(db, "teams", teamID), {
-                members: arrayUnion({name: userData.name, emailID: currentUser.email, uid: currentUser.uid})
-            });
-            console.log("Added member with teamID: ", teamRef.id);
-            showAlert("success", `You have been successfully connected to the team ${teamData.teamName}`)
-            connectTeam(teamRef.id, false) */
+
           } catch (e) {
-            //console.error("Error:", e);
+            console.error("Error in finding team", e);
           }
 
     }
@@ -260,53 +226,14 @@ function AuthContextProvider({children}){
     async function joinTeam(teamID, teamName){
       try{
         await updateDoc(doc(db, "teams", teamID), {
-            members: arrayUnion({name: userData.name, emailID: currentUser.email, uid: currentUser.uid})
-        });
-        //console.log("Added member with teamID: ", teamRef.id);
+            members: arrayUnion({name: userData.name, emailID: currentUser.email, uid: currentUser.uid, teamLeader: false})
+        })
         showAlert("success", `You have been successfully connected to the team ${teamName}`)
         connectTeam(teamID, false)
       } catch (e) {
         //console.error("Error:", e);
       }
     }
-
-    /* async function joinTeam(teamID){
-      if(teamID.length === 0){
-        showAlert("error", "Enter the Team ID first!")
-        return false
-      }
-        try {
-            const teamRef = doc(db, "teams", teamID);
-            const docSnap = await getDoc(teamRef)
-            const teamData = docSnap.data()
-            if (docSnap.exists()) {
-              if (teamData.members.length === 4){
-                showAlert("error", "A team can have a maximum of 4 members only!" )
-                return false
-              }
-              for (var member = 0 ; member < teamData.members.length ; member++){
-                if (teamData.members[member].uid === currentUser.uid) {
-                  showAlert("error", `It seems that you are already a member of the team ${teamData.teamName}`)
-                  return false
-                }
-              }
-            } else {
-                console.log("team does not exist")
-                showAlert("error", "Team ID does not exist!")
-                return false
-              }
-            
-            await updateDoc(doc(db, "teams", teamID), {
-                members: arrayUnion({name: userData.name, emailID: currentUser.email, uid: currentUser.uid})
-            });
-            console.log("Added member with teamID: ", teamRef.id);
-            showAlert("success", `You have been successfully connected to the team ${teamData.teamName}`)
-            connectTeam(teamRef.id, false)
-          } catch (e) {
-            //console.error("Error:", e);
-          }
-
-    } */
 
     function showAlert(severity, message){
       setAlert({severity: severity, message: message, show: true})

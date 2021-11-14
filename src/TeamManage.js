@@ -27,7 +27,7 @@ function TeamManage(){
                  
                 <Button size="large" fullWidth variant="outlined" onClick={() => setInviteDiag(true)}>Invite people</Button> 
                 
-                <Dialog open={inviteDiag}  fullWidth="xs">
+                <Dialog open={inviteDiag} fullWidth={true} >
                     <DialogTitle>Invite people to join your team</DialogTitle>
                     <DialogContent>    
                         <DialogContentText color="white" sx={{mt:2}}>1. Share the team invite link</DialogContentText>

@@ -19,6 +19,7 @@ function TeamJoin(){
         }
         const result = await context.findTeam(teamID)
         if(!result){
+            console.log("error is false")
             context.navigate("/team")
         }else{
             setTeamName(result)

@@ -12,7 +12,7 @@ import SubmissionsList from "./SubmissionsList";
 import TeamJoin from "./TeamJoin";
 
 function App() {
-    return (
+  return (
     <>
       <CssBaseline/>
       <Paper sx={{borderRadius : 0}}>

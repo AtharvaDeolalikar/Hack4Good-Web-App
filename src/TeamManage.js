@@ -9,20 +9,24 @@ import LinkIcon from '@mui/icons-material/Link';
 
 function TeamManage(){
     const context = useContext(AuthContext)
-    const [buttonLoading, setButtonLoading] = useState(false);
+    const [button, setButton] = useState({editable : false, loading: false});
     const teamNameRef = useRef();
     const [inviteDiag, setInviteDiag] = useState(false)
 
     async function handleClick(){
-        setButtonLoading(true)
+        setButton({...button, loading: true})
+        if(!button.editable){
+            setButton({...button, editable: true})
+            return false
+        }
         await context.updateTeam(teamNameRef.current.value)
-        setButtonLoading(false)
+        setButton({loading: false, editable: false})
     }
 
     return (
         <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "85vh", textAlign: "center" , my:7 , py:3}}>      
             <Box>
-                <Chip sx={{fontSize: {xs: 17, md: 22}, p:3.5 , my:2}} label={`Team: ${context.team.teamName}`}></Chip> 
+                <Chip sx={{fontSize: {xs: 17, md: 22}, p:3.5 , my:2}} label={`Team Name: ${context.team.teamName}`}></Chip> 
                 <Alert sx={{borderRadius:3,  maxWidth: 380, my:2}} severity="info">This hackathon let’s you have upto 4 teammates. You can invite people to join your team by clicking the button below.</Alert>
                  
                 <Button size="large" fullWidth variant="outlined" onClick={() => setInviteDiag(true)}>Invite people</Button> 
@@ -90,19 +94,19 @@ function TeamManage(){
                 <Divider orientation="horizontal" sx={{width:300, my:6, display:{sm: "none", xs:"block" } }} flexItem ></Divider>
             </Box>
 
-            <Stack sx={{display: "inline-block"}}>
-                <Typography >Team Members </Typography>
-
-            {context.team.members.map((item, index) => {
-                var currentIndex = (index + 1 ).toString() + ". "
-                return (
-                    <> 
-                        <Chip key={item.uid} sx={{ fontSize: 17, p:3, my:1}} variant="outlined" label={currentIndex + item.name}></Chip> <br />
-                    </>
-                )
-            }) }
+            <Box >
+                <Chip sx={{fontSize: {xs: 17, md: 22}, p:3.5 , my:2}} label="Team Members"></Chip>
+                   <Stack sx={{textAlign: 'left'}} spacing={1}>                     
+                    {context.team.members.map((item, index) => {
+                        return (
+                            <> 
+                                <Typography sx={{fontSize: {xs: 16, md: 19}}}>{(index + 1 ).toString() + ". " + item.name}</Typography>
+                            </>
+                        )
+                    }) }
+                    </Stack>
                 
-            </Stack>
+            </Box>
 
             <Box>
                 <Divider orientation="vertical" sx={{height: 300, display:{xs: "none", sm:"block" } }} flexItem ></Divider>
@@ -116,11 +120,12 @@ function TeamManage(){
                         margin="normal"
                         id="TeamName"
                         label="Team Name"
+                        disabled = {!button.editable}
                         defaultValue= {context.team.teamName}
                         name= "TeamName"
                         inputRef={teamNameRef}          
                     />
-                    <LoadingButton loading={buttonLoading} variant="outlined" onClick={handleClick} size="large">Update</LoadingButton>
+                    <LoadingButton loading={button.loading} variant="outlined" onClick={handleClick} size="large">{button.editable ? "Update" : "Edit"}</LoadingButton>
                 </Stack> 
             </Box>
         </Box>

@@ -12,10 +12,10 @@ function Temp({time}){
     return(
         <>  
             <Stack sx={{display: "flex", flexWrap : "wrap", justifyContent: "center", flexDirection : "row"}}>
-                <Box sx={timerStyles} fontSize={40}>{time.days} <Typography >Days</Typography></Box>
-                <Box sx={timerStyles} fontSize={40}>{time.hours} <Typography >Hours</Typography></Box>
-                <Box sx={timerStyles} fontSize={40}>{time.minutes} <Typography >Minutes</Typography></Box>
-                <Box sx={timerStyles} fontSize={40}>{time.seconds} <Typography >Seconds</Typography></Box>
+                <Box sx={timerStyles} fontSize={40}>{time.days} <Typography >{time.days === 1 ? "Day" : "Days"}</Typography></Box>
+                <Box sx={timerStyles} fontSize={40}>{time.hours} <Typography >{time.hours === 1 ? "Hour" : "Hours"}</Typography></Box>
+                <Box sx={timerStyles} fontSize={40}>{time.minutes} <Typography >{time.minutes === 1 ? "Minute" : "Minutes"}</Typography></Box>
+                <Box sx={timerStyles} fontSize={40}>{time.seconds} <Typography >{time.seconds === 1 ? "Second" : "Seconds"}</Typography></Box>
             </Stack>
         </>
     )

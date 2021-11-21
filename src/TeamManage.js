@@ -26,14 +26,14 @@ function TeamManage(){
     return (
         <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "85vh", textAlign: "center" , my:7 , py:3}}>      
             <Box>
-                <Chip sx={{fontSize: {xs: 17, md: 22}, p:3.5 , my:2}} label={`Team Name: ${context.team.teamName}`}></Chip> 
-                <Alert sx={{borderRadius:3,  maxWidth: 380, my:2}} severity="info">This hackathon let’s you have upto 4 teammates. You can invite people to join your team by clicking the button below.</Alert>
+                <Chip sx={{fontSize: {xs: 17, md: 22}, p:3.5 , my:2}} label={`Team : ${context.team.teamName}`}></Chip> 
+                <Alert sx={{borderRadius:3,  maxWidth: 380, my:2}} severity="info">Hack4Good let’s you have upto 4 teammates. You can invite people to join your team by clicking the button below.</Alert>
                  
                 <Button size="large" fullWidth variant="outlined" onClick={() => setInviteDiag(true)}>Invite people</Button> 
                 
                 <Dialog open={inviteDiag} fullWidth={true} >
                     <DialogTitle>Invite people to join your team</DialogTitle>
-                    <DialogContent>    
+                    <DialogContent>
                         <DialogContentText color="white" sx={{mt:2}}>1. Share the team invite link</DialogContentText>
                             <CopyToClipboard
                                 options={{ debug: true, message: "" }}
@@ -99,9 +99,7 @@ function TeamManage(){
                    <Stack sx={{textAlign: 'left'}} spacing={1}>                     
                     {context.team.members.map((item, index) => {
                         return (
-                            <> 
-                                <Typography sx={{fontSize: {xs: 16, md: 19}}}>{(index + 1 ).toString() + ". " + item.name}</Typography>
-                            </>
+                            <Typography key={index} sx={{fontSize: {xs: 16, md: 19}}}>{(index + 1 ).toString() + ". " + item.name}</Typography>
                         )
                     }) }
                     </Stack>

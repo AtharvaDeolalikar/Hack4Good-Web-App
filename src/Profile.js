@@ -35,8 +35,7 @@ function Profile(){
             institution: institutionRef.current.value,
             city: cityRef.current.value,
             gender : gender,
-            age: ageRef.current.value, 
-            updatedAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a')
+            age: ageRef.current.value
         }
         if (phoneRef.current.value && !phoneRef.current.value.startsWith("+")){
             context.showAlert("error", "The phone number must start with the country code. Eg. +91")

@@ -12,24 +12,23 @@ import SubmissionsList from "./SubmissionsList";
 import TeamJoin from "./TeamJoin";
 
 function App() {
-
     return (
-      <>
-          <CssBaseline/>
-            <Paper sx={{borderRadius : 0}}>
-              <Routes>
-                <Route path="Submissions" element={<Submission />}>
-                  <Route path="" element={<SubmissionsList />} />
-                  <Route path="Round-1" element={<Round1 />} />
-                  <Route path="Round-2" element={<Round2 />} />
-                </Route>
-                <Route path="/team" element={<Team />} />
-                <Route path="/team/join" element ={<TeamJoin />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/profile" element={<Profile />} /> 
-                <Route path="*" element={<Navigate to="/profile" /> } />
-              </Routes>
-            </Paper>
+    <>
+      <CssBaseline/>
+      <Paper sx={{borderRadius : 0}}>
+        <Routes>
+          <Route path="Submissions" element={<Submission />}>
+            <Route path="" element={<SubmissionsList />} />
+            <Route path="Round-1" element={<Round1 />} />
+            <Route path="Round-2" element={<Round2 />} />
+          </Route>
+          <Route path="/team" element={<Team />} />
+          <Route path="/team/join" element ={<TeamJoin />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/profile" element={<Profile />} /> 
+          <Route path="*" element={<Navigate to="/profile" /> } />
+        </Routes>
+      </Paper>
     </>
     )
 }

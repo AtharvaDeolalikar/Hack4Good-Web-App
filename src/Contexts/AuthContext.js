@@ -2,13 +2,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "../config";
 import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut, onAuthStateChanged} from "firebase/auth";
-import { getFirestore , collection, addDoc, updateDoc, arrayUnion, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore , collection, addDoc, updateDoc, arrayUnion, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useNavigate } from "react-router";
 import ShowAlert from "../ShowAlert";
 import Loading from "../Loading";
 import { ThemeProvider } from '@mui/material/styles'
 import Theme from "./Theme";
-import moment from "moment";
+import axios from "axios";
 
 export const AuthContext = createContext();
 
@@ -58,7 +58,7 @@ function AuthContextProvider({children}){
             const temp = userData.data()
             setUserData(temp)
             if(!temp){
-              if(window.location.pathname == "/team/join"){
+              if(window.location.pathname === "/team/join"){
                 setRedirect({navigate: window.location.pathname + window.location.search})
                 showAlert("info", "You'll require to sign up first!")
               }
@@ -106,7 +106,7 @@ function AuthContextProvider({children}){
         try {
             const docRef = await addDoc(collection(db, "teams"), {
               teamName: name,
-              createdAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a'),
+              createdAt: serverTimestamp(),
               round1: {submitted: false},
               round2: {submitted: false},
               members: [{name: currentUser.displayName, emailID: currentUser.email, uid: currentUser.uid, teamLeader: true}]
@@ -121,7 +121,7 @@ function AuthContextProvider({children}){
 
     async function Round1Submission(data){
       try {
-          await updateDoc(doc(db, "teams", userData.teamID), {round1 : {...data, submitted: true, lastUpdatedAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a')}});
+          await updateDoc(doc(db, "teams", userData.teamID), {round1 : {...data, submitted: true, lastUpdatedAt: serverTimestamp()}});
           showAlert("success", "Your submission has been saved successfully. However you can make the changes before the deadline.")
         } catch (e) {
           console.error("Error adding user: ", e);
@@ -130,7 +130,7 @@ function AuthContextProvider({children}){
 
     async function addUser(data){
       try {
-          const newUserData = {...data, uid: currentUser.uid, registeredAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a')}
+          const newUserData = {...data, uid: currentUser.uid, connectedWithTeam : false, registeredAt: serverTimestamp()}
           await setDoc(doc(db, "users", currentUser.uid), newUserData);
           setUserData(newUserData)
           showAlert("success", "You have been signed up successfully!")
@@ -147,8 +147,8 @@ function AuthContextProvider({children}){
     async function connectTeam(teamID, teamLeader){
       console.log(teamID)
       try {
-          await updateDoc(doc(db, "users", currentUser.uid), {connectedWithTeamAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a'), teamLeader: teamLeader, teamID : teamID});
-          if(window.location.pathname == "/team"){
+          await updateDoc(doc(db, "users", currentUser.uid), {connectedWithTeamAt: serverTimestamp(), connectedWithTeam: true, teamLeader: teamLeader, teamID : teamID});
+          if(window.location.pathname === "/team"){
             window.location.reload()
           }else{
             navigate("/team")
@@ -161,14 +161,16 @@ function AuthContextProvider({children}){
     async function updateUser(data){
       try {
           setUserData({...data, uid: currentUser.uid, teamID: userData.teamID})
-          await updateDoc(doc(db, "users", currentUser.uid), {...data, lastUpdatedAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a')})
-          const tempRef = await getDoc(doc(db, "teams", userData.teamID))
-          const temp = tempRef.data()
-          const tempArray = temp.members
-          for (var member = 0; member < temp.members.length ; member++){
-            if(temp.members[member].uid === userData.uid){
-              tempArray[member] = {name: data.name, emailID: currentUser.email, uid: currentUser.uid, teamLeader: userData.teamLeader}
-              await updateDoc(doc(db, "teams", userData.teamID), {members: tempArray})
+          await updateDoc(doc(db, "users", currentUser.uid), {...data, lastUpdatedAt: serverTimestamp()})
+          if(userData.teamID){
+            const tempRef = await getDoc(doc(db, "teams", userData.teamID))
+            const temp = tempRef.data()
+            const tempArray = temp.members
+            for (var member = 0; member < temp.members.length ; member++){
+              if(temp.members[member].uid === userData.uid){
+                tempArray[member] = {name: data.name, emailID: currentUser.email, uid: currentUser.uid, teamLeader: userData.teamLeader}
+                await updateDoc(doc(db, "teams", userData.teamID), {members: tempArray})
+              }
             }
           }
           showAlert("success", "Profile has been updated successfully")
@@ -180,9 +182,22 @@ function AuthContextProvider({children}){
     async function updateTeam(newName){
       if(team.teamName !== newName){
         try {
-          await updateDoc(doc(db, "teams", userData.teamID), {lastUpdatedAt: moment().format('ddd, MMM DD YYYY, h:mm:ss a'), teamName: newName})
+          await updateDoc(doc(db, "teams", userData.teamID), {lastUpdatedAt: serverTimestamp(), teamName: newName})
           setTeam({ ...team, teamName : newName})
           showAlert("success", "Team name has been updated successfully")
+          console.log(currentUser.email)
+          axios.get('https://hack4goodbackend-atharvadeolalikar.vercel.app', {
+            params: {
+              to : currentUser.email,
+              subject : `Your updated team is ${newName}`,
+              body : `Hello! <br> 
+              <b>${userData.name} </b> has recently updated the name of your team to <b>${newName}</b>.
+              `
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          })
         } catch (e) {
           console.error("Error updating team name: ", e);
         }

@@ -11,22 +11,20 @@ function TeamJoin(){
     const teamID = new URLSearchParams(window.location.search).get("teamID")
 
     useEffect(()=> {
-    async function _useEffect(){
-        if(!teamID){
-            context.showAlert("error", "Enter the team ID first.")
-            context.navigate("/team")
-            return false
-        }
-        const result = await context.findTeam(teamID)
-        if(!result){
-            console.log("error is false")
-            context.navigate("/team")
-        }else{
-            setTeamName(result)
+        async function _useEffect(){
+            if(!teamID){
+                context.showAlert("error", "Enter the team ID first.")
+                context.navigate("/team")
+                return false
+            }
+            const result = await context.findTeam(teamID)
+            if(!result){
+                context.navigate("/team")
+            }else{
+                setTeamName(result)
         }
     }
     _useEffect()
-        //setTeamName(teamID)
     }, [context, teamID])
 
     return(

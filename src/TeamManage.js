@@ -1,66 +1,102 @@
-import { Alert, Button, Chip, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, InputAdornment, Stack, TextField, Tooltip, Typography } from "@mui/material"
-import { Box } from "@mui/system"
+import { Alert, Avatar, Button, Chip, Dialog, DialogContent, DialogContentText, DialogTitle, Box, Divider, Grid, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Stack, TextField, Tooltip, Typography } from "@mui/material"
 import { useContext, useRef, useState } from "react"
 import CopyToClipboard from "react-copy-to-clipboard"
 import { AuthContext } from "./Contexts/AuthContext"
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { LoadingButton } from "@mui/lab"
 import LinkIcon from '@mui/icons-material/Link';
+import EditIcon from '@mui/icons-material/Edit';
 
 function TeamManage(){
     const context = useContext(AuthContext)
-    const [button, setButton] = useState({editable : false, loading: false});
+    console.log(context)
+    const [button, setButton] = useState(false);
     const teamNameRef = useRef();
     const [inviteDiag, setInviteDiag] = useState(false)
+    const [editDiag, setEditDiag] = useState(false)
 
     async function handleClick(){
-        setButton({...button, loading: true})
-        if(!button.editable){
-            setButton({...button, editable: true})
-            return false
-        }
+        setButton(true)
         await context.updateTeam(teamNameRef.current.value)
-        setButton({loading: false, editable: false})
+        setButton(false)
+        setEditDiag(false)
     }
 
     return (
-        <Box sx={{display: "flex", justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center", width : "100%", minHeight: "85vh", textAlign: "center" , my:7 , py:3}}>      
-            <Box>
-                <Chip sx={{fontSize: {xs: 17, md: 22}, p:3.5 , my:2}} label={`Team : ${context.team.teamName}`}></Chip> 
-                <Alert sx={{borderRadius:3,  maxWidth: 380, my:2}} severity="info">Hack4Good let’s you have upto 4 teammates. You can invite people to join your team by clicking the button below.</Alert>
-                 
-                <Button size="large" fullWidth variant="outlined" onClick={() => setInviteDiag(true)}>Invite people</Button> 
-                
-                <Dialog open={inviteDiag} fullWidth={true} >
-                    <DialogTitle>Invite people to join your team</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText color="white" sx={{mt:2}}>1. Share the team invite link</DialogContentText>
+        <>
+            <Grid container sx={{ mt : {xs: 5, md: 11}, bgcolor : "#0a1929"}}> 
+                <Grid item md={7} sm={8} xs={11} sx={{ p:3, borderRadius: 5, bgcolor: "#162534", margin:"auto", py: {xs: 5, md: 8}, my:5, display: "flex", justifyContent: "space-between"}}>
+                    <Typography sx={{fontSize: {xs: 30, md: 45}}}>{context.team.teamName}</Typography>
+                    <EditIcon sx={{mt: {xs:1 , md:2},  cursor: "pointer"}} onClick={() => setEditDiag(true)}/>
+                </Grid>
+                <Dialog open={editDiag} fullWidth={true} maxWidth="xs">
+                    <DialogTitle>Edit Team Name</DialogTitle>
+                    <DialogContent sx={{textAlign: "center"}}>
+                        <Stack spacing={2}>
+                            <TextField
+                                defaultValue = {context.team.teamName}
+                                margin="normal"
+                                inputRef={teamNameRef}
+                            >
+                            </TextField>
+                            <LoadingButton loading={button} variant="outlined" onClick={handleClick}>Update</LoadingButton>
+                        </Stack>
+                    </DialogContent>
+                </Dialog>
+            </Grid>
+            <Grid container sx={{display: "flex", justifyContent: "center", bgcolor : "#0a1929", mb: 12}}>
+                <Grid item md ={4} sm={8} xs={11}>
+                    <Chip sx={{fontSize: {xs: 20, md: 20}, p:3}} label="Team Members"></Chip>
+                    <List >
+                        {context.team.members.map((member) => {
+                            return (
+                                <ListItem key={member.uid} disableGutters>
+                                    <ListItemAvatar>
+                                        <Avatar sx={{bgcolor : "primary.main"}}>{member.name.charAt(0)}</Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        primary={member.name}
+                                        secondary={member.emailID}
+                                    />
+                                </ListItem>
+                            )
+                        }) }
+                    </List>
+                </Grid>
+            
+                <Grid item md={3} sm={8} xs={11}>
+                    <Alert sx={{borderRadius:3, my:2}} severity="info">Hack4Good let’s you have upto 4 teammates. You can invite people to join your team by clicking the button below.</Alert>
+                    <Button size="large" fullWidth  variant="outlined" onClick={() => setInviteDiag(true)}>Invite people</Button> 
+                    <Dialog open={inviteDiag} fullWidth={true} >
+                        <DialogTitle>Invite people to join your team</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText color="white" sx={{mt:2}}>1. Share the team invite link</DialogContentText>
                             <CopyToClipboard
                                 options={{ debug: true, message: "" }}
                                 text={`https://hack4good.ieee-cis-sbc.org/team/join?teamID=${context.userData.teamID}`}
                                 onCopy={() => context.showAlert("success", "Team invite link has been copied to Clipboard!")}>
-                                <Tooltip title="Copy the team invite link and share it with your teammates!" arrow> 
-                                    <TextField 
-                                        defaultValue={`https://hack4good.ieee-cis-sbc.org/team/join?teamID=${context.userData.teamID}`}
-                                        disabled
-                                        sx={{mt:1, mb:3}}
-                                        fullWidth
-                                        InputProps={{
-                                            endAdornment: 
-                                            <InputAdornment position="end">
-                                                    <IconButton >
-                                                        <LinkIcon />
-                                                    </IconButton>
-                                            </InputAdornment>
-                                        }}
-                                        
-                                    ></TextField>
-                                </Tooltip>
-                            </CopyToClipboard>
+                                    <Tooltip title="Copy the team invite link and share it with your teammates!" arrow> 
+                                        <TextField 
+                                            defaultValue={`https://hack4good.ieee-cis-sbc.org/team/join?teamID=${context.userData.teamID}`}
+                                            disabled
+                                            sx={{mt:1, mb:3}}
+                                            fullWidth
+                                            InputProps={{
+                                                endAdornment: 
+                                                <InputAdornment position="end">
+                                                        <IconButton >
+                                                            <LinkIcon />
+                                                        </IconButton>
+                                                </InputAdornment>
+                                            }}
+                                            
+                                        ></TextField>
+                                    </Tooltip>
+                                </CopyToClipboard>
+    
+                            <Divider orientation="horizontal"><Chip label="Or" /></Divider>
 
-                        <Divider orientation="horizontal"><Chip label="Or" /></Divider>
-
-                        <DialogContentText sx={{mt:2}} color="white">2. Share the team code </DialogContentText>
+                            <DialogContentText sx={{mt:2}} color="white">2. Share the team code </DialogContentText>
                         
                             <CopyToClipboard
                                 options={{ debug: true, message: "" }}
@@ -78,55 +114,14 @@ function TeamManage(){
                                         ></TextField>
                                     </Tooltip>
                             </CopyToClipboard>
-                       
-                        <DialogActions >
-                            <Button variant="outlined" onClick={() => setInviteDiag(false)}>
-                                Done
+                            <Button sx={{float: "right"}} variant="outlined" onClick={() => setInviteDiag(false)}>
+                                Close
                             </Button> 
-                        </DialogActions>
-                    </DialogContent>      
-                </Dialog>
-            </Box>
-                
-
-            <Box>
-                <Divider orientation="vertical" sx={{height: 300, display:{xs: "none", sm:"block" } }} flexItem ></Divider>
-                <Divider orientation="horizontal" sx={{width:300, my:6, display:{sm: "none", xs:"block" } }} flexItem ></Divider>
-            </Box>
-
-            <Box >
-                <Chip sx={{fontSize: {xs: 17, md: 22}, p:3.5 , my:2}} label="Team Members"></Chip>
-                   <Stack sx={{textAlign: 'left'}} spacing={1}>                     
-                    {context.team.members.map((item, index) => {
-                        return (
-                            <Typography key={index} sx={{fontSize: {xs: 16, md: 19}}}>{(index + 1 ).toString() + ". " + item.name}</Typography>
-                        )
-                    }) }
-                    </Stack>
-                
-            </Box>
-
-            <Box>
-                <Divider orientation="vertical" sx={{height: 300, display:{xs: "none", sm:"block" } }} flexItem ></Divider>
-                <Divider orientation="horizontal" sx={{width:300, my:6, display:{sm: "none", xs:"block" } }} flexItem ></Divider>
-            </Box>
-
-            <Box width={350} >
-                <Stack sx={{width: 1}} spacing={3}>
-                <Typography variant="h5" align="center">Update Team</Typography>
-                    <TextField
-                        margin="normal"
-                        id="TeamName"
-                        label="Team Name"
-                        disabled = {!button.editable}
-                        defaultValue= {context.team.teamName}
-                        name= "TeamName"
-                        inputRef={teamNameRef}          
-                    />
-                    <LoadingButton loading={button.loading} variant="outlined" onClick={handleClick} size="large">{button.editable ? "Update" : "Edit"}</LoadingButton>
-                </Stack> 
-            </Box>
-        </Box>
+                        </DialogContent>      
+                    </Dialog>
+                </Grid>
+            </Grid>
+        </>
     )
 }
 

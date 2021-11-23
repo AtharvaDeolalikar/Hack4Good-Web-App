@@ -1,4 +1,4 @@
-import { Alert, Avatar, Button, Chip, Dialog, DialogContent, DialogContentText, DialogTitle, Box, Divider, Grid, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Stack, TextField, Tooltip, Typography } from "@mui/material"
+import { Alert, Avatar, Button, Chip, Dialog, DialogContent, DialogContentText, DialogTitle, Divider, Grid, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Stack, TextField, Tooltip, Typography } from "@mui/material"
 import { useContext, useRef, useState } from "react"
 import CopyToClipboard from "react-copy-to-clipboard"
 import { AuthContext } from "./Contexts/AuthContext"

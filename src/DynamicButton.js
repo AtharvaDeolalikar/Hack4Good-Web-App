@@ -1,7 +1,6 @@
 import { Button } from "@mui/material"
 
 function DynamicButton({timer, editable, MakeSubmission}){
-    console.log("Timer",timer)
     if(timer.expired){
         return (
             <Button variant="contained" disabled>Submission deadline is over</Button>

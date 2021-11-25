@@ -9,7 +9,7 @@ import Timer from "../Timer";
 import Temp from "../temp";
 import DynamicButton from "../DynamicButton";
 import { TransitionGroup } from 'react-transition-group';
-
+import Collapse from '@mui/material/Collapse'
 
 function Round1(){
     const context = useContext(AuthContext) 
@@ -55,26 +55,24 @@ function Round1(){
             technologiesUsed : technologies
         }
 
-        var addError = formError
-        var removeError = formError
+        var errors = formError
         for (const property in round1data) {
             if(round1data[property].length === 0){
-                addError[property] = true
-                setFormError(addError)
-                //context.showAlert("error", `Enter ${property} first!`)
+                errors[property] = true
+                setFormError(errors)
             }else{
-                removeError[property] = false
-                setFormError(removeError)
+                errors[property] = false
+                setFormError(errors)
             }         
         }
         console.log('1')
-        for(var error in addError){
-            console.log(addError)
-            if(addError[error] == true){
+        for(var error in errors){
+            console.log(errors)
+            if(errors[error] === true){
                 return false
             }
         }
-        if(noLinks.length == 0){
+        if(noLinks.length === 0){
             context.showAlert("error", "Enter the link(s) before making submission.")
             return false
         }
@@ -132,7 +130,6 @@ function Round1(){
         target: { value },
         } = event;
         setTechnologies(
-        // On autofill we get a the stringified value.
         typeof value === 'string' ? value.split(',') : value,
         );
     };
@@ -144,18 +141,16 @@ function Round1(){
             </Box>
         )
     }
-
-
     
     return (         
         <>
         {start ? 
         <>
-        <Grid container sx={{display: "flex", justifyContent: 'space-evenly'}} >
-            <Grid item xs={11}>
-                <Typography variant="h3" my={3} textAlign="center" fontSize={{xs: 30, sm:35, md: 45}}>Round - 1 Submission</Typography>
+        <Grid container sx={{display: "flex", justifyContent: 'space-evenly', bgcolor : "#0a1929"}} >
+            <Grid item xs={11} mt={2} mb={1}>
+                <Typography variant="h3" textAlign="center" fontSize={{xs: 25, sm:30, md: 35}}>Round - 1 Submission</Typography>
             </Grid>
-            <Grid item md={4} sm={8} xs={11} mt={1} mb={1}>
+            <Grid item md={5} sm={8} xs={11} mt={1} mb={1} sx={{p:3, borderRadius: 5, bgcolor : "#162534"}}>
                 <Stack spacing={2}>
                     <FormLabel component="legend">Basic Details</FormLabel>
                     <TextField 
@@ -193,7 +188,7 @@ function Round1(){
                     ></TextField>
                 </Stack>
             </Grid>
-            <Grid item md={3} sm={8} xs={11} my={2}>
+            <Grid item md={3} sm={8} xs={11} my={2} sx={{p:3, borderRadius: 5, bgcolor : "#162534"}}>
                 <Stack spacing={2}>
                     <FormLabel component="legend">Additional Details</FormLabel>
                     <FormControl >
@@ -225,11 +220,14 @@ function Round1(){
                             ))}
                         </Select>
                     </FormControl>
+                    
                     <FormLabel component="legend">Project Links</FormLabel>
                     <TransitionGroup>
                     {noLinks.map((item, index) => 
+                        <Collapse in={true}>
                         <TextField
                             key =  {index}
+                            margin = "dense"
                             label={`Link #${index + 1}`} 
                             defaultValue={isSubmitted ? item : ""}
                             disabled={!(!timer.expired && editable)}
@@ -240,12 +238,13 @@ function Round1(){
                                 endAdornment: <InputAdornment position="end"><IconButton  disabled={!(!timer.expired && editable)} onClick={() => deleteLink(index)}><DeleteIcon /></IconButton></InputAdornment>,
                             }}
                         ></TextField>
+                        </Collapse>
                     )}
                     </TransitionGroup>
                     <Button disabled={!(!timer.expired && editable)} onClick={() => addLink()} startIcon={<AddIcon />}>Add link</Button>
                 </Stack>
             </Grid>
-            <Grid item xs={12} sx={{textAlign : 'center', mt:2, mb: 8}}>
+            <Grid item xs={12} sx={{textAlign : 'center', mt:1, mb: 8}}>
                 <DynamicButton timer={timer} editable={editable} MakeSubmission={MakeSubmission} />
             </Grid>
         </Grid>

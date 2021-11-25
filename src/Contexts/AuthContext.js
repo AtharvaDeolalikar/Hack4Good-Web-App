@@ -130,7 +130,7 @@ function AuthContextProvider({children}){
 
     async function addUser(data){
       try {
-          const newUserData = {...data, uid: currentUser.uid, connectedWithTeam : false, registeredAt: serverTimestamp()}
+          const newUserData = {...data, uid: currentUser.uid, connectedWithTeam : false, registeredAt: serverTimestamp(), addressConfirmation: false}
           await setDoc(doc(db, "users", currentUser.uid), newUserData);
           setUserData(newUserData)
           showAlert("success", "You have been signed up successfully!")
@@ -159,8 +159,9 @@ function AuthContextProvider({children}){
     }
 
     async function updateUser(data){
+      console.log("Received data", data)
       try {
-          setUserData({...data, uid: currentUser.uid, teamID: userData.teamID})
+          setUserData({...data})
           await updateDoc(doc(db, "users", currentUser.uid), {...data, lastUpdatedAt: serverTimestamp()})
           if(userData.teamID){
             const tempRef = await getDoc(doc(db, "teams", userData.teamID))
@@ -169,6 +170,7 @@ function AuthContextProvider({children}){
             for (var member = 0; member < temp.members.length ; member++){
               if(temp.members[member].uid === userData.uid){
                 tempArray[member] = {name: data.name, emailID: currentUser.email, uid: currentUser.uid, teamLeader: userData.teamLeader}
+                console.log("calling updateDoc with", {members: tempArray})
                 await updateDoc(doc(db, "teams", userData.teamID), {members: tempArray})
               }
             }
@@ -177,6 +179,16 @@ function AuthContextProvider({children}){
         } catch (e) {
           console.error("Error adding user: ", e);
         }
+    }
+
+    async function addAddress(data){
+      try {
+        setUserData({...data})
+        await updateDoc(doc(db, "users", currentUser.uid), {...data, lastUpdatedAt: serverTimestamp()})
+        showAlert("success", "Shipping details has been submitted successfully!")
+      } catch (e) {
+        console.error("Error adding user: ", e);
+      }
     }
 
     async function updateTeam(newName){
@@ -268,6 +280,7 @@ function AuthContextProvider({children}){
         joinTeam,
         addUser,
         updateUser,
+        addAddress,
         updateTeam,
         team,
         userData,

@@ -26,7 +26,7 @@ function Submission(){
     return (
         <>  
         <NavBar />
-            <Box sx={{ borderBottom: 1, mt:{xs:7, sm:8}, borderColor: 'divider'}}>
+            <Box sx={{ borderBottom: 1, mt:{xs:7, sm:8}, borderColor: 'divider', bgcolor : "#0a1929"}}>
                 <Tabs value={value} onChange={handleChange}>
                     <Tab component={Link} to="/Submissions/" label="Rounds" />
                     <Tab component={Link} to="/Submissions/Round-1" label="Round - 1" />

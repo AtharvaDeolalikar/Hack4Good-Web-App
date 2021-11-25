@@ -34,16 +34,13 @@ function Profile(){
             state: e.target.state.value,
             shirtSize: e.target.shirtSize.value
         }
-        console.log(addressData)
-
         for (const property in addressData) {
+            console.log(e.target[property])
             if(addressData[property].length === 0){
-                context.showAlert("error", `Enter ${property} first!`)
-                ToggleButtonLoad()
+                context.showAlert("error", `Please enter ${e.target[property].id}`)
                 return false
             }
         }
-
         setUserAddress(addressData)
         setAddressDialog(true)   
     }
@@ -60,9 +57,7 @@ function Profile(){
             setEdit({...edit, profile: true})
             return false
         }
-
         ToggleButtonLoad()
-
         const detailsData = {
             firstName: e.target.firstName.value,
             lastName: e.target.lastName.value,
@@ -74,23 +69,19 @@ function Profile(){
             gender: e.target.gender.value,
             age: e.target.age.value
         }
-
         if (e.target.phoneNo.value && !e.target.phoneNo.value.startsWith("+")){
             context.showAlert("error", "The phone number must start with the country code. Eg. +91")
             ToggleButtonLoad()
             return false
         }
-
         for (const property in detailsData) {
             if(detailsData[property].length === 0){
-              context.showAlert("error", `Enter ${property} first!`)
+              context.showAlert("error", `Please enter ${property}`)
               ToggleButtonLoad()
               return false
             } 
         }
-
         await context.updateUser(detailsData)
-        
         ToggleButtonLoad()
         setEdit({...edit, profile: false})
     }
@@ -218,18 +209,21 @@ function Profile(){
                     <TextField
                         label="Address Line 1"
                         name="addressLine1"
+                        id="address line 1"
                         defaultValue={context.userData.addressLine1}
                         disabled={!(edit.address && addressConfirmation)}
                     />
                     <TextField
                         label="Address Line 2"
                         name="addressLine2"
+                        id="address line 2"
                         defaultValue={context.userData.addressLine2}
                         disabled={!(edit.address && addressConfirmation)}   
                     />
                     <TextField
                         label="Landmark"
                         name="landmark"
+                        id="the landmark"
                         defaultValue={context.userData.landmark}
                         disabled={!(edit.address && addressConfirmation)} 
                     />
@@ -239,6 +233,7 @@ function Profile(){
                                 fullWidth
                                 label="City"
                                 name="city"
+                                id="city"
                                 defaultValue={context.userData.city}
                                 disabled={!(edit.address && addressConfirmation)}  
                             />
@@ -248,6 +243,7 @@ function Profile(){
                                 fullWidth
                                 type="number"
                                 name="pinCode"
+                                id="pincode"
                                 defaultValue={context.userData.pinCode}
                                 label="Pin Code"
                                 disabled={!(edit.address && addressConfirmation)}   
@@ -260,6 +256,7 @@ function Profile(){
                                 fullWidth
                                 name="state"
                                 label="State"
+                                id="state"
                                 defaultValue={context.userData.state}
                                 disabled={!(edit.address && addressConfirmation)}   
                             />
@@ -282,6 +279,7 @@ function Profile(){
                             label="T-Shirt Size" 
                             defaultValue={context.userData.shirtSize} 
                             name="shirtSize"
+                            id="t-shirt size"
                         >
                             <MenuItem value="S">S</MenuItem>
                             <MenuItem value="M">M</MenuItem>
@@ -290,7 +288,7 @@ function Profile(){
                     </FormControl>
                 </Stack>
                 <Grid item xs={12} sx={{textAlign : "center", mt: 2, mb: 10}}>
-                    <LoadingButton sx={{minWidth : 200}} size="large" loading={buttonLoading} disabled={!addressConfirmation} type="submit" variant="contained" >{edit.address ? "Submit Shipping Details" : "Add Shipping Details"} </LoadingButton>
+                    <Button sx={{minWidth : 200}} size="large" disabled={!addressConfirmation} type="submit" variant="contained" >{edit.address ? "Submit Shipping Details" : "Add Shipping Details"} </Button>
                 </Grid>
             </Grid>
         </Grid> 

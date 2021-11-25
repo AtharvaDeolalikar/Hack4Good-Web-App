@@ -25,7 +25,7 @@ function App() {
           <Route path="/team" element={<Team />} />
           <Route path="/team/join" element ={<TeamJoin />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/profile" element={<Profile />} /> 
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<Navigate to="/profile" /> } />
         </Routes>
       </Paper>

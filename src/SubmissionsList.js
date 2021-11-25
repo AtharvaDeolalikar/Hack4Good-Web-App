@@ -8,7 +8,7 @@ function SubmissionsList(){
                 <Stack spacing={2}>
                     <Typography variant="h4">Round - 1</Typography>
                     <Box sx={{display: "block"}}>
-                        <Chip sx={{px:2}} label="Deadline: November 15, 2021"></Chip>
+                        <Chip sx={{px:2}} label="Deadline: November 15, 2021" />
                     </Box>
                     <Typography color="grey">In Round - 1, your team is required to submit a slide deck on your project topic.</Typography>
                     <Button component={Link} to="Round-1" variant="outlined">Submit Now</Button> 
@@ -19,7 +19,7 @@ function SubmissionsList(){
                 <Stack spacing={2}>
                     <Typography variant="h4">Round - 2</Typography>
                     <Box sx={{display: "block"}}>
-                        <Chip sx={{px:2}} label="Deadline: November 20, 2021"></Chip>
+                        <Chip sx={{px:2}} label="Deadline: November 20, 2021" />
                     </Box>
                     <Typography color="grey">In Round - 2, your team is required to submit the prototype of your project.</Typography>
                     <Button component={Link} to="Round-2" disabled variant="outlined">Submission starts on November 17, 21</Button> 

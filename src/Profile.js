@@ -91,83 +91,88 @@ function Profile(){
         <NavBar />
         <Grid container sx={{ mt:{xs:7, sm:8}, justifyContent : "space-evenly" }}>
             <Grid item xs={12}>
-                <Typography variant="h5" align="center" my={2}>My Profile</Typography>
+                <Typography variant="h4" align="center" my={2}>My Profile</Typography>
             </Grid>
             <Grid item md={4} sm={8} xs={11} my={2} component="form" onSubmit={updateProfile}>
-                <Stack spacing={3}>
-                    <FormLabel component="legend">Basic Details</FormLabel>
-                    <Grid container sx={{justifyContent : "space-between"}}>
-                        <Grid item md={6} xs={12}>
-                            <TextField
-                                fullWidth
-                                sx={{pr: {xs:0, md: 1}}}
-                                label="First Name"
-                                disabled={!edit.profile}
-                                defaultValue = {context.userData.firstName}
-                                name= "firstName"        
-                            />
-                        </Grid>
-                        <Grid item md={6} xs={12} sx={{mt: {xs:3, md: 0}}}>
-                            <TextField
-                                label="Last Name"
-                                fullWidth
-                                sx={{pl: {xs:0, md: 1}}}
-                                name= "lastName"
-                                disabled={!edit.profile}
-                                defaultValue= {context.userData.lastName}     
-                            />
-                        </Grid>
+                <Grid container spacing={3} >
+                    <Grid item xs={12}>
+                        <FormLabel component="legend">Basic Details</FormLabel>
                     </Grid>
-                    <TextField
-                        label="Email"
-                        name="email"
-                        defaultValue = {context.userData.email}
-                        disabled    
-                    />
-                    <TextField
-                        label="Phone No"
-                        name="phoneNo"
-                        disabled={!edit.profile}
-                        defaultValue = {context.userData.phoneNo}     
-                    />
-                    <TextField
-                        label="Educational Institution"
-                        name="institution" 
-                        disabled={!edit.profile}
-                        defaultValue = {context.userData.institution}       
-                    />
-                    <Grid container sx={{justifyContent : "space-between"}}>
-                        <Grid item md={5} xs={12}>
-                            <FormControl fullWidth>
-                                <InputLabel disabled={!edit.profile}>Degree Type</InputLabel>
-                                <Select 
-                                    value={degreeType} 
-                                    onChange={(e) => setDegreeType(e.target.value)}
-                                    defaultValue={context.userData.degreeType} 
-                                    label="Degree Type" 
-                                    name="degreeType" 
-                                    disabled={!edit.profile}
-                                >
-                                    <MenuItem value="Associate">Associate</MenuItem>
-                                    <MenuItem value="Bachelors">Bachelors</MenuItem>
-                                    <MenuItem value="Masters">Masters</MenuItem>
-                                    <MenuItem value="Doctoral">Doctoral</MenuItem>
-                                    <MenuItem value="High School">High School</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item md={5} xs={12} sx={{mt: {xs:3, md: 0}}}>
-                            <TextField
-                                fullWidth
-                                name = "studyField"
-                                label="Field of Study"
-                                placeholder = "Eg. Computer Science" 
-                                disabled={!edit.profile}
-                                defaultValue = {context.userData.institution}        
-                            />
-                        </Grid>
+                    <Grid item md={6} xs={12}>
+                        <TextField
+                            fullWidth
+                            label="First Name"
+                            disabled={!edit.profile}
+                            defaultValue = {context.userData.firstName}
+                            name= "firstName"        
+                        />
                     </Grid>
-                    <Box sx={{display: "flex", justifyContent : "space-between", flexDirection : "row"}}>
+                    <Grid item md={6} xs={12}>
+                        <TextField
+                            label="Last Name"
+                            fullWidth
+                            name= "lastName"
+                            disabled={!edit.profile}
+                            defaultValue= {context.userData.lastName}     
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Email"
+                            name="email"
+                            fullWidth
+                            defaultValue = {context.userData.email}
+                            disabled    
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Phone No"
+                            name="phoneNo"
+                            fullWidth
+                            disabled={!edit.profile}
+                            defaultValue = {context.userData.phoneNo}     
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Educational Institution"
+                            name="institution" 
+                            fullWidth
+                            disabled={!edit.profile}
+                            defaultValue = {context.userData.institution}       
+                        />
+                    </Grid>
+                    <Grid item md={6} xs={12} >
+                        <FormControl fullWidth>
+                            <InputLabel disabled={!edit.profile}>Degree Type</InputLabel>
+                            <Select 
+                                value={degreeType} 
+                                onChange={(e) => setDegreeType(e.target.value)}
+                                defaultValue={context.userData.degreeType} 
+                                label="Degree Type" 
+                                name="degreeType" 
+                                disabled={!edit.profile}
+                            >
+                                <MenuItem value="Associate">Associate</MenuItem>
+                                <MenuItem value="Bachelors">Bachelors</MenuItem>
+                                <MenuItem value="Masters">Masters</MenuItem>
+                                <MenuItem value="Doctoral">Doctoral</MenuItem>
+                                <MenuItem value="High School">High School</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                        <TextField
+                            fullWidth
+                            name = "studyField"
+                            label="Field of Study"
+                            placeholder = "Eg. Computer Science" 
+                            disabled={!edit.profile}
+                            defaultValue = {context.userData.institution}        
+                        />
+                    </Grid>
+                    <Grid item xs={8}>
                         <FormControl disabled={!edit.profile} >
                             <FormLabel component="legend">Gender</FormLabel>
                                 <RadioGroup
@@ -181,114 +186,125 @@ function Profile(){
                                     </Box>   
                             </RadioGroup>
                         </FormControl>
+                    </Grid>
+                    <Grid item xs={4} sx={{textAlign: "right"}}>
                         <TextField sx={{maxWidth : 100}} disabled={!edit.profile} defaultValue={context.userData.age} type="number" name="age" label="Age" />
-                    </Box>
-                </Stack>
-                <Grid item xs={12} sx={{textAlign : "center", mt: 1, mb:6}}>
-                    <LoadingButton sx={{minWidth : 200}} size="large" loading={buttonLoading} type="submit" variant="contained" >{!edit.profile ? "Edit" : "Update"} Profile</LoadingButton>
-                </Grid>            
+                    </Grid>
+                    <Grid item xs={12} sx={{textAlign : "center"}}>
+                        <LoadingButton sx={{minWidth : 200}} size="large" loading={buttonLoading} type="submit" variant="contained" >{!edit.profile ? "Edit" : "Update"} Profile</LoadingButton>
+                    </Grid> 
+                </Grid>           
             </Grid>
             <Grid item md={4} sm={8} xs={11} my={2} component="form" onSubmit={putAddress}>
-                <Stack spacing={3}>
-                    <Dialog open={addressDialog} fullWidth={true} >
-                        <DialogTitle>Shipping Details Confirmation</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText >Do you really want to submit these shipping details? You won't be able to modify it later.</DialogContentText>
-                            <Stack sx={{float: "right", mt: 2}} direction="row" spacing={2}>
-                                <Button variant="contained" onClick={addAddress}>
-                                    Submit
-                                </Button>
+                <Dialog open={addressDialog} fullWidth={true} >
+                    <DialogTitle>Shipping Details Confirmation</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText >Do you really want to submit these shipping details? You won't be able to modify it later.</DialogContentText>
+                        <Stack sx={{float: "right", mt: 2}} direction="row" spacing={2}>
+                            <Button variant="contained" onClick={addAddress}>
+                                Submit
+                            </Button>
 
-                                <Button variant="outlined" onClick={() => setAddressDialog(false)}>
-                                    Close
-                                </Button>
-                            </Stack>
-                        </DialogContent>      
-                    </Dialog>
-                    <FormLabel component="legend">Shipping Details</FormLabel>
-                    <TextField
-                        label="Address Line 1"
-                        name="addressLine1"
-                        id="address line 1"
-                        defaultValue={context.userData.addressLine1}
-                        disabled={!(edit.address && addressConfirmation)}
-                    />
-                    <TextField
-                        label="Address Line 2"
-                        name="addressLine2"
-                        id="address line 2"
-                        defaultValue={context.userData.addressLine2}
-                        disabled={!(edit.address && addressConfirmation)}   
-                    />
-                    <TextField
-                        label="Landmark"
-                        name="landmark"
-                        id="the landmark"
-                        defaultValue={context.userData.landmark}
-                        disabled={!(edit.address && addressConfirmation)} 
-                    />
-                    <Grid container sx={{justifyContent : "space-between"}}>
-                        <Grid item md={5} xs={12}>
-                            <TextField
-                                fullWidth
-                                label="City"
-                                name="city"
-                                id="city"
-                                defaultValue={context.userData.city}
-                                disabled={!(edit.address && addressConfirmation)}  
-                            />
-                        </Grid>
-                        <Grid item md={5} xs={12} sx={{mt: {xs: 3, md: 0}}}>
-                            <TextField
-                                fullWidth
-                                type="number"
-                                name="pinCode"
-                                id="pincode"
-                                defaultValue={context.userData.pinCode}
-                                label="Pin Code"
-                                disabled={!(edit.address && addressConfirmation)}   
-                            />
-                        </Grid>
+                            <Button variant="outlined" onClick={() => setAddressDialog(false)}>
+                                Close
+                            </Button>
+                        </Stack>
+                    </DialogContent>      
+                </Dialog>
+                <Grid container spacing={3} >
+                    <Grid item xs={12}>
+                        <FormLabel component="legend">Shipping Details</FormLabel>
                     </Grid>
-                    <Grid container sx={{justifyContent : "space-between"}}>
-                        <Grid item md={5} xs={12} >
-                            <TextField
-                                fullWidth
-                                name="state"
-                                label="State"
-                                id="state"
-                                defaultValue={context.userData.state}
-                                disabled={!(edit.address && addressConfirmation)}   
-                            />
-                        </Grid>
-                        <Grid item md={5} xs={12} sx={{mt: {xs: 3, md: 0}}}>
-                            <TextField
-                                fullWidth
-                                label="Country"
-                                name="country"
-                                defaultValue = "India"
-                                disabled
-                            />
-                        </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Address Line 1"
+                            name="addressLine1"
+                            fullWidth
+                            id="address line 1"
+                            defaultValue={context.userData.addressLine1}
+                            disabled={!(edit.address && addressConfirmation)}
+                        />
                     </Grid>
-                    <FormControl disabled={!(edit.address && addressConfirmation)}>
-                        <InputLabel >T-Shirt Size</InputLabel>
-                        <Select 
-                            value={shirtSize} 
-                            onChange={(e) => setShirtSize(e.target.value)} 
-                            label="T-Shirt Size" 
-                            defaultValue={context.userData.shirtSize} 
-                            name="shirtSize"
-                            id="t-shirt size"
-                        >
-                            <MenuItem value="S">S</MenuItem>
-                            <MenuItem value="M">M</MenuItem>
-                            <MenuItem value="L">L</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Stack>
-                <Grid item xs={12} sx={{textAlign : "center", mt: 2, mb: 10}}>
-                    <Button sx={{minWidth : 200}} size="large" disabled={!addressConfirmation} type="submit" variant="contained" >{edit.address ? "Submit Shipping Details" : "Add Shipping Details"} </Button>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Address Line 2"
+                            name="addressLine2"
+                            fullWidth
+                            id="address line 2"
+                            defaultValue={context.userData.addressLine2}
+                            disabled={!(edit.address && addressConfirmation)}   
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Landmark"
+                            fullWidth
+                            name="landmark"
+                            id="the landmark"
+                            defaultValue={context.userData.landmark}
+                            disabled={!(edit.address && addressConfirmation)} 
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            fullWidth
+                            label="City"
+                            name="city"
+                            id="city"
+                            defaultValue={context.userData.city}
+                            disabled={!(edit.address && addressConfirmation)}  
+                        />
+                    </Grid>
+                    <Grid item md={6} xs={12} >
+                        <TextField
+                            fullWidth
+                            type="number"
+                            name="pinCode"
+                            id="pincode"
+                            defaultValue={context.userData.pinCode}
+                            label="Pin Code"
+                            disabled={!(edit.address && addressConfirmation)}   
+                        />
+                    </Grid>                    
+                    <Grid item md={6} xs={12} >
+                        <TextField
+                            fullWidth
+                            name="state"
+                            label="State"
+                            id="state"
+                            defaultValue={context.userData.state}
+                            disabled={!(edit.address && addressConfirmation)}   
+                        />
+                    </Grid>
+                    <Grid item md={6} xs={12} >
+                        <TextField
+                            fullWidth
+                            label="Country"
+                            name="country"
+                            defaultValue = "India"
+                            disabled
+                        />
+                    </Grid>
+                    <Grid item xs={12} >
+                        <FormControl fullWidth disabled={!(edit.address && addressConfirmation)}>
+                            <InputLabel >T-Shirt Size</InputLabel>
+                            <Select 
+                                value={shirtSize} 
+                                onChange={(e) => setShirtSize(e.target.value)} 
+                                label="T-Shirt Size" 
+                                defaultValue={context.userData.shirtSize} 
+                                name="shirtSize"
+                                id="t-shirt size"
+                            >
+                                <MenuItem value="S">S</MenuItem>
+                                <MenuItem value="M">M</MenuItem>
+                                <MenuItem value="L">L</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sx={{textAlign : "center", mb:10}}>
+                        <Button sx={{minWidth : 200}} size="large" disabled={!addressConfirmation} type="submit" variant="contained" >{edit.address ? "Submit Shipping Details" : "Add Shipping Details"} </Button>
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid> 

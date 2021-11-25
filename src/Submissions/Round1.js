@@ -149,7 +149,7 @@ function Round1(){
             <Grid item xs={11} mt={2} mb={1}>
                 <Typography variant="h3" textAlign="center" fontSize={{xs: 25, sm:30, md: 35}}>Round - 1 Submission</Typography>
             </Grid>
-            <Grid item md={5} sm={8} xs={11} mt={1} mb={1} sx={{p:4, borderRadius: 3, bgcolor : "#162534",  border: (theme) => `1px solid ${theme.palette.divider}`}}>
+            <Grid item md={5} sm={8} xs={11} mt={1} mb={1} sx={{p:4, borderRadius: 3, bgcolor : "#162534"}}>
                 <Stack spacing={2}>
                     <FormLabel component="legend">Basic Details</FormLabel>
                     <TextField 
@@ -187,7 +187,7 @@ function Round1(){
                     ></TextField>
                 </Stack>
             </Grid>
-            <Grid item md={3} sm={8} xs={11} my={2} sx={{p:4, borderRadius: 3, bgcolor : "#162534",   border: (theme) => `1px solid ${theme.palette.divider}`}}>
+            <Grid item md={3} sm={8} xs={11} my={2} sx={{p:4, borderRadius: 3, bgcolor : "#162534"}}>
                 <Stack spacing={2}>
                     <FormLabel component="legend">Additional Details</FormLabel>
                     <FormControl >

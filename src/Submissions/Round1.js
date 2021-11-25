@@ -32,7 +32,6 @@ function Round1(){
         const interval = setInterval(function(){
             current = current + 1000
             setTimer(Timer(deadline, current))
-            //console.log(timer)
         }, 1000);
         return () => {
             clearInterval(interval)

@@ -173,25 +173,25 @@ function Profile(){
                         />
                     </Grid>
                     <Grid item xs={8}>
-                        <FormControl disabled={!edit.profile} >
+                        <FormControl disabled={!edit.profile} sx={{border:"1 px solid"}}>
                             <FormLabel component="legend">Gender</FormLabel>
-                                <RadioGroup
-                                    row
-                                    name="gender"
-                                    defaultValue={context.userData.gender}
-                                >
-                                    <Box>
-                                        <FormControlLabel value="male" control={<Radio />} label="Male" />
-                                        <FormControlLabel value="female" control={<Radio />} label="Female" /> 
-                                    </Box>   
+                            <RadioGroup
+                                row
+                                name="gender"
+                                defaultValue={context.userData.gender}
+                            >
+                                <Box>
+                                    <FormControlLabel value="male" control={<Radio />} label="Male" />
+                                    <FormControlLabel value="female" control={<Radio />} label="Female" /> 
+                                </Box>   
                             </RadioGroup>
                         </FormControl>
                     </Grid>
                     <Grid item xs={4} sx={{textAlign: "right"}}>
                         <TextField sx={{maxWidth : 100}} disabled={!edit.profile} defaultValue={context.userData.age} type="number" name="age" label="Age" />
                     </Grid>
-                    <Grid item xs={12} sx={{textAlign : "center"}}>
-                        <LoadingButton sx={{minWidth : 200}} size="large" loading={buttonLoading} type="submit" variant="contained" >{!edit.profile ? "Edit" : "Update"} Profile</LoadingButton>
+                    <Grid item xs={6} sx={{margin : "auto"}}>
+                        <LoadingButton fullWidth size="large" loading={buttonLoading} type="submit" variant="contained" >{!edit.profile ? "Edit" : "Update"} Profile</LoadingButton>
                     </Grid> 
                 </Grid>           
             </Grid>
@@ -302,8 +302,8 @@ function Profile(){
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} sx={{textAlign : "center", mb:10}}>
-                        <Button sx={{minWidth : 200}} size="large" disabled={!addressConfirmation} type="submit" variant="contained" >{edit.address ? "Submit Shipping Details" : "Add Shipping Details"} </Button>
+                    <Grid item xs={6} sx={{margin : "auto", mb:10, mt:1}}>
+                        <Button fullWidth size="large" disabled={!addressConfirmation} type="submit" variant="contained" >{edit.address ? "Submit Shipping Details" : "Add Shipping Details"} </Button>
                     </Grid>
                 </Grid>
             </Grid>

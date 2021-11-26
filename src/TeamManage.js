@@ -9,7 +9,6 @@ import EditIcon from '@mui/icons-material/Edit';
 
 function TeamManage(){
     const context = useContext(AuthContext)
-    console.log(context)
     const [button, setButton] = useState(false);
     const teamNameRef = useRef();
     const [inviteDiag, setInviteDiag] = useState(false)

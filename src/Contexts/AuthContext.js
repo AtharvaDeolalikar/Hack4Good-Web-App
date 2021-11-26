@@ -104,14 +104,15 @@ function AuthContextProvider({children}){
           return false
         }
         try {
-            const docRef = await addDoc(collection(db, "teams"), {
+            const tempData = {
               teamName: name,
               createdAt: serverTimestamp(),
               round1: {submitted: false},
               round2: {submitted: false},
               members: [{name: currentUser.displayName, emailID: currentUser.email, uid: currentUser.uid, teamLeader: true}]
-            });
-            console.log("Team created with ID: ", docRef.id);
+            }
+            const docRef = await addDoc(collection(db, "teams"), tempData);
+            setTeam(tempData)
             setAlert({severity: "success", message: "New team has been successfully created!", show: true})
             connectTeam(docRef.id, true)
           } catch (e) {
@@ -121,9 +122,13 @@ function AuthContextProvider({children}){
 
     async function Round1Submission(data){
       try {
-          await updateDoc(doc(db, "teams", userData.teamID), {round1 : {...data, submitted: true, lastUpdatedAt: serverTimestamp()}});
-          showAlert("success", "Your submission has been saved successfully. However you can make the changes before the deadline.")
-        } catch (e) {
+        const tempData =  {
+          round1 : {...data, submitted: true, lastUpdatedAt: serverTimestamp()}
+        }
+        await updateDoc(doc(db, "teams", userData.teamID), tempData)
+        setTeam({...team, ...tempData})
+        showAlert("success", "Your submission has been saved successfully. However you can make the changes before the deadline.")
+      } catch (e) {
           console.error("Error adding user: ", e);
         }
     }
@@ -145,9 +150,15 @@ function AuthContextProvider({children}){
     }
 
     async function connectTeam(teamID, teamLeader){
-      console.log(teamID)
       try {
-          await updateDoc(doc(db, "users", currentUser.uid), {connectedWithTeamAt: serverTimestamp(), connectedWithTeam: true, teamLeader: teamLeader, teamID : teamID});
+          const tempData = {
+            connectedWithTeamAt: serverTimestamp(), 
+            connectedWithTeam: true, 
+            teamLeader: teamLeader, 
+            teamID : teamID
+          }
+          await updateDoc(doc(db, "users", currentUser.uid), tempData);
+          setUserData({...userData, ...tempData})
           if(window.location.pathname === "/team"){
             window.location.reload()
           }else{
@@ -159,7 +170,6 @@ function AuthContextProvider({children}){
     }
 
     async function updateUser(data){
-      console.log("Received data", data)
       try {
           setUserData({...data})
           await updateDoc(doc(db, "users", currentUser.uid), {...data, lastUpdatedAt: serverTimestamp()})
@@ -183,7 +193,7 @@ function AuthContextProvider({children}){
 
     async function addAddress(data){
       try {
-        setUserData({...data})
+        setUserData({...userData, ...data})
         await updateDoc(doc(db, "users", currentUser.uid), {...data, lastUpdatedAt: serverTimestamp()})
         showAlert("success", "Shipping details has been submitted successfully!")
       } catch (e) {
@@ -297,7 +307,7 @@ function AuthContextProvider({children}){
             {loading && <Loading />}
             {!loading && children}
         </AuthContext.Provider>
-        </ThemeProvider>
+      </ThemeProvider>
     )
 }
 

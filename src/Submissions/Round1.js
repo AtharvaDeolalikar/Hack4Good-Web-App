@@ -13,7 +13,6 @@ import Collapse from '@mui/material/Collapse'
 
 function Round1(){
     const context = useContext(AuthContext) 
-    //console.log(context.team.round1)
     const isSubmitted = context.team.round1.submitted
     const [noLinks, setNoLinks] = useState((isSubmitted && context.team.round1.projectLinks) || [""])
     const [technologies, setTechnologies] = useState((isSubmitted && context.team.round1.technologiesUsed) || [])
@@ -40,7 +39,6 @@ function Round1(){
 
     async function MakeSubmission(){
         if(timer.expired){
-            //console.log("timer expired")
             return false
         }
         if(!editable){
@@ -64,9 +62,7 @@ function Round1(){
                 setFormError(errors)
             }         
         }
-        console.log('1')
         for(var error in errors){
-            console.log(errors)
             if(errors[error] === true){
                 return false
             }
@@ -81,7 +77,6 @@ function Round1(){
                 return false
             }
         }
-        console.log("Making submission")
         await context.Round1Submission({...round1data, projectLinks : noLinks})
         setEditable(false)
     }

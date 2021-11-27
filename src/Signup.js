@@ -42,7 +42,6 @@ function SignUp(){
               return false
             } 
           }
-        console.log(data)
         context.addUser(data)
     }
 

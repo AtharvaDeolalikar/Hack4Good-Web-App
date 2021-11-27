@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "../config";
 import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut, onAuthStateChanged} from "firebase/auth";
-import { getFirestore , collection, addDoc, updateDoc, arrayUnion, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { getFirestore , collection, addDoc, updateDoc, arrayUnion, doc, getDoc, setDoc, serverTimestamp, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router";
 import ShowAlert from "../ShowAlert";
 import Loading from "../Loading";
@@ -133,6 +133,25 @@ function AuthContextProvider({children}){
         }
     }
 
+    async function getAllUsers(){
+      const querySnapshot = await getDocs(collection(db, "users"))
+      const users = []
+      querySnapshot.forEach((doc) => {
+        users.push(doc.data())
+        //console.log(doc.id, " => ", doc.data());
+      })
+      return users
+    }
+
+    async function getAllTeams(){
+      const querySnapshot = await getDocs(collection(db, "teams"))
+      const teams = []
+      querySnapshot.forEach((doc) => {
+        teams.push(doc.data())
+        //console.log(doc.id, " => ", doc.data());
+      })
+      return teams
+    }
     async function addUser(data){
       try {
           const newUserData = {...data, uid: currentUser.uid, connectedWithTeam : false, registeredAt: serverTimestamp(), addressConfirmation: false}
@@ -180,7 +199,6 @@ function AuthContextProvider({children}){
             for (var member = 0; member < temp.members.length ; member++){
               if(temp.members[member].uid === userData.uid){
                 tempArray[member] = {name: data.name, emailID: currentUser.email, uid: currentUser.uid, teamLeader: userData.teamLeader}
-                console.log("calling updateDoc with", {members: tempArray})
                 await updateDoc(doc(db, "teams", userData.teamID), {members: tempArray})
               }
             }
@@ -284,6 +302,8 @@ function AuthContextProvider({children}){
     const values = {
         login,
         currentUser,
+        getAllUsers,
+        getAllTeams,
         logOut,
         createTeam,
         findTeam, 

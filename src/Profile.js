@@ -35,7 +35,6 @@ function Profile(){
             shirtSize: e.target.shirtSize.value
         }
         for (const property in addressData) {
-            console.log(e.target[property])
             if(addressData[property].length === 0){
                 context.showAlert("error", `Please enter ${e.target[property].id}`)
                 return false

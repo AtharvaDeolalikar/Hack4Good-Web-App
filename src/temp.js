@@ -1,7 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material"
 
 function Temp({time}){
-    //console.log(time)
     const timerStyles = {
         borderRadius: 4,
         p:3, 

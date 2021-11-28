@@ -1,7 +1,6 @@
 import { Search } from "@mui/icons-material"
 import { CircularProgress, Button, Link, Stack, Chip, TableContainer, TableCell, TableHead, TableRow, Table, TableBody, Toolbar, AppBar, Typography, TextField, InputAdornment, Dialog, DialogContent, DialogTitle,DialogContentText, ListItem, ListItemText, ListItemIcon} from "@mui/material"
 import { Box } from "@mui/system"
-import Fuse from "fuse.js"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../Contexts/AuthContext"
 
@@ -9,7 +8,7 @@ export default function Admin(){
     const context = useContext(AuthContext)
     const [teams, setTeams] = useState()
     const [loading, setLoading] = useState(true)
-    const [search, setSearch] = useState(null)
+    const [search, setSearch] = useState("")
     const [submissionDialog, setSubmissionDialog] = useState({show: false, index: null})
 
     useEffect(() => {
@@ -27,32 +26,19 @@ export default function Admin(){
         
     }, [])
 
-    const options = {
-      //isCaseSensitive: false,
-      // includeScore: false,
-      // shouldSort: true,
-      //includeMatches: false,
-      // findAllMatches: false,
-      // minMatchCharLength: 1,
-      // location: 0,
-      // threshold: 0.6,
-      // distance: 100,
-      // useExtendedSearch: false,
-      // ignoreLocation: false,
-      // ignoreFieldNorm: false,
-      keys: [
-        "teamName"
-      ]
-    };
-    
-    const fuse = new Fuse(teams, options)
-    
-    function fuseSearch(e){
-      if(e.target.value){
-        var result = fuse.search(e.target.value)
-        setSearch(result)
-      }else{
-        setSearch()
+    function makeSearch(item){
+      function searchHelper(item){
+        if (item.toLowerCase().includes(search)) return true 
+      }
+      if (search == ""){
+        return item
+      }else if(searchHelper(item.id)){
+        return item
+      }else if(searchHelper(item.teamName)){
+        return item
+      }
+      for (var member=0; member < item.members.length ; member++){
+        if (searchHelper(item.members[member].emailID)) return item
       }
     }
 
@@ -86,9 +72,7 @@ export default function Admin(){
           </Dialog>
         </Box>
       )
-    }
-      
-    
+    }    
 
     return (
         <>
@@ -106,7 +90,7 @@ export default function Admin(){
           >
           <Toolbar sx={{ flexWrap: 'wrap', display: "flex", justifyContent : "space-between" }}>
             <Typography>Hack4Good</Typography>
-              <TextField placeholder="Search" variant="standard" onChange={e => fuseSearch(e)} InputProps={{startAdornment: (
+              <TextField placeholder="Search" variant="standard" onChange={e => setSearch(e.target.value.toLowerCase())} InputProps={{startAdornment: (
                 <InputAdornment position="start">
                   <Search />
                 </InputAdornment>)}}> 
@@ -128,11 +112,9 @@ export default function Admin(){
                 </TableRow>
               </TableHead>
               <TableBody>
-              {(search ? search : teams).map((team, index) => {
-                console.log(search, team)
-                if(search){
-                  team = search[index].item
-                }else{console.log("zA")}
+              {teams.filter(item => {
+                return makeSearch(item)
+              }).map((team, index) => {
                 return (
                 <TableRow key={index}>
                   <TableCell >{index + 1}</TableCell>

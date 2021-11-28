@@ -113,7 +113,7 @@ function AuthContextProvider({children}){
             }
             const docRef = await addDoc(collection(db, "teams"), tempData);
             setTeam(tempData)
-            setAlert({severity: "success", message: "New team has been successfully created!", show: true})
+            setAlert({severity: "success", message: "New team has been successfully created. Now you can invite people to join your team!", show: true})
             connectTeam(docRef.id, true)
           } catch (e) {
             console.error("Error adding document: ", e);
@@ -133,21 +133,22 @@ function AuthContextProvider({children}){
         }
     }
 
-    async function getAllUsers(){
+    /* async function getAllUsers(){
       const querySnapshot = await getDocs(collection(db, "users"))
       const users = []
       querySnapshot.forEach((doc) => {
-        users.push(doc.data())
+        users.push({...doc.data(), id: doc.id, "A": "B"})
         //console.log(doc.id, " => ", doc.data());
       })
+      console.log(users)
       return users
-    }
+    } */
 
     async function getAllTeams(){
       const querySnapshot = await getDocs(collection(db, "teams"))
       const teams = []
       querySnapshot.forEach((doc) => {
-        teams.push(doc.data())
+        teams.push({...doc.data(), id: doc.id})
         //console.log(doc.id, " => ", doc.data());
       })
       return teams
@@ -178,9 +179,7 @@ function AuthContextProvider({children}){
           }
           await updateDoc(doc(db, "users", currentUser.uid), tempData);
           setUserData({...userData, ...tempData})
-          if(window.location.pathname === "/team"){
-            window.location.reload()
-          }else{
+          if(!window.location.pathname === "/team"){
             navigate("/team")
           }
         } catch (e) {
@@ -302,7 +301,7 @@ function AuthContextProvider({children}){
     const values = {
         login,
         currentUser,
-        getAllUsers,
+        //getAllUsers,
         getAllTeams,
         logOut,
         createTeam,

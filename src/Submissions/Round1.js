@@ -72,8 +72,8 @@ function Round1(){
             return false
         }
         for (var link = 0; link < noLinks.length; link++){
-            if(noLinks[link].length === 0){
-                context.showAlert("error", "Enter the link(s) before making submission.")
+            if(!noLinks[link].startsWith("https://")){
+                context.showAlert("error", "The link(s) must start with 'https://'")
                 return false
             }
         }

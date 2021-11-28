@@ -168,7 +168,7 @@ function Profile(){
                             label="Field of Study"
                             placeholder = "Eg. Computer Science" 
                             disabled={!edit.profile}
-                            defaultValue = {context.userData.institution}        
+                            defaultValue = {context.userData.studyField}        
                         />
                     </Grid>
                     <Grid item xs={8}>

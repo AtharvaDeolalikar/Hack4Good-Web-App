@@ -142,7 +142,7 @@ export default function Admin(){
                       {team.members.map((member, memberindex) => (
                           <ListItem key={member.uid} disableGutters>
                           <ListItemText
-                              primary={member.name}
+                              primary={member.firstName + " " + member.lastName}
                               secondary={member.emailID}
                           />
                           {member.teamLeader && 

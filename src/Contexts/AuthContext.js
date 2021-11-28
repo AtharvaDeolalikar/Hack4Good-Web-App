@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "../config";
 import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut, onAuthStateChanged} from "firebase/auth";
-import { getFirestore , collection, addDoc, updateDoc, arrayUnion, doc, getDoc, setDoc, serverTimestamp, getDocs } from "firebase/firestore";
+import { getFirestore , collection, addDoc, updateDoc, onSnapshot, arrayUnion, doc, getDoc, setDoc, serverTimestamp, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router";
 import ShowAlert from "../ShowAlert";
 import Loading from "../Loading";
@@ -54,7 +54,7 @@ function AuthContextProvider({children}){
 
         const getUserData = async (user) => {
           try {
-            const userData = await getDoc(doc(db, "users", user.uid));
+            const userData = await getDoc(doc(db, "users", user.uid))
             const temp = userData.data()
             setUserData(temp)
             if(!temp){
@@ -189,19 +189,20 @@ function AuthContextProvider({children}){
 
     async function updateUser(data){
       try {
-          setUserData({...data})
           await updateDoc(doc(db, "users", currentUser.uid), {...data, lastUpdatedAt: serverTimestamp()})
           if(userData.teamID){
             const tempRef = await getDoc(doc(db, "teams", userData.teamID))
             const temp = tempRef.data()
             const tempArray = temp.members
             for (var member = 0; member < temp.members.length ; member++){
-              if(temp.members[member].uid === userData.uid){
-                tempArray[member] = {name: data.name, emailID: currentUser.email, uid: currentUser.uid, teamLeader: userData.teamLeader}
+              console.log(tempArray[member].uid, currentUser.uid)
+              if(tempArray[member].uid === currentUser.uid){
+                tempArray[member] = {firstName: data.firstName, lastName: data.lastName, emailID: currentUser.email, uid: currentUser.uid, teamLeader: userData.teamLeader}
                 await updateDoc(doc(db, "teams", userData.teamID), {members: tempArray})
               }
             }
           }
+          setUserData({...data})
           showAlert("success", "Profile has been updated successfully")
         } catch (e) {
           console.error("Error adding user: ", e);
@@ -280,7 +281,7 @@ function AuthContextProvider({children}){
     async function joinTeam(teamID, teamName){
       try{
         await updateDoc(doc(db, "teams", teamID), {
-            members: arrayUnion({name: userData.name, emailID: currentUser.email, uid: currentUser.uid, teamLeader: false})
+            members: arrayUnion({firstName: userData.firstName, lastName: userData.lastName, emailID: currentUser.email, uid: currentUser.uid, teamLeader: false})
         })
         showAlert("success", `You have been successfully connected to the team ${teamName}`)
         connectTeam(teamID, false)

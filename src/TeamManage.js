@@ -51,10 +51,10 @@ function TeamManage(){
                             return (
                                 <ListItem key={member.uid} disableGutters>
                                     <ListItemAvatar>
-                                        <Avatar sx={{bgcolor : "primary.main"}}>{member.name.charAt(0)}</Avatar>
+                                        <Avatar sx={{bgcolor : "primary.main"}}>{member.firstName.charAt(0)}</Avatar>
                                     </ListItemAvatar>
                                     <ListItemText
-                                        primary={member.name}
+                                        primary={member.firstName + " " + member.lastName}
                                         secondary={member.emailID}
                                     />
                                 </ListItem>

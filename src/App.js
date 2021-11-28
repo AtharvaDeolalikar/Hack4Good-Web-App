@@ -10,7 +10,8 @@ import Round1 from "./Submissions/Round1";
 import Round2 from "./Submissions/Round2";
 import SubmissionsList from "./SubmissionsList";
 import TeamJoin from "./TeamJoin";
-import Admin from "./Admin/Admin";
+//import AdminOld from "./Admin/Admin";
+import Admin from "./Admin/AdminNew";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <CssBaseline/>
       <Paper sx={{borderRadius : 0, bgcolor : "theme.palette.background.paper"}}>
         <Routes>
+          {/* <Route path="adminOld" element={<AdminOld />} /> */}
           <Route path="admin" element={<Admin />} />
           <Route path="Submissions" element={<Submission />}>
             <Route path="" element={<SubmissionsList />} />

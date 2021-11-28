@@ -64,6 +64,8 @@ function AuthContextProvider({children}){
               }
               navigate("/signup", { replace: true })
               setLoading(false)
+            }else if(temp.isAdmin){
+              navigate("/admin")
             }else if(temp.teamID){
               await getUserTeam(temp.teamID)
               if(window.location.pathname === "/"){
@@ -107,9 +109,10 @@ function AuthContextProvider({children}){
             const tempData = {
               teamName: name,
               createdAt: serverTimestamp(),
+              lastUpdatedAt: serverTimestamp(),
               round1: {submitted: false},
               round2: {submitted: false},
-              members: [{name: currentUser.displayName, emailID: currentUser.email, uid: currentUser.uid, teamLeader: true}]
+              members: [{firstName: userData.firstName, lastName: userData.lastName, emailID: currentUser.email, uid: currentUser.uid, teamLeader: true}]
             }
             const docRef = await addDoc(collection(db, "teams"), tempData);
             setTeam(tempData)
@@ -155,7 +158,7 @@ function AuthContextProvider({children}){
     }
     async function addUser(data){
       try {
-          const newUserData = {...data, uid: currentUser.uid, connectedWithTeam : false, registeredAt: serverTimestamp(), addressConfirmation: false}
+          const newUserData = {...data, uid: currentUser.uid, connectedWithTeam : false, registeredAt: serverTimestamp(), lastUpdatedAt: serverTimestamp(), addressConfirmation: false}
           await setDoc(doc(db, "users", currentUser.uid), newUserData);
           setUserData(newUserData)
           showAlert("success", "You have been signed up successfully!")

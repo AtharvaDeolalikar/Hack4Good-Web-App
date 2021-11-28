@@ -185,23 +185,22 @@ function Round1(){
             <Grid item md={3} sm={8} xs={11} my={2} sx={{p:4, borderRadius: 3, bgcolor : "#162534"}}>
                 <Stack spacing={2}>
                     <FormLabel component="legend">Additional Details</FormLabel>
-                    <FormControl >
-                        <InputLabel id="demo-multiple-chip-label" sx={{bgcolor:"#162534", pr:0.7}}>Technologies Used</InputLabel>
+                    <FormControl>
+                        <InputLabel>Technologies Used</InputLabel>
                         <Select
                             multiple
                             error = {formError.technologiesUsed}
                             disabled={!(!timer.expired && editable)}
                             value={technologies}
                             onChange={handleTechChange}
-                            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                            input={<OutlinedInput label="Technologies Used" />}
                             renderValue={(selected) => (
-                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                <Stack direction="row" sx={{flexWrap : "wrap" , gap: 1}}>
                                 {selected.map((value) => (
                                     <Chip key={value} label={value} />
                                 ))}
-                                </Box>
+                                </Stack>
                             )}
-                            //MenuProps={MenuProps}
                         >
                             {names.map((name) => (
                             <MenuItem

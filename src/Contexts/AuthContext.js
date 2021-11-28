@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "../config";
 import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut, onAuthStateChanged} from "firebase/auth";
-import { getFirestore , collection, addDoc, updateDoc, onSnapshot, arrayUnion, doc, getDoc, setDoc, serverTimestamp, getDocs } from "firebase/firestore";
+import { getFirestore , collection, addDoc, updateDoc, arrayUnion, doc, getDoc, setDoc, serverTimestamp, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router";
 import ShowAlert from "../ShowAlert";
 import Loading from "../Loading";

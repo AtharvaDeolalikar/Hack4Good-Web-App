@@ -1,11 +1,9 @@
 import { Search } from "@mui/icons-material"
-import { CircularProgress, Button, Link, Stack, Chip, TableContainer, TableCell, TableHead, TableRow, Table, TableBody, Toolbar, AppBar, Typography, Input, TextField, InputAdornment, Dialog, DialogContent, DialogTitle,DialogContentText, ListItem, ListItemAvatar, ListItemText, Avatar, ListItemIcon} from "@mui/material"
+import { CircularProgress, Button, Link, Stack, Chip, TableContainer, TableCell, TableHead, TableRow, Table, TableBody, Toolbar, AppBar, Typography, TextField, InputAdornment, Dialog, DialogContent, DialogTitle,DialogContentText, ListItem, ListItemText, ListItemIcon} from "@mui/material"
 import { Box } from "@mui/system"
 import Fuse from "fuse.js"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../Contexts/AuthContext"
-//import Crown from "../../crown_icon.svg"
-import { ReactComponent as Crown } from '../crown_icon.svg';
 
 export default function Admin(){
     const context = useContext(AuthContext)
@@ -30,10 +28,10 @@ export default function Admin(){
     }, [])
 
     const options = {
-      // isCaseSensitive: false,
+      //isCaseSensitive: false,
       // includeScore: false,
       // shouldSort: true,
-      // includeMatches: false,
+      //includeMatches: false,
       // findAllMatches: false,
       // minMatchCharLength: 1,
       // location: 0,
@@ -43,10 +41,7 @@ export default function Admin(){
       // ignoreLocation: false,
       // ignoreFieldNorm: false,
       keys: [
-        "teamName",
-        "teamID",
-        "id",
-        "email"
+        "teamName"
       ]
     };
     
@@ -133,13 +128,18 @@ export default function Admin(){
                 </TableRow>
               </TableHead>
               <TableBody>
-              {(search ? search : teams).map((team, index) => (
+              {(search ? search : teams).map((team, index) => {
+                console.log(search, team)
+                if(search){
+                  team = search[index].item
+                }else{console.log("zA")}
+                return (
                 <TableRow key={index}>
                   <TableCell >{index + 1}</TableCell>
                   <TableCell >{team.teamName}</TableCell>
                   <TableCell >
                     <Stack spacing={2}>
-                      {team.members.map((member, memberindex) => (
+                      {team.members.map((member) => (
                           <ListItem key={member.uid} disableGutters>
                           <ListItemText
                               primary={member.firstName + " " + member.lastName}
@@ -157,7 +157,7 @@ export default function Admin(){
                   <TableCell align ="center">{team.round1.submitted ? <Button onClick={() => setSubmissionDialog({index: index, show: true})}>Open</Button> : null}</TableCell>
                   <TableCell />
                 </TableRow>
-              ))}
+              )})}
               </TableBody>
             </Table>
           </TableContainer>

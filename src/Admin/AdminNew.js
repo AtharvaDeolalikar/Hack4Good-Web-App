@@ -13,19 +13,15 @@ export default function Admin(){
     const [search, setSearch] = useState("")
     const [submissionDialog, setSubmissionDialog] = useState({show: false, index: null})
 
-    useEffect(() => {
-        if(context.userData.isAdmin){
-          async function fetchTeams(){
-            var snapshot = await context.getAllTeams()
-            setTeams(snapshot)
-            setLoading(false)
-          }
-          fetchTeams()
-      }else{
-        context.showAlert("error", "You are not authorised to access this page")
-        //context.navigate("/profile")
+    useEffect(() => { 
+      async function fetchTeams(){
+        var snapshot = await context.getAllTeams()
+        setTeams(snapshot)
+        setLoading(false)
       }
-        
+      fetchTeams()
+      //context.showAlert("error", "You are not authorised to access this page")
+      //context.navigate("/profile") 
     }, [context])
 
     function makeSearch(item){

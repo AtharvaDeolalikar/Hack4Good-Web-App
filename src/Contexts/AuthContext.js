@@ -30,56 +30,62 @@ function AuthContextProvider({children}){
     const provider =  new GoogleAuthProvider()
     
     let navigate = useNavigate()
-    
-    useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setCurrentUser(user)
-                getUserData(user)
-            } else {
-                login()
-            }
-        })
-        
-        const getUserTeam = async (teamID) => {
-          try {
-            const teamData = await getDoc(doc(db, "teams", teamID));
-            const temp = teamData.data()
-            setTeam(temp)
-        }
-          catch(e){
-            console.log(e)
-          }
-        }
 
-        const getUserData = async (user) => {
-          try {
-            const userData = await getDoc(doc(db, "users", user.uid))
-            const temp = userData.data()
-            setUserData(temp)
-            if(!temp){
-              if(window.location.pathname === "/team/join"){
-                setRedirect({navigate: window.location.pathname + window.location.search})
-                showAlert("info", "You'll require to sign up first!")
-              }
-              navigate("/signup", { replace: true })
-              setLoading(false)
-            }else if(temp.isAdmin){
-              navigate("/admin")
-            }else if(temp.teamID){
-              await getUserTeam(temp.teamID)
-              if(window.location.pathname === "/"){
-                navigate("/Submissions")
-              }
-            }else if(window.location.pathname === "/"){
-              navigate("/team")
+    useEffect(() => {
+      const getUserTeam = async (teamID) => {
+        try {
+          const teamData = await getDoc(doc(db, "teams", teamID));
+          const temp = teamData.data()
+          setTeam(temp)
+      }
+        catch(e){
+          console.log(e)
+        }
+      }
+
+      const getUserData = async (uid) => {
+        try {
+          const userData = await getDoc(doc(db, "users", uid))
+          const temp = userData.data()
+          setUserData(temp)
+          if(!temp){
+            if(window.location.pathname === "/team/join"){
+              setRedirect({navigate: window.location.pathname + window.location.search})
+              showAlert("info", "You'll require to sign up first!")
             }
+            navigate("/signup", { replace: true })
             setLoading(false)
+          }else if(temp.teamID){
+            await getUserTeam(temp.teamID)
+            if(window.location.pathname === "/"){
+              navigate("/Submissions")
+            }
+          }else if(window.location.pathname === "/"){
+            navigate("/team")
           }
-          catch(e){
-            console.log(e)
+          setLoading(false)
+        }
+        catch(e){
+          console.log(e)
+        }
+      }
+
+      var uid = localStorage.getItem("uid")
+      
+      if(uid){
+        getUserData(uid)
+      }else{
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+              setCurrentUser(user)
+              localStorage.setItem("uid", user.uid)
+              getUserData(user.uid)
+              //console.log(user)
+          } else {
+              login()
           }
-        };
+        })
+      }      
         
     }, [auth, db, navigate]);
 
@@ -94,9 +100,11 @@ function AuthContextProvider({children}){
     }
 
     function logOut(){
+      localStorage.removeItem("uid")
       signOut(auth).then(() => {
+        window.document.reload()
       }).catch((error) => {
-      console.log(error)
+        console.log(error)
       })
     }
  
@@ -136,17 +144,6 @@ function AuthContextProvider({children}){
         }
     }
 
-    /* async function getAllUsers(){
-      const querySnapshot = await getDocs(collection(db, "users"))
-      const users = []
-      querySnapshot.forEach((doc) => {
-        users.push({...doc.data(), id: doc.id, "A": "B"})
-        //console.log(doc.id, " => ", doc.data());
-      })
-      console.log(users)
-      return users
-    } */
-
     async function getAllTeams(){
       const querySnapshot = await getDocs(collection(db, "teams"))
       const teams = []
@@ -156,6 +153,7 @@ function AuthContextProvider({children}){
       })
       return teams
     }
+
     async function addUser(data){
       try {
           const newUserData = {...data, uid: currentUser.uid, connectedWithTeam : false, registeredAt: serverTimestamp(), lastUpdatedAt: serverTimestamp(), addressConfirmation: false}
@@ -198,7 +196,7 @@ function AuthContextProvider({children}){
             const temp = tempRef.data()
             const tempArray = temp.members
             for (var member = 0; member < temp.members.length ; member++){
-              console.log(tempArray[member].uid, currentUser.uid)
+              //console.log(tempArray[member].uid, currentUser.uid)
               if(tempArray[member].uid === currentUser.uid){
                 tempArray[member] = {firstName: data.firstName, lastName: data.lastName, emailID: currentUser.email, uid: currentUser.uid, teamLeader: userData.teamLeader}
                 await updateDoc(doc(db, "teams", userData.teamID), {members: tempArray})
@@ -228,7 +226,6 @@ function AuthContextProvider({children}){
           await updateDoc(doc(db, "teams", userData.teamID), {lastUpdatedAt: serverTimestamp(), teamName: newName})
           setTeam({ ...team, teamName : newName})
           showAlert("success", "Team name has been updated successfully")
-          console.log(currentUser.email)
           axios.get('https://hack4goodbackend-atharvadeolalikar.vercel.app', {
             params: {
               to : currentUser.email,

@@ -58,7 +58,7 @@ function AuthContextProvider({children}){
           }else if(temp.teamID){
             await getUserTeam(temp.teamID)
             if(window.location.pathname === "/"){
-              navigate("/Submissions")
+              navigate("/Submission")
             }
           }else if(window.location.pathname === "/"){
             navigate("/team")
@@ -69,23 +69,18 @@ function AuthContextProvider({children}){
           console.log(e)
         }
       }
-
-      var uid = localStorage.getItem("uid")
       
-      if(uid){
-        getUserData(uid)
-      }else{
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-              setCurrentUser(user)
-              localStorage.setItem("uid", user.uid)
-              getUserData(user.uid)
-              //console.log(user)
-          } else {
-              login()
-          }
-        })
-      }      
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+            setCurrentUser(user)
+            localStorage.setItem("uid", user.uid)
+            getUserData(user.uid)
+            //console.log(user)
+        } else {
+            login()
+        }
+      })
+            
         
     }, [auth, db, navigate]);
 
@@ -113,13 +108,13 @@ function AuthContextProvider({children}){
           showAlert("error", "Enter the team name first!")
           return false
         }
+        console.log(currentUser)
         try {
             const tempData = {
               teamName: name,
               createdAt: serverTimestamp(),
               lastUpdatedAt: serverTimestamp(),
-              round1: {submitted: false},
-              round2: {submitted: false},
+              submission: {submitted: false},
               members: [{firstName: userData.firstName, lastName: userData.lastName, emailID: currentUser.email, uid: currentUser.uid, teamLeader: true}]
             }
             const docRef = await addDoc(collection(db, "teams"), tempData);
@@ -131,10 +126,10 @@ function AuthContextProvider({children}){
           }
     }
 
-    async function Round1Submission(data){
+    async function makeSubmission(data){
       try {
         const tempData =  {
-          round1 : {...data, submitted: true, lastUpdatedAt: serverTimestamp()}
+          submission : {...data, submitted: true, lastUpdatedAt: serverTimestamp()}
         }
         await updateDoc(doc(db, "teams", userData.teamID), tempData)
         setTeam({...team, ...tempData})
@@ -317,7 +312,7 @@ function AuthContextProvider({children}){
         showAlert,
         navigate,
         hideMessage,
-        Round1Submission
+        makeSubmission
     }
     
     return (

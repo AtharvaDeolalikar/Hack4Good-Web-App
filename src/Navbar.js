@@ -34,8 +34,8 @@ function NavBar(){
             <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
                 Hack4Good
             </Typography>
-            <Link className="tabLink" to="/Submissions">
-                <Typography sx={{ mx: 2, display:{xs: "none", sm:"block"  }}}>Submissions</Typography>
+            <Link className="tabLink" to="/Submission">
+                <Typography sx={{ mx: 2, display:{xs: "none", sm:"block"  }}}>Submission</Typography>
             </Link>
             <Avatar onClick={handleClick} sx={{ bgcolor: "#fafafa" }}>
                 <AccountCircleIcon />
@@ -74,11 +74,11 @@ function NavBar(){
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-            <MenuItem component={Link} to="/Submissions">
+            <MenuItem component={Link} to="/Submission">
                 <ListItemIcon>
                     <AssignmentOutlinedIcon  />
                 </ListItemIcon>
-                    Submissions
+                    Submission
             </MenuItem>
 
 

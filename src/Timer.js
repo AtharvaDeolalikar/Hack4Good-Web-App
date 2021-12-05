@@ -2,7 +2,6 @@
 function Timer(deadline, current){
     var distance = deadline - current;
     if (distance < 0) {
-        //clearInterval(x);
         const count = {
             expired: true,
             hours : 0,

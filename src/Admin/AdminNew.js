@@ -1,5 +1,4 @@
-import { Search } from "@mui/icons-material"
-import { CircularProgress, Button, Link, Stack, Collapse, Chip, Toolbar, AppBar, Typography, TextField, InputAdornment, Dialog, DialogContent, DialogTitle,DialogContentText, ListItem, ListItemText, ListItemIcon, Grid, IconButton, Tooltip, FormControl, InputLabel, Select, MenuItem} from "@mui/material"
+import { CircularProgress, Button, Link, Stack, Collapse, Chip, Toolbar, AppBar, Typography, TextField, Dialog, DialogContent, DialogTitle,DialogContentText, ListItem, ListItemText, ListItemIcon, Grid, IconButton, Tooltip, FormControl, InputLabel, Select, MenuItem} from "@mui/material"
 import { Box } from "@mui/system"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../Contexts/AuthContext"
@@ -18,7 +17,7 @@ export default function Admin(){
       async function fetchTeams(){
         var snapshot = await context.getAllTeams()
         setTeams(snapshot)
-        console.log(snapshot)
+        //console.log(snapshot)
         setLoading(false)
       }
       fetchTeams()
@@ -39,7 +38,6 @@ export default function Admin(){
       }
       for (var member=0; member < item.members.length ; member++){
         if (searchHelper(item.members[member].emailID)) return item
-        
       }
     }
 
@@ -53,21 +51,21 @@ export default function Admin(){
             <DialogTitle >Team {team.teamName}</DialogTitle>
             <DialogContent>
               <DialogContentText>
-              <Typography color="white" fontSize={22}>{team.round1.projectTitle}</Typography>
-              <Typography>{team.round1.projectDescription}</Typography>
+              <Typography color="white" fontSize={22}>{team.submission.projectTitle}</Typography>
+              <Typography>{team.submission.projectDescription}</Typography>
               <Typography  color="white" mt={2}>Technologies Used</Typography>
               <Stack direction="row" sx={{flexWrap: "wrap", gap:1, mt:1, mb: 2}}>
-                {team.round1.technologiesUsed.map(item => (
+                {team.submission.technologiesUsed.map(item => (
                   <Chip key={item} label={item}/>
                 ))}
               </Stack>
               <Typography color="white" mt={2}>Project Links</Typography>
               <Stack spacing={1}>
-                {team.round1.projectLinks.map(item => (
+                {team.submission.projectLinks.map(item => (
                   <Link key={item} sx={{wordWrap: "break-word"}} href={item} target="_blank">{item}</Link>
                 ))}
               </Stack>
-              <Typography mt={2}>Last Updated at: {new Date(team.round1.lastUpdatedAt.seconds * 1000).toLocaleString('en-IN')}</Typography>
+              <Typography mt={2}>Last Updated at : {new Date(team.submission.lastUpdatedAt.seconds * 1000).toLocaleString('en-IN')}</Typography>
               </DialogContentText>
               <Button sx={{float: 'right'}} onClick={() => setSubmissionDialog({...submissionDialog, show: false})}>Close</Button>
             </DialogContent> 
@@ -126,7 +124,7 @@ export default function Admin(){
                   <Grid item md={2}>Team Name</Grid>
                   <Grid item md={4}>Members</Grid>
                   <Grid item md={2}>Team ID</Grid>
-                  <Grid item md={2} sx={{textAlign : "center"}}><Chip color="info" label="Round 1 Submission" /></Grid>
+                  <Grid item md={2} sx={{textAlign : "center"}}><Chip color="info" label="Submission" /></Grid>
               </Grid>
             </Box>
             <TransitionGroup >
@@ -135,9 +133,9 @@ export default function Admin(){
                 }).filter(item => {
                   if(filter == "all"){
                     return item
-                  }else if(filter == true && item.round1.submitted == true){
+                  }else if(filter == true && item.submission.submitted == true){
                     return item
-                  }else if(filter == false && item.round1.submitted == false){
+                  }else if(filter == false && item.submission.submitted == false){
                     return item
                   }
                 }).map((team, index) => {
@@ -165,7 +163,7 @@ export default function Admin(){
                           </Grid>
                           <Grid item md={2}>{team.id}</Grid>
                           <Grid item md={2} sx={{textAlign : "center"}}>
-                            {team.round1.submitted ? <Button variant="outlined" onClick={() => setSubmissionDialog({index: index, show: true})}>Open</Button> : null}
+                            {team.submission.submitted ? <Button variant="outlined" onClick={() => setSubmissionDialog({index: index, show: true})}>Open</Button> : null}
                           </Grid>
                         </Grid>
                       </Box>

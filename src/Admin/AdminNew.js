@@ -1,5 +1,5 @@
 import { Search } from "@mui/icons-material"
-import { CircularProgress, Button, Link, Stack, Collapse, Chip, Toolbar, AppBar, Typography, TextField, InputAdornment, Dialog, DialogContent, DialogTitle,DialogContentText, ListItem, ListItemText, ListItemIcon, Grid, IconButton, Tooltip} from "@mui/material"
+import { CircularProgress, Button, Link, Stack, Collapse, Chip, Toolbar, AppBar, Typography, TextField, InputAdornment, Dialog, DialogContent, DialogTitle,DialogContentText, ListItem, ListItemText, ListItemIcon, Grid, IconButton, Tooltip, FormControl, InputLabel, Select, MenuItem} from "@mui/material"
 import { Box } from "@mui/system"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../Contexts/AuthContext"
@@ -11,12 +11,14 @@ export default function Admin(){
     const [teams, setTeams] = useState()
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState("")
+    const [filter, setFilter] = useState("all")
     const [submissionDialog, setSubmissionDialog] = useState({show: false, index: null})
 
     useEffect(() => { 
       async function fetchTeams(){
         var snapshot = await context.getAllTeams()
         setTeams(snapshot)
+        console.log(snapshot)
         setLoading(false)
       }
       fetchTeams()
@@ -92,11 +94,22 @@ export default function Admin(){
           <Toolbar sx={{ flexWrap: 'wrap', display: "flex", justifyContent : "space-between" }}>
             <Typography>Hack4Good</Typography>
               <Box sx={{display: "flex", gap: 2}}>
+                <Box>
+                  <FormControl variant="filled" size="small" sx={{width: 250}}>
+                    <InputLabel>Filter Teams</InputLabel>
+                    <Select
+                      value={filter}
+                      label="Filter Teams"
+                      onChange={(e) => setFilter(e.target.value)}
+                    >
+                      <MenuItem value="all">All teams</MenuItem>
+                      <MenuItem value={true}>Submitted Teams</MenuItem>
+                      <MenuItem value={false}>Non-submitted Teams</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
                 <Tooltip title="You can search by team ID, team name or the email address of any team member!">
-                  <TextField placeholder="Search" variant="standard" onChange={e => setSearch(e.target.value.toLowerCase())} InputProps={{startAdornment: (
-                    <InputAdornment position="start">
-                      <Search />
-                    </InputAdornment>)}}> 
+                  <TextField variant="filled" size="small" label="Search" sx={{width: 250}} onChange={e => setSearch(e.target.value.toLowerCase())} >
                   </TextField>
                 </Tooltip>
                 <Tooltip title="Log out">
@@ -119,6 +132,14 @@ export default function Admin(){
             <TransitionGroup >
               {teams.filter(item => {
                 return makeSearch(item)
+                }).filter(item => {
+                  if(filter == "all"){
+                    return item
+                  }else if(filter == true && item.round1.submitted == true){
+                    return item
+                  }else if(filter == false && item.round1.submitted == false){
+                    return item
+                  }
                 }).map((team, index) => {
                   return (
                     <Collapse in={true} key={index}>

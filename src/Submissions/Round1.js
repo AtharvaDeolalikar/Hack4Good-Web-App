@@ -26,7 +26,7 @@ function Round1(){
     const contributionRef = useRef()
 
     useEffect(() => {
-        var deadline = new Date("Nov 29, 2021 19:15:00 GMT+0530").getTime();
+        var deadline = new Date("Dec 2, 2021 19:15:00 GMT+0530").getTime();
         var current = new Date().getTime();
         const interval = setInterval(function(){
             current = current + 1000

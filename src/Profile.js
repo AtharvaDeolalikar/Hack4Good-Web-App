@@ -298,6 +298,8 @@ function Profile(){
                                 <MenuItem value="S">S</MenuItem>
                                 <MenuItem value="M">M</MenuItem>
                                 <MenuItem value="L">L</MenuItem>
+                                <MenuItem value="XL">XL</MenuItem>
+                                <MenuItem value="XXL">XXL</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>

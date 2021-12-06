@@ -7,7 +7,6 @@ import SignUp from "./Signup";
 import Profile from "./Profile"
 import Submission from "./Submission";
 import TeamJoin from "./TeamJoin";
-//import AdminOld from "./Admin/Admin";
 import Admin from "./Admin/AdminNew";
 import PrivateRoute from "./PrivateRoute";
 

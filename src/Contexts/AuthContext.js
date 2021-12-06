@@ -73,7 +73,6 @@ function AuthContextProvider({children}){
       onAuthStateChanged(auth, (user) => {
         if (user) {
             setCurrentUser(user)
-            localStorage.setItem("uid", user.uid)
             getUserData(user.uid)
             console.log(user)
         } else {
@@ -95,9 +94,8 @@ function AuthContextProvider({children}){
     }
 
     function logOut(){
-      localStorage.removeItem("uid")
       signOut(auth).then(() => {
-        window.document.reload()
+        window.location.href = "http://hack4good.ieee-cis-sbc.org";
       }).catch((error) => {
         console.log(error)
       })

@@ -14,8 +14,9 @@ import NavBar from "./Navbar";
 import Footer from "./Footer";
 
 function Submission(){
-    const context = useContext(AuthContext) 
-    const isSubmitted = context.team.submission.submitted
+    const context = useContext(AuthContext)
+
+    const [isSubmitted, setIsSubmitted] = useState(context.team.submission.submitted)
     const [noLinks, setNoLinks] = useState((isSubmitted && context.team.submission.projectLinks) || [""])
     const [technologies, setTechnologies] = useState((isSubmitted && context.team.submission.technologiesUsed) || [])
     const [start, setStart] = useState(isSubmitted)
@@ -26,16 +27,9 @@ function Submission(){
 
     const projectTitleRef = useRef()
     const projectDescriptionRef = useRef()
-    const contributionRef = useRef()
-
-    
+    const contributionRef = useRef()    
 
     useEffect(() => {
-        if(!context.team){
-            context.showAlert("info", "You should create or join a team first in order to make submissions!")
-            context.navigate("/team")
-        }
-
         var deadline = new Date("Dec 7, 2021 19:15:00 GMT+0530").getTime();
         var current = new Date().getTime();
         const interval = setInterval(function(){
@@ -55,6 +49,7 @@ function Submission(){
             setEditable(true)
             return false
         }
+        setLoadButton(true)
         const submissiondata = {
             projectTitle: projectTitleRef.current.value,
             projectDescription : projectDescriptionRef.current.value,
@@ -74,21 +69,25 @@ function Submission(){
         }
         for(var error in errors){
             if(errors[error] === true){
+                setLoadButton(false)
                 return false
             }
         }
         if(noLinks.length === 0){
             context.showAlert("error", "Enter the link(s) before making submission.")
+            setLoadButton(false)
             return false
         }
         for (var link = 0; link < noLinks.length; link++){
             if(!noLinks[link].startsWith("https://")){
                 context.showAlert("error", "The link(s) must start with 'https://'")
+                setLoadButton(false)
                 return false
             }
         }
         await context.makeSubmission({...submissiondata, projectLinks : noLinks})
         setEditable(false)
+        setLoadButton(false)
     }
     
 
@@ -249,7 +248,7 @@ function Submission(){
                 </Stack>
             </Grid>
             <Grid item xs={12} sx={{textAlign : 'center', mt:1, mb: 10}}>
-                <DynamicButton timer={timer} editable={editable} MakeSubmission={MakeSubmission} submitted={isSubmitted}/>
+                <DynamicButton timer={timer} editable={editable} MakeSubmission={MakeSubmission} submitted={isSubmitted} load={loadButton}/>
             </Grid>
         </Grid>
         </>

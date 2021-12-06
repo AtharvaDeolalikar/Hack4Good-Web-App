@@ -1,5 +1,6 @@
+import { LoadingButton } from "@mui/lab"
 import { Typography, TextField, Divider, Button, Grid, Stack, Chip, Box } from "@mui/material"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { AuthContext } from "./Contexts/AuthContext"
 import Footer from "./Footer"
 import NavBar from "./Navbar"
@@ -7,14 +8,18 @@ import TeamManage from "./TeamManage"
 
 function Team(){
     const context = useContext(AuthContext)
+    const [load, setLoad] = useState(false)
 
     function createTeam(e){
         e.preventDefault()
+        setLoad(true)
         if(!e.target.teamName.value){
             context.showAlert("error", "Please enter the team name")
+            setLoad(false)
             return false
         }
         context.createTeam(e.target.teamName.value)
+        setLoad(false)
     }
 
     function joinTeam(e){
@@ -49,7 +54,7 @@ function Team(){
                                 label="Team Name"
                                 name="teamName"          
                             />
-                            <Button variant="outlined" type="submit">Create</Button>
+                            <LoadingButton loading={load} variant="outlined" type="submit">Create</LoadingButton>
                         </Stack>
                     </Grid>
                 

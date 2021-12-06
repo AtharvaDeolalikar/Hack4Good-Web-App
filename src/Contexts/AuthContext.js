@@ -75,7 +75,7 @@ function AuthContextProvider({children}){
             setCurrentUser(user)
             localStorage.setItem("uid", user.uid)
             getUserData(user.uid)
-            //console.log(user)
+            console.log(user)
         } else {
             login()
         }

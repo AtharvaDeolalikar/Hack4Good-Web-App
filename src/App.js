@@ -9,16 +9,16 @@ import Submission from "./Submission";
 import TeamJoin from "./TeamJoin";
 //import AdminOld from "./Admin/Admin";
 import Admin from "./Admin/AdminNew";
+import PrivateRoute from "./PrivateRoute";
 
-function App() {
+function App() {  
   return (
     <>
       <CssBaseline/>
       <Paper sx={{borderRadius : 0, bgcolor : "theme.palette.background.paper"}}>
         <Routes>
-          {/* <Route path="adminOld" element={<AdminOld />} /> */}
-          <Route path="admin" element={<Admin />} />
-          <Route path="Submission" element={<Submission />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/Submission" element={<PrivateRoute><Submission /></PrivateRoute>}/>
           <Route path="/team" element={<Team />} />
           <Route path="/team/join" element ={<TeamJoin />} />
           <Route path="/signup" element={<SignUp />} />

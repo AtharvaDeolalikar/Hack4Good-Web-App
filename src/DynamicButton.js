@@ -1,6 +1,7 @@
+import { LoadingButton } from "@mui/lab"
 import { Button } from "@mui/material"
 
-function DynamicButton({timer, editable, MakeSubmission, submitted}){
+function DynamicButton({timer, editable, MakeSubmission, submitted, load}){
     if(timer.expired){
         return (
             <Button variant="contained" disabled>Submission deadline is over</Button>
@@ -9,7 +10,7 @@ function DynamicButton({timer, editable, MakeSubmission, submitted}){
             <Button variant="contained" onClick={MakeSubmission}>Make Submission</Button>
     )}else{
         return (
-            <Button variant="contained" onClick={MakeSubmission}>{editable ? "Update" : "Edit"} Submission</Button>
+            <LoadingButton variant="contained" loading={load} onClick={MakeSubmission}>{editable ? "Update" : "Edit"} Submission</LoadingButton>
     )}
 }
 

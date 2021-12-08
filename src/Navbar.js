@@ -1,4 +1,4 @@
-import { AppBar, Typography, Toolbar, Avatar} from "@mui/material"
+import { AppBar, Typography, Toolbar, Avatar, Chip, Button} from "@mui/material"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -34,9 +34,7 @@ function NavBar(){
             <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
                 Hack4Good
             </Typography>
-            <Link className="tabLink" to="/Submission">
-                <Typography sx={{ mx: 2, display:{xs: "none", sm:"block"  }}}>Submission</Typography>
-            </Link>
+            <Button variant="outlined" component={Link} to="/submission" sx={{mx: 2, display:{xs: "none", sm:"flex"}}} startIcon={<AssignmentOutlinedIcon  />}>Submission</Button>
             <Avatar onClick={handleClick} sx={{ bgcolor: "#fafafa" }}>
                 <AccountCircleIcon />
             </Avatar>

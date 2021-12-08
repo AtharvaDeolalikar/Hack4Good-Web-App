@@ -30,7 +30,7 @@ function Submission(){
     const contributionRef = useRef()    
 
     useEffect(() => {
-        var deadline = new Date("Dec 7, 2021 19:15:00 GMT+0530").getTime();
+        var deadline = new Date("Dec 20, 2021 23:59:00 GMT+0530").getTime();
         var current = new Date().getTime();
         const interval = setInterval(function(){
             current = current + 1000
@@ -255,11 +255,11 @@ function Submission(){
         :
         <>
             {!isSubmitted && timer &&
-                <Box sx={{textAlign: "center", minHeight: "100vh", display: 'flex'}}>
-                    <Box sx={{padding:4, m:3, justifyContent: "center", borderRadius: 3, margin: "auto", border: (theme) => `1px solid ${theme.palette.divider}`}}> 
+                <Box sx={{textAlign: "center", minHeight: "100vh", display: 'grid', placeContent : "center"}}>
+                    <Box sx={{p:{xs: 1, sm: 2}, borderRadius: 3, mx:{xs: 2, sm: 0}, border: (theme) => `1px solid ${theme.palette.divider}`}}> 
                         <Typography variant="h4">Hack4Good Submission</Typography>
                         <Box sx={{display: "block", my:2}}>
-                                <Chip sx={{px:2}} label="Deadline: November 15, 2021" />
+                                <Chip sx={{px:2}} label="Deadline: December 20, 2021" />
                         </Box>
                         <Typography>Time left for Submission deadline</Typography>
                         <Countdown time={timer}/>

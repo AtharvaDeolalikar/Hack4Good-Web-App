@@ -61,9 +61,9 @@ export default function Admin(){
               </Stack>
               <Typography color="white" mt={2}>Project Links</Typography>
               <Stack spacing={1}>
-                {team.submission.projectLinks.map(item => (
-                  <Link key={item} sx={{wordWrap: "break-word"}} href={item} target="_blank">{item}</Link>
-                ))}
+                <Link sx={{wordWrap: "break-word"}} href={team.submission.projectLinks.githubRepo} target="_blank">{team.submission.projectLinks.githubRepo}</Link>
+                <Link sx={{wordWrap: "break-word"}} href={team.submission.projectLinks.videoDemo} target="_blank">{team.submission.projectLinks.videoDemo}</Link>
+                {team.submission.projectLinks.deployed && <Link sx={{wordWrap: "break-word"}} href={team.submission.projectLinks.deployed} target="_blank">{team.submission.projectLinks.deployed}</Link>}
               </Stack>
               <Typography mt={2}>Last Updated at : {new Date(team.submission.lastUpdatedAt.seconds * 1000).toLocaleString('en-IN')}</Typography>
               </DialogContentText>
@@ -131,11 +131,11 @@ export default function Admin(){
               {teams.filter(item => {
                 return makeSearch(item)
                 }).filter(item => {
-                  if(filter == "all"){
+                  if(filter === true && item.submission.submitted === true){
                     return item
-                  }else if(filter == true && item.submission.submitted == true){
+                  }else if(filter === false && item.submission.submitted === false){
                     return item
-                  }else if(filter == false && item.submission.submitted == false){
+                  }else {
                     return item
                   }
                 }).map((team, index) => {

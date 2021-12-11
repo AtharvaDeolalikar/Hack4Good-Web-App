@@ -1,33 +1,28 @@
-import {Box, TextField, Typography, Stack, Button, FormLabel, Grid, InputAdornment, IconButton, Select, Chip, InputLabel, FormControl, CircularProgress, Divider} from "@mui/material"
-import { useContext, useEffect, useRef, useState } from "react"
-import MenuItem from '@mui/material/MenuItem';
-import AddIcon from '@mui/icons-material/Add';
+import {Box, TextField, Typography, Stack, Button, FormLabel, Grid, Chip, CircularProgress} from "@mui/material"
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "./Contexts/AuthContext";
-import DeleteIcon from '@mui/icons-material/Delete';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import Timer from "./Timer";
 import Countdown from "./Countdown";
 import DynamicButton from "./DynamicButton";
-import { TransitionGroup } from 'react-transition-group';
-import Collapse from '@mui/material/Collapse'
 import NavBar from "./Navbar";
 import Footer from "./Footer";
+import SubmissionInstructions from "./SubmissionInstructions";
+import options from "./options.json"
 
 function Submission(){
     const context = useContext(AuthContext)
-
-    const [isSubmitted, setIsSubmitted] = useState(context.team.submission.submitted)
-    const [noLinks, setNoLinks] = useState((isSubmitted && context.team.submission.projectLinks) || [""])
-    const [technologies, setTechnologies] = useState((isSubmitted && context.team.submission.technologiesUsed) || [])
+    const submission = context.team.submission
+    const [isSubmitted] = useState(submission.submitted)
+    //const [noLinks, setNoLinks] = useState((isSubmitted && context.team.submission.projectLinks) || [""])
+    const [technologies, setTechnologies] = useState((isSubmitted && submission.technologiesUsed) || [])
     const [start, setStart] = useState(isSubmitted)
     const [timer, setTimer] = useState()
     const [editable, setEditable] = useState(false)
-    const [formError, setFormError] = useState({})
     const [loadButton, setLoadButton] = useState(false)
-
-    const projectTitleRef = useRef()
-    const projectDescriptionRef = useRef()
-    const contributionRef = useRef()    
+    const [instructions, setInstructions] = useState(!isSubmitted)
+    
+    const filter = createFilterOptions();
 
     useEffect(() => {
         var deadline = new Date("Dec 20, 2021 23:59:00 GMT+0530").getTime();
@@ -41,7 +36,9 @@ function Submission(){
         }
     }, [])
 
-    async function MakeSubmission(){
+    async function MakeSubmission(e){
+        e.preventDefault()
+
         if(timer.expired){
             return false
         }
@@ -50,92 +47,54 @@ function Submission(){
             return false
         }
         setLoadButton(true)
-        const submissiondata = {
-            projectTitle: projectTitleRef.current.value,
-            projectDescription : projectDescriptionRef.current.value,
-            contribution : contributionRef.current.value, 
+
+        const submissionData = {
+            problemStatementID : e.target.problemStatementID.value,
+            projectTitle: e.target.projectTitle.value,
+            projectDescription : e.target.projectDescription.value,
+            contribution : e.target.contribution.value, 
+            projectLinks : {
+                githubRepo : e.target.githubRepo.value, 
+                videoDemo: e.target.videoDemo.value, 
+                deployed: e.target.deployed.value,
+                dataset: e.target.dataset.value
+            },
             technologiesUsed : technologies
         }
-
-        var errors = formError
-        for (const property in submissiondata) {
-            if(submissiondata[property].length === 0){
-                errors[property] = true
-                setFormError(errors)
-            }else{
-                errors[property] = false
-                setFormError(errors)
-            }         
-        }
-        for(var error in errors){
-            if(errors[error] === true){
-                setLoadButton(false)
-                return false
-            }
-        }
-        if(noLinks.length === 0){
-            context.showAlert("error", "Enter the link(s) before making submission.")
+        
+        if((!e.target.problemStatementID.value.startsWith("P")) && (!e.target.problemStatementID.value.startsWith("OB"))){
+            context.showAlert("warning", `Kindly enter a valid problem statement ID`)
             setLoadButton(false)
-            return false
+            return false   
         }
-        for (var link = 0; link < noLinks.length; link++){
-            if(!noLinks[link].startsWith("https://")){
-                context.showAlert("error", "The link(s) must start with 'https://'")
+
+        for (const item in submissionData){
+            if(typeof submissionData[item] == "string" && submissionData[item].length === 0){
+                context.showAlert("warning", `Kindly enter ${e.target[item].id}`)
                 setLoadButton(false)
                 return false
             }
         }
-        await context.makeSubmission({...submissiondata, projectLinks : noLinks})
+
+        if(submissionData.projectLinks.githubRepo.length === 0 || submissionData.projectLinks.videoDemo.length === 0 || submissionData.projectLinks.dataset.length === 0){
+            context.showAlert("warning", `You must provide the required project link(s)`)
+            setLoadButton(false)
+            return false       
+        }
+        
+        for (const link in submissionData.projectLinks){
+            if(submissionData.projectLinks[link] !== "" && !submissionData.projectLinks[link].startsWith('https')){
+                context.showAlert("warning", "The link(s) must start with https://")
+                setLoadButton(false)
+                return false
+            }
+        }
+        
+        await context.makeSubmission({...submissionData})
         setEditable(false)
         setLoadButton(false)
     }
-    
 
-    const names=[
-        "JavaScript",
-        "HTML",
-        "CSS",
-        "React", 
-        "React Native",
-        "Angular",
-        "flutter",
-        "NPM",
-        "Vue.js",
-        "Ionic", 
-        "BootStrap"
-    ]
-
-    
-
-    function addLink(){
-        if(noLinks.length === 5){
-            context.showAlert("error", "You can add upto 5 links.")
-            return false
-        }
-        setNoLinks(noLinks => [...noLinks, ""])
-    }
-
-    function deleteLink(index){
-        const temp = [...noLinks]
-        temp.splice(index, 1)
-        setNoLinks(temp)
-    }
-
-    function updateLinksArray(index, value){
-        var tempArray = noLinks
-        tempArray[index] = value
-        setNoLinks(tempArray)
-    }
-
-    
-    const handleTechChange = (event) => {
-        const {
-        target: { value },
-        } = event;
-        setTechnologies(
-        typeof value === 'string' ? value.split(',') : value,
-        );
-    };
 
     if(!timer){
         return(
@@ -150,7 +109,8 @@ function Submission(){
         <NavBar />
         {start ? 
         <>
-        <Grid container sx={{display: "flex", justifyContent: 'space-evenly', bgcolor : "#0a1929", minHeight: "100vh"}} >
+        {!isSubmitted && <SubmissionInstructions open={instructions} close={() => setInstructions(false)}/>}
+        <Grid container sx={{display: "flex", justifyContent: 'space-evenly', bgcolor : "#0a1929", minHeight: "100vh"}} component="form" onSubmit={MakeSubmission}>
             <Grid item xs={11} mt={10} mb={1}>
                 <Typography variant="h3" textAlign="center" fontSize={{xs: 25, sm:30, md: 35}}>Hack4Good Submission</Typography>
             </Grid>
@@ -158,97 +118,127 @@ function Submission(){
                 <Stack spacing={2}>
                     <FormLabel component="legend">Basic Details</FormLabel>
                     <TextField 
-                        inputRef={projectTitleRef}
-                        error = {formError.projectTitle}
+                        //inputRef={projectTitleRef}
+                        label="Problem Statement ID"
+                        placeholder = "Eg. P01"
+                        name="problemStatementID"
+                        id = "the problem statement ID"
+                        disabled={!(!timer.expired && editable)}
+                        defaultValue = {isSubmitted ? submission.problemStatementID : ""}
+                    />
+                    <TextField 
                         label="Project Title"
+                        name = "projectTitle"
+                        id = "the project title"
                         placeholder = "What are you calling it?"
                         disabled={!(!timer.expired && editable)}
-                        defaultValue = {isSubmitted ? context.team.submission.projectTitle : ""}
-                    >
-                    </TextField>
+                        defaultValue = {isSubmitted ? submission.projectTitle : ""}
+                    />
                     <TextField 
-                        inputRef={projectDescriptionRef} 
+                        name = "projectDescription"
                         label= "Project Description" 
-                        error = {formError.projectDescription}
+                        id = 'the project description'
                         multiline 
                         placeholder = "Write a short, sharp and on point description of your project."
                         minRows={4} 
                         maxRows={6}
                         disabled={!(!timer.expired && editable)}
-                        defaultValue = {isSubmitted ? context.team.submission.projectDescription : ""}
-                    >
-                    </TextField>
+                        defaultValue = {isSubmitted ? submission.projectDescription : ""}
+                    />
                     <FormLabel component="legend">Project Details</FormLabel>
                     <TextField 
-                        inputRef={contributionRef} 
+                        name = "contribution"
                         label= "Contribution to the society"
                         placeholder = "How it will help the society?" 
-                        error = {formError.contribution}
+                        id = 'how it will contribute to the society'
                         multiline 
                         minRows={3} 
                         maxRows={4}
                         disabled={!(!timer.expired && editable)}
-                        defaultValue = {isSubmitted ? context.team.submission.projectDescription : ""}
-                    ></TextField>
+                        defaultValue = {isSubmitted ? submission.projectDescription : ""}
+                    />
                 </Stack>
             </Grid>
             <Grid item md={3} sm={8} xs={11} my={2} sx={{p:4, borderRadius: 2, bgcolor : "#162534"}}>
                 <Stack spacing={2}>
                     <FormLabel component="legend">Additional Details</FormLabel>
-                    <FormControl>
-                        <InputLabel>Technologies Used</InputLabel>
-                        <Select
-                            multiple
-                            error = {formError.technologiesUsed}
-                            disabled={!(!timer.expired && editable)}
-                            value={technologies}
-                            onChange={handleTechChange}
-                            input={<OutlinedInput label="Technologies Used" />}
-                            renderValue={(selected) => (
-                                <Stack direction="row" sx={{flexWrap : "wrap" , gap: 1}}>
-                                {selected.map((value) => (
-                                    <Chip key={value} label={value} />
-                                ))}
-                                </Stack>
-                            )}
-                        >
-                            {names.map((name) => (
-                            <MenuItem
-                                key={name}
-                                value={name}
-                                //style={getStyles(name, personName, theme)}
-                            >
-                                {name}
-                            </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    <Autocomplete
+                        multiple
+                        options={options.options}
+                        freeSolo
+                        disabled={!(!timer.expired && editable)}
+                        value = {technologies}
+                        onChange = {(event, newValue) => {
+                            if (typeof newValue === 'string') {
+                              setTechnologies(newValue);
+                            } else if (newValue && newValue.inputValue) {
+                              // Create a new value from the user input
+                              setTechnologies(newValue.inputValue);
+                            } else {
+                              setTechnologies(newValue);
+                            }
+                        }}
+                        disableCloseOnSelect
+                        renderTags={(value, getTagProps) =>
+                            value.map((option, index) => (
+                                <Chip variant="filled" label={option} {...getTagProps({ index })} />
+                            ))
+                        }
+                        filterOptions={(options, params) => {
+                            const filtered = filter(options, params)
+                            const { inputValue } = params;
+                            // Suggest the creation of a new value
+                            const isExisting = options.some((option) => inputValue === option);
+                            if (inputValue !== '' && !isExisting) {
+                              filtered.push(
+                                inputValue
+                              );
+                            }
                     
+                            return filtered;
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="outlined"
+                                label="Technologies Used"
+                            />
+                        )}
+                    />
+
                     <FormLabel component="legend">Project Links</FormLabel>
-                    <TransitionGroup>
-                    {noLinks.map((item, index) => 
-                        <Collapse in={true}>
-                        <TextField
-                            key =  {index}
-                            margin = "dense"
-                            label={`Link #${index + 1}`} 
-                            defaultValue={isSubmitted ? item : ""}
-                            disabled={!(!timer.expired && editable)}
-                            placeholder = "Paste or type a link"
-                            fullWidth
-                            onChange= {(event) => updateLinksArray(index, event.target.value)}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end"><IconButton  disabled={!(!timer.expired && editable)} onClick={() => deleteLink(index)}><DeleteIcon /></IconButton></InputAdornment>,
-                            }}
-                        ></TextField>
-                        </Collapse>
-                    )}
-                    </TransitionGroup>
-                    <Button disabled={!(!timer.expired && editable)} onClick={() => addLink()} startIcon={<AddIcon />}>Add link</Button>
+                    <TextField
+                        name = "githubRepo"
+                        label = "GitHub Repository"
+                        disabled={!(!timer.expired && editable)}
+                        fullWidth
+                        defaultValue = {isSubmitted ? submission.projectLinks.githubRepo : ""}
+                    ></TextField>
+                     <TextField
+                        name = "videoDemo"
+                        label = "Video Demonstration"
+                        disabled={!(!timer.expired && editable)}
+                        defaultValue = {isSubmitted ? submission.projectLinks.videoDemo : ""}
+                        fullWidth                        
+                    ></TextField>
+                     <TextField
+                        name = "dataset"
+                        label = "Used Dataset Link"
+                        disabled={!(!timer.expired && editable)}
+                        defaultValue = {isSubmitted ? submission.projectLinks.dataset : ""}
+                        fullWidth
+                    ></TextField>
+                    <TextField
+                        name = "deployed"
+                        label = "Deployed Link (Optional)"
+                        disabled={!(!timer.expired && editable)}
+                        defaultValue = {isSubmitted ? submission.projectLinks.deployed : ""}
+                        fullWidth
+                    ></TextField>
                 </Stack>
             </Grid>
             <Grid item xs={12} sx={{textAlign : 'center', mt:1, mb: 10}}>
-                <DynamicButton timer={timer} editable={editable} MakeSubmission={MakeSubmission} submitted={isSubmitted} load={loadButton}/>
+                <DynamicButton timer={timer} editable={editable} submitted={isSubmitted} load={loadButton}/>
             </Grid>
         </Grid>
         </>
@@ -256,7 +246,7 @@ function Submission(){
         <>
             {!isSubmitted && timer &&
                 <Box sx={{textAlign: "center", minHeight: "100vh", display: 'grid', placeContent : "center"}}>
-                    <Box sx={{p:{xs: 1, sm: 2}, borderRadius: 3, mx:{xs: 2, sm: 0}, border: (theme) => `1px solid ${theme.palette.divider}`}}> 
+                    <Box sx={{p:{xs: 1, sm: 3}, borderRadius: 3, mx:{xs: 2, sm: 0}, border: (theme) => `1px solid ${theme.palette.divider}`}}> 
                         <Typography variant="h4">Hack4Good Submission</Typography>
                         <Box sx={{display: "block", my:2}}>
                                 <Chip sx={{px:2}} label="Deadline: December 20, 2021" />

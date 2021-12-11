@@ -9,6 +9,7 @@ import Submission from "./Submission";
 import TeamJoin from "./TeamJoin";
 import Admin from "./Admin/AdminNew";
 import PrivateRoute from "./PrivateRoute";
+import TnC from "./TnC";
 
 function App() {  
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/team/join" element ={<TeamJoin />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/tnc" element={<TnC />} />
           <Route path="*" element={<Navigate to="/profile" /> } />
         </Routes>
       </Paper>

@@ -1,5 +1,5 @@
 import { LoadingButton } from "@mui/lab";
-import { TextField, Typography, Stack, Grid, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, InputLabel, Select, MenuItem, Divider } from "@mui/material";
+import { TextField, Typography, Stack, Grid, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, InputLabel, Select, MenuItem, Divider, FormGroup, Checkbox } from "@mui/material";
 import { Box } from "@mui/system";
 import { useContext, useState, useEffect} from "react";
 import { AuthContext } from "./Contexts/AuthContext";
@@ -8,6 +8,7 @@ import Footer from "./Footer";
 function SignUp(){
     const context = useContext(AuthContext);
     const [buttonLoading, setButtonLoading] = useState(false);
+    const [termsAccepted, setTermsAccepted] = useState(true) 
     const [degreeType, setDegreeType] = useState("")
 
     useEffect(() => {
@@ -18,6 +19,10 @@ function SignUp(){
 
     function handleSubmit(e){
         e.preventDefault()
+        if(!termsAccepted){
+            context.showAlert("warning", "Kindly accept the terms and conditions")
+            return false
+        }
         setButtonLoading(true)
         const data = {
             firstName: e.target.firstName.value,
@@ -37,7 +42,7 @@ function SignUp(){
         }
         for (const property in data) {
             if(data[property].length === 0){
-              context.showAlert("error", `Enter ${property} first!`)
+              context.showAlert("warning", `Kindly enter your${property}!`)
               setButtonLoading(false)
               return false
             } 
@@ -54,81 +59,83 @@ function SignUp(){
                     <Divider sx={{maxWidth: 200, margin : "auto", my: 2}}/>
                     <Typography sx={{ fontSize: {xs: 30, md: "h5.fontSize"} , fontWeight: 400 }}>Signup</Typography>
                 </Grid> 
-            <Grid item md={5} sm={8} xs={11} my={2}>
-                <Stack spacing={3}>
-                    <Grid container sx={{justifyContent : "space-between"}}>
-                        <Grid item md={6} xs={12}>
-                            <TextField
-                                fullWidth
-                                sx={{pr: {xs:0, md: 1}}}
-                                label="First Name"
-                                defaultValue= {context.currentUser.firstName}
-                                name= "firstName"        
-                            />
+                <Grid item md={5} sm={8} xs={11} my={2}>
+                    <Stack spacing={3}>
+                        <Grid container sx={{justifyContent : "space-between"}}>
+                            <Grid item md={6} xs={12}>
+                                <TextField
+                                    fullWidth
+                                    sx={{pr: {xs:0, md: 1}}}
+                                    label="First Name"
+                                    defaultValue= {context.currentUser.firstName}
+                                    name= "firstName"        
+                                />
+                            </Grid>
+                            <Grid item md={6} xs={12} sx={{mt: {xs:3, md: 0}}}>
+                                <TextField
+                                    label="Last Name"
+                                    fullWidth
+                                    sx={{pl: {xs:0, md: 1}}}
+                                    name= "lastName"
+                                    defaultValue= {context.currentUser.lastName}     
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid item md={6} xs={12} sx={{mt: {xs:3, md: 0}}}>
-                            <TextField
-                                label="Last Name"
-                                fullWidth
-                                sx={{pl: {xs:0, md: 1}}}
-                                name= "lastName"
-                                defaultValue= {context.currentUser.lastName}     
-                            />
+                        <TextField
+                            label="Email"
+                            name="email"
+                            defaultValue = {context.currentUser.email}
+                            disabled    
+                        />
+                        <TextField
+                            label="Phone No"
+                            name="phoneNo"
+                        />
+                        <TextField
+                            label="Educational Institution"
+                            name="institution"  
+                        />
+                        <Grid container sx={{justifyContent : "space-between"}}>
+                            <Grid item md={6} xs={12}>
+                                <FormControl fullWidth  sx={{pr: {xs:0, md: 1}}}>
+                                    <InputLabel >Degree Type</InputLabel>
+                                        <Select value={degreeType} onChange={(e) => setDegreeType(e.target.value)} label="Degree Type" name="degreeType" >
+                                            <MenuItem value="Associate">Associate</MenuItem>
+                                            <MenuItem value="Bachelors">Bachelors</MenuItem>
+                                            <MenuItem value="Masters">Masters</MenuItem>
+                                            <MenuItem value="Doctoral">Doctoral</MenuItem>
+                                            <MenuItem value="High School">High School</MenuItem>
+                                        </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item md={6} xs={12} sx={{mt: {xs:3, md: 0}}}>
+                                <TextField
+                                    fullWidth
+                                    name = "studyField"
+                                    label="Field of Study"
+                                    sx={{pl: {xs:0, md: 1}}}
+                                    placeholder = "Eg. Computer Science"        
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <TextField
-                        label="Email"
-                        name="email"
-                        defaultValue = {context.currentUser.email}
-                        disabled    
-                    />
-                    <TextField
-                        label="Phone No"
-                        name="phoneNo"
-                    />
-                    <TextField
-                        label="Educational Institution"
-                        name="institution"  
-                    />
-                    <Grid container sx={{justifyContent : "space-between"}}>
-                        <Grid item md={6} xs={12}>
-                            <FormControl fullWidth  sx={{pr: {xs:0, md: 1}}}>
-                                <InputLabel >Degree Type</InputLabel>
-                                    <Select value={degreeType} onChange={(e) => setDegreeType(e.target.value)} label="Degree Type" name="degreeType" >
-                                        <MenuItem value="Associate">Associate</MenuItem>
-                                        <MenuItem value="Bachelors">Bachelors</MenuItem>
-                                        <MenuItem value="Masters">Masters</MenuItem>
-                                        <MenuItem value="Doctoral">Doctoral</MenuItem>
-                                        <MenuItem value="High School">High School</MenuItem>
-                                    </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item md={6} xs={12} sx={{mt: {xs:3, md: 0}}}>
-                            <TextField
-                                fullWidth
-                                name = "studyField"
-                                label="Field of Study"
-                                sx={{pl: {xs:0, md: 1}}}
-                                placeholder = "Eg. Computer Science"        
-                            />
-                        </Grid>
-                    </Grid>
-                    <Box sx={{display: "flex", justifyContent : "space-between", flexDirection : "row"}}>
-                        <FormControl  >
-                            <FormLabel component="legend">Gender</FormLabel>
-                                <RadioGroup row name="gender">
-                                    <Box>
-                                        <FormControlLabel value="male" control={<Radio />} label="Male" />
-                                        <FormControlLabel value="female" control={<Radio />} label="Female" /> 
-                                    </Box>   
-                                </RadioGroup>
-                            </FormControl>
-                        <TextField sx={{maxWidth : 100}} type="number" name="age" label="Age" />
-                    </Box>
-                    <LoadingButton type="submit" variant="contained" loading={buttonLoading}>Submit</LoadingButton>
-                </Stack>             
-            </Grid>
-                
+                        <Box sx={{display: "flex", justifyContent : "space-between", flexDirection : "row"}}>
+                            <FormControl  >
+                                <FormLabel component="legend">Gender</FormLabel>
+                                    <RadioGroup row name="gender">
+                                        <Box>
+                                            <FormControlLabel value="male" control={<Radio />} label="Male" />
+                                            <FormControlLabel value="female" control={<Radio />} label="Female" /> 
+                                        </Box>   
+                                    </RadioGroup>
+                                </FormControl>
+                            <TextField sx={{maxWidth : 100}} type="number" name="age" label="Age" />
+                        </Box>
+                        <FormGroup>
+                            <FormControlLabel control={<Checkbox onChange={(e) => setTermsAccepted(e.target.checked)} checked={termsAccepted} />} label="I agree to all the terms and conditions" />
+                        </FormGroup>
+                        <LoadingButton type="submit" variant="contained" loading={buttonLoading}>Submit</LoadingButton>
+                    </Stack>             
+                </Grid>
             </Grid>
     <Footer />
     </>

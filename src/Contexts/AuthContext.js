@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "../config";
-import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut, onAuthStateChanged} from "firebase/auth";
+import { getAuth, signInWithPopup, /* signInWithRedirect, getRedirectResult, */ GoogleAuthProvider, signOut, onAuthStateChanged} from "firebase/auth";
 import { getFirestore , collection, addDoc, updateDoc, arrayUnion, doc, getDoc, setDoc, serverTimestamp, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router";
 import ShowAlert from "../ShowAlert";
@@ -42,7 +42,6 @@ function AuthContextProvider({children}){
           console.log(e)
         }
       }
-
       const getUserData = async (uid) => {
         try {
           const userData = await getDoc(doc(db, "users", uid))
@@ -74,28 +73,33 @@ function AuthContextProvider({children}){
         if (user) {
             setCurrentUser(user)
             getUserData(user.uid)
-            console.log(user)
         } else {
             login()
         }
       })
-            
-        
     }, [auth, db, navigate]);
 
     function login(){
+      signInWithPopup(auth, provider)
+      .then(result => {
+        setCurrentUser(result.user)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+      /* 
       signInWithRedirect(auth, provider)
       getRedirectResult(auth)
       .then((result) => {
       setCurrentUser(result.user)
       }).catch((error) => {
       console.log(error)
-      })
+      }) */
     }
 
     function logOut(){
       signOut(auth).then(() => {
-        window.location.href = "http://hack4good.ieee-cis-sbc.org";
+        window.location.href = "http://hack4good.ieee-cis-sbc.org"
       }).catch((error) => {
         console.log(error)
       })
@@ -106,13 +110,13 @@ function AuthContextProvider({children}){
           showAlert("error", "Enter the team name first!")
           return false
         }
-        console.log(currentUser)
+        
         try {
             const tempData = {
               teamName: name,
               createdAt: serverTimestamp(),
               lastUpdatedAt: serverTimestamp(),
-              submission: {submitted: false},
+              submission: {submitted: false, problemStatementID: "", projectTitle : "", projectDescription : "", contribution: "", projectLinks : {githubRepo: "", videoDemo: "", deployed: "", dataset: ""}, technologiesUsed: []},
               members: [{firstName: userData.firstName, lastName: userData.lastName, emailID: currentUser.email, uid: currentUser.uid, teamLeader: true}]
             }
             const docRef = await addDoc(collection(db, "teams"), tempData);

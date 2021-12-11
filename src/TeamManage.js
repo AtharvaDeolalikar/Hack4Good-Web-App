@@ -5,7 +5,6 @@ import { AuthContext } from "./Contexts/AuthContext"
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { LoadingButton } from "@mui/lab"
 import LinkIcon from '@mui/icons-material/Link';
-import EditIcon from '@mui/icons-material/Edit';
 
 function TeamManage(){
     const context = useContext(AuthContext)
@@ -26,7 +25,7 @@ function TeamManage(){
             <Grid container sx={{ mt : {xs: 5, md: 11}, bgcolor : "#0a1929"}}> 
                 <Grid item md={7} sm={8} xs={11} sx={{ p:3, borderRadius: 5, bgcolor: "#162534", margin:"auto", py: {xs: 5, md: 8}, my:5, display: "flex", justifyContent: "space-between"}}>
                     <Typography sx={{fontSize: {xs: 30, md: 45}}}>{context.team.teamName}</Typography>
-                    <EditIcon sx={{mt: {xs:1 , md:2},  cursor: "pointer"}} onClick={() => setEditDiag(true)}/>
+                    {/* <EditIcon sx={{mt: {xs:1 , md:2},  cursor: "pointer"}} onClick={() => setEditDiag(true)}/> */}
                 </Grid>
                 <Dialog open={editDiag} fullWidth={true} maxWidth="xs">
                     <DialogTitle>Edit Team Name</DialogTitle>
@@ -72,11 +71,11 @@ function TeamManage(){
                             <DialogContentText color="white" sx={{mt:2}}>1. Share the team invite link</DialogContentText>
                             <CopyToClipboard
                                 options={{ debug: true, message: "" }}
-                                text={`https://hack4good.ieee-cis-sbc.org/team/join?teamID=${context.userData.teamID}`}
+                                text={`https://app.hack4good.ieee-cis-sbc.org/team/join?teamID=${context.userData.teamID}`}
                                 onCopy={() => context.showAlert("success", "Team invite link has been copied to Clipboard!")}>
                                     <Tooltip title="Copy the team invite link and share it with your teammates!" arrow> 
                                         <TextField 
-                                            defaultValue={`https://hack4good.ieee-cis-sbc.org/team/join?teamID=${context.userData.teamID}`}
+                                            defaultValue={`https://app.hack4good.ieee-cis-sbc.org/team/join?teamID=${context.userData.teamID}`}
                                             disabled
                                             sx={{mt:1, mb:3}}
                                             fullWidth

@@ -1,4 +1,4 @@
-import { AppBar, Typography, Toolbar, Avatar, Chip, Button} from "@mui/material"
+import { AppBar, Typography, Toolbar, Avatar, Button} from "@mui/material"
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -11,6 +11,8 @@ import { Link } from "react-router-dom";
 import GroupIcon from '@mui/icons-material/Group';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
+import SubmissionInstructions from "./SubmissionInstructions"
+
 
 function NavBar(){
     const context = useContext(AuthContext)
@@ -22,6 +24,8 @@ function NavBar(){
     const handleClose = () => {
         setAnchorEl(null);
     };
+    
+    const [submissionInstructions, setSubmissionInstructions] = useState(false)
 
     return (
         <AppBar
@@ -34,7 +38,10 @@ function NavBar(){
             <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
                 Hack4Good
             </Typography>
-            <Button variant="outlined" component={Link} to="/submission" sx={{mx: 2, display:{xs: "none", sm:"flex"}}} startIcon={<AssignmentOutlinedIcon  />}>Submission</Button>
+            {window.location.pathname !== "/submission" && <Button variant="outlined" component={Link} to="/submission" sx={{mx: 2, display:{xs: "none", sm:"flex"}}} startIcon={<AssignmentOutlinedIcon  />}>Submission</Button>}
+            {window.location.pathname === "/submission" && <Button variant="outlined" onClick={() => setSubmissionInstructions(true)} sx={{mx: 2, display:{xs: "none", sm:"flex"}}} startIcon={<AssignmentOutlinedIcon  />}>Submission Instructions</Button>}
+            <SubmissionInstructions open={submissionInstructions} close={() => setSubmissionInstructions(false)} />
+
             <Avatar onClick={handleClick} sx={{ bgcolor: "#fafafa" }}>
                 <AccountCircleIcon />
             </Avatar>
@@ -72,7 +79,7 @@ function NavBar(){
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-            <MenuItem component={Link} to="/Submission">
+            <MenuItem component={Link} to="/submission">
                 <ListItemIcon>
                     <AssignmentOutlinedIcon  />
                 </ListItemIcon>

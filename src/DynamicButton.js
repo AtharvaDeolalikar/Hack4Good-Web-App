@@ -7,10 +7,10 @@ function DynamicButton({timer, editable, MakeSubmission, submitted, load}){
             <Button variant="contained" disabled>Submission deadline is over</Button>
     )}else if(!submitted){
         return(
-            <Button variant="contained" onClick={MakeSubmission}>Make Submission</Button>
+            <Button variant="contained" type="submit">Make Submission</Button>
     )}else{
         return (
-            <LoadingButton variant="contained" loading={load} onClick={MakeSubmission}>{editable ? "Update" : "Edit"} Submission</LoadingButton>
+            <LoadingButton variant="contained" loading={load} type="submit">{editable ? "Update" : "Edit"} Submission</LoadingButton>
     )}
 }
 

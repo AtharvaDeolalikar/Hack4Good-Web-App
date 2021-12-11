@@ -12,6 +12,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import SubmissionInstructions from "./SubmissionInstructions"
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 
 function NavBar(){
@@ -79,6 +80,12 @@ function NavBar(){
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
+            <MenuItem component={Link} to="/dashboard">
+                <ListItemIcon>
+                    <DashboardIcon  />
+                </ListItemIcon>
+                    Dashboard
+            </MenuItem>
             <MenuItem component={Link} to="/submission">
                 <ListItemIcon>
                     <AssignmentOutlinedIcon  />

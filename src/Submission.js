@@ -1,9 +1,8 @@
-import {Box, TextField, Typography, Stack, Button, FormLabel, Grid, Chip, CircularProgress} from "@mui/material"
+import {Box, TextField, Typography, Stack, FormLabel, Grid, Chip, CircularProgress} from "@mui/material"
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "./Contexts/AuthContext";
 import Timer from "./Timer";
-import Countdown from "./Countdown";
 import DynamicButton from "./DynamicButton";
 import NavBar from "./Navbar";
 import Footer from "./Footer";
@@ -16,7 +15,6 @@ function Submission(){
     const [isSubmitted] = useState(submission.submitted)
     //const [noLinks, setNoLinks] = useState((isSubmitted && context.team.submission.projectLinks) || [""])
     const [technologies, setTechnologies] = useState((isSubmitted && submission.technologiesUsed) || [])
-    const [start, setStart] = useState(isSubmitted)
     const [timer, setTimer] = useState()
     const [editable, setEditable] = useState(false)
     const [loadButton, setLoadButton] = useState(false)
@@ -25,8 +23,8 @@ function Submission(){
     const filter = createFilterOptions();
 
     useEffect(() => {
-        var deadline = new Date("Dec 20, 2021 23:59:00 GMT+0530").getTime();
-        var current = new Date().getTime();
+        var deadline = new Date("Dec 20, 2021 23:59:59 GMT+0530").getTime()
+        var current = new Date().getTime()
         const interval = setInterval(function(){
             current = current + 1000
             setTimer(Timer(deadline, current))
@@ -107,9 +105,8 @@ function Submission(){
     return (         
         <>
         <NavBar />
-        {start ? 
-        <>
         {!isSubmitted && <SubmissionInstructions open={instructions} close={() => setInstructions(false)}/>}
+
         <Grid container sx={{display: "flex", justifyContent: 'space-evenly', bgcolor : "#0a1929", minHeight: "100vh"}} component="form" onSubmit={MakeSubmission}>
             <Grid item xs={11} mt={10} mb={1}>
                 <Typography variant="h3" textAlign="center" fontSize={{xs: 25, sm:30, md: 35}}>Hack4Good Submission</Typography>
@@ -118,7 +115,6 @@ function Submission(){
                 <Stack spacing={2}>
                     <FormLabel component="legend">Basic Details</FormLabel>
                     <TextField 
-                        //inputRef={projectTitleRef}
                         label="Problem Statement ID"
                         placeholder = "Eg. P01"
                         name="problemStatementID"
@@ -241,27 +237,8 @@ function Submission(){
                 <DynamicButton timer={timer} editable={editable} submitted={isSubmitted} load={loadButton}/>
             </Grid>
         </Grid>
-        </>
-        :
-        <>
-            {!isSubmitted && timer &&
-                <Box sx={{textAlign: "center", minHeight: "100vh", display: 'grid', placeContent : "center"}}>
-                    <Box sx={{p:{xs: 1, sm: 3}, borderRadius: 3, mx:{xs: 2, sm: 0}, border: (theme) => `1px solid ${theme.palette.divider}`}}> 
-                        <Typography variant="h4">Hack4Good Submission</Typography>
-                        <Box sx={{display: "block", my:2}}>
-                                <Chip sx={{px:2}} label="Deadline: December 20, 2021" />
-                        </Box>
-                        <Typography>Time left for Submission deadline</Typography>
-                        <Countdown time={timer}/>
-                        <Box>  
-                            <Button variant="outlined" disabled={timer.expired} sx={{minWidth: 200}} onClick={() => {setStart(true)}}>{timer.expired ?  "Submission Deadline is over" : "Start"}</Button> 
-                        </Box>
-                    </Box>
-                </Box>} 
-        </>
-        }
         <Footer />
-    </>   
+    </>
     )
 }
 

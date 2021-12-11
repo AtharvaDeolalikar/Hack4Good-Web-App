@@ -10,6 +10,7 @@ import TeamJoin from "./TeamJoin";
 import Admin from "./Admin/AdminNew";
 import PrivateRoute from "./PrivateRoute";
 import TnC from "./TnC";
+import Dashboard from "./Dashboard";
 
 function App() {  
   return (
@@ -18,13 +19,14 @@ function App() {
       <Paper sx={{borderRadius : 0, bgcolor : "theme.palette.background.paper"}}>
         <Routes>
           <Route path="/admin" element={<Admin />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/Submission" element={<PrivateRoute><Submission /></PrivateRoute>}/>
           <Route path="/team" element={<Team />} />
           <Route path="/team/join" element ={<TeamJoin />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/tnc" element={<TnC />} />
-          <Route path="*" element={<Navigate to="/profile" /> } />
+          <Route path="*" element={<Navigate to="/dashboard" /> } />
         </Routes>
       </Paper>
     </>

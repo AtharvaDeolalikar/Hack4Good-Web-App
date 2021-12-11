@@ -25,8 +25,8 @@ function AuthContextProvider({children}){
     const [redirect, setRedirect] = useState({navigate : null})
 
     initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const db = getFirestore();
+    const auth = getAuth()
+    const db = getFirestore()
     const provider =  new GoogleAuthProvider()
     
     let navigate = useNavigate()
@@ -50,18 +50,15 @@ function AuthContextProvider({children}){
           if(!temp){
             if(window.location.pathname === "/team/join"){
               setRedirect({navigate: window.location.pathname + window.location.search})
-              showAlert("info", "You'll require to sign up first!")
             }
-            navigate("/signup", { replace: true })
-            setLoading(false)
+            showAlert("info", "Kindly sign up by filling your information")
+            navigate("/signup")
           }else if(temp.teamID){
             await getUserTeam(temp.teamID)
-            if(window.location.pathname === "/"){
-              navigate("/submission")
-            }
-          }else if(window.location.pathname === "/"){
-            navigate("/team")
           }
+          /* if(temp){
+            navigate('/dashboard')
+          } */
           setLoading(false)
         }
         catch(e){
@@ -160,7 +157,7 @@ function AuthContextProvider({children}){
           if(redirect.navigate){
             navigate(redirect.navigate)
           }else{
-            navigate("/team", {replace: true})
+            navigate("/dashboard")
           }
         } catch (e) {
           console.error("Error adding user: ", e);
@@ -299,7 +296,6 @@ function AuthContextProvider({children}){
     const values = {
         login,
         currentUser,
-        //getAllUsers,
         getAllTeams,
         logOut,
         createTeam,

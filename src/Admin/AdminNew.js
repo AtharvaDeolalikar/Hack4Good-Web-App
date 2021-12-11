@@ -131,11 +131,11 @@ export default function Admin(){
               {teams.filter(item => {
                 return makeSearch(item)
                 }).filter(item => {
-                  if(filter === true && item.submission.submitted === true){
+                  if(filter === "all"){
                     return item
-                  }else if(filter === false && item.submission.submitted === false){
+                  }else if(filter === true && item.submission.submitted === true){
                     return item
-                  }else {
+                  }else{
                     return item
                   }
                 }).map((team, index) => {

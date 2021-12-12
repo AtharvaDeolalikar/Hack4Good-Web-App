@@ -10,11 +10,18 @@ import { ThemeProvider } from '@mui/material/styles'
 import Theme from "./Theme";
 import axios from "axios";
 
+
 export const AuthContext = createContext();
 
 export function useAuth() {
   return useContext(AuthContext)
 }
+
+const instance = axios.create({
+  baseURL: 'http://localhost:5000/',
+  headers: {'key': process.env.REACT_APP_EMAIL_KEY}
+});
+console.log("ran")
 
 function AuthContextProvider({children}){
     const [currentUser, setCurrentUser] = useState()
@@ -74,6 +81,8 @@ function AuthContextProvider({children}){
             login()
         }
       })
+      
+      
     }, [auth, db, navigate]);
 
     function login(){
@@ -132,6 +141,31 @@ function AuthContextProvider({children}){
         }
         await updateDoc(doc(db, "teams", userData.teamID), tempData)
         setTeam({...team, ...tempData})
+
+        const memberEmails = []
+        team.members.map((member) => {
+          if(!member.teamLeader){
+            memberEmails.push(member.emailID)
+          }
+        })
+
+        var teamLeader = team.members.find(item => item.teamLeader === true )
+
+        instance.post("/submission", {
+          data : {
+            teamName: team.teamName,
+            projectTitle : team.submission.projectTitle,
+            updatedByfirstName: userData.firstName,
+            updatedBylastName: userData.lastName,
+          },
+          recipients: {
+            to: teamLeader.emailID,
+            cc: memberEmails
+          }
+        }).catch(function (error) {
+          console.log(error);
+        })
+        
         showAlert("success", "Your submission has been saved successfully. However you can make the changes before the deadline.")
       } catch (e) {
           console.error("Error adding user: ", e);
@@ -154,6 +188,16 @@ function AuthContextProvider({children}){
           await setDoc(doc(db, "users", currentUser.uid), newUserData);
           setUserData(newUserData)
           showAlert("success", "You have been signed up successfully!")
+            instance.post("/signup", {
+              data : {
+                firstName: userData.firstName
+              },
+              recipients: {
+                to: currentUser.email
+              }
+            }).catch(function (error) {
+              console.log(error);
+            })
           if(redirect.navigate){
             navigate(redirect.navigate)
           }else{
@@ -214,19 +258,45 @@ function AuthContextProvider({children}){
       }
     }
 
+    async function sendMail(){
+
+      var teamLeader = team.members.find(item => item.teamLeader === true )
+
+      try {
+        instance.post("/teamJoin", {
+            data : {
+              leaderFirstName : teamLeader.firstName,
+              teamName: team.teamName,
+              firstName: userData.firstName,
+              lastName: userData.lastName,
+              emailID : currentUser.email
+            },
+            recipients: {
+              to: teamLeader.emailID
+            }
+          }).then(function (response) {
+            console.log(response)
+          }).catch(function (error) {
+            console.log(error);
+          })
+        showAlert("success", "Mail sent!")
+      } catch (e) {
+        showAlert("error", "An unknown error occured")
+        console.error("Error", e);
+      }
+    }
+
     async function updateTeam(newName){
       if(team.teamName !== newName){
         try {
           await updateDoc(doc(db, "teams", userData.teamID), {lastUpdatedAt: serverTimestamp(), teamName: newName})
           setTeam({ ...team, teamName : newName})
           showAlert("success", "Team name has been updated successfully")
-          axios.get('https://hack4goodbackend-atharvadeolalikar.vercel.app', {
+          instance.get('https://hack4goodbackend-atharvadeolalikar.vercel.app', {
             params: {
               to : currentUser.email,
               subject : `Your updated team is ${newName}`,
-              body : `Hello! <br> 
-              <b>${userData.name} </b> has recently updated the name of your team to <b>${newName}</b>.
-              `
+              body : {}
             }
           })
           .catch(function (error) {
@@ -310,7 +380,8 @@ function AuthContextProvider({children}){
         showAlert,
         navigate,
         hideMessage,
-        makeSubmission
+        makeSubmission,
+        sendMail
     }
     
     return (

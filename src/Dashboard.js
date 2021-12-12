@@ -16,16 +16,16 @@ export default function Dashboard(){
         var deadline = new Date("Dec 20, 2021 23:59:59 GMT+0530").getTime()
         var current = new Date().getTime()
 
-        if(presentationRound <= current && context.userData.connectedWithTeam && context.team.submission.submitted){
-            setActiveStep(5)
-        }else if(presentationRound >= deadline && context.userData.connectedWithTeam && context.team.submission.submitted){
-            setActiveStep(4)
-        }else if(evaluation >= deadline && context.userData.connectedWithTeam && context.team.submission.submitted){
-            setActiveStep(3)
+        if(!context.userData.connectedWithTeam){
+            setActiveStep(1)
         }else if(deadline >= current && context.userData.connectedWithTeam){
             setActiveStep(2)
-        }else if(!context.userData.connectedWithTeam){
-            setActiveStep(1)
+        }else if(evaluation >= deadline && context.userData.connectedWithTeam && context.team.submission.submitted){
+            setActiveStep(3)
+        }else if(presentationRound >= deadline && context.userData.connectedWithTeam && context.team.submission.submitted){
+            setActiveStep(4)
+        }else {
+            setActiveStep(5)
         }
         
         const interval = setInterval(function(){
@@ -35,7 +35,7 @@ export default function Dashboard(){
         return () => {
             clearInterval(interval)
         }
-    }, [context.userData.connectedWithTeam, context.team.submission.submitted])
+    }, [])
 
     return (
         <>
@@ -43,6 +43,7 @@ export default function Dashboard(){
             <Grid container sx={{ mt : 10, bgcolor : "#0a1929"}}> 
                 <Grid item md={8} sm={8} xs={11} sx={{ borderRadius: 5, margin:"auto", py: 1}}>
                     <Typography sx={{fontSize: {xs: 30, md: 45}}}>Hey {context.userData.firstName.charAt(0).toUpperCase() + context.userData.firstName.slice(1)}!</Typography>
+                    <Button onClick={context.sendMail}>Send mail</Button>
                 </Grid>
 
                 <Grid item md={8} sm={8} xs={11} sx={{px: 3, display: {xs: "none", sm: "block"}, borderRadius: 5, bgcolor: "#162534", margin:"auto", py: {xs: 5, md: 6}, my:3}}>
@@ -66,7 +67,7 @@ export default function Dashboard(){
                 </Grid>
 
                 <Grid item md={8} sm={8} xs={11} sx={{px: 3, display: {xs: "block", sm: "none"}, borderRadius: 5, bgcolor: "#162534", margin:"auto", py: {xs: 5, md: 6}, my:3}}>
-                    <Stepper activeStep={0} orientation="vertical">
+                    <Stepper activeStep={activeStep} orientation="vertical">
                         <Step>
                             <StepLabel>Sign up</StepLabel>
                         </Step>

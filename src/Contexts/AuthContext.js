@@ -18,10 +18,9 @@ export function useAuth() {
 }
 
 const instance = axios.create({
-  baseURL: 'http://localhost:5000/',
+  baseURL: process.env.REACT_APP_EMAIL_API,
   headers: {'key': process.env.REACT_APP_EMAIL_KEY}
 });
-console.log("ran")
 
 function AuthContextProvider({children}){
     const [currentUser, setCurrentUser] = useState()
@@ -258,34 +257,6 @@ function AuthContextProvider({children}){
       }
     }
 
-    async function sendMail(){
-
-      var teamLeader = team.members.find(item => item.teamLeader === true )
-
-      try {
-        instance.post("/teamJoin", {
-            data : {
-              leaderFirstName : teamLeader.firstName,
-              teamName: team.teamName,
-              firstName: userData.firstName,
-              lastName: userData.lastName,
-              emailID : currentUser.email
-            },
-            recipients: {
-              to: teamLeader.emailID
-            }
-          }).then(function (response) {
-            console.log(response)
-          }).catch(function (error) {
-            console.log(error);
-          })
-        showAlert("success", "Mail sent!")
-      } catch (e) {
-        showAlert("error", "An unknown error occured")
-        console.error("Error", e);
-      }
-    }
-
     async function updateTeam(newName){
       if(team.teamName !== newName){
         try {
@@ -347,10 +318,26 @@ function AuthContextProvider({children}){
         await updateDoc(doc(db, "teams", teamID), {
             members: arrayUnion({firstName: userData.firstName, lastName: userData.lastName, emailID: currentUser.email, uid: currentUser.uid, teamLeader: false})
         })
+        var teamLeader = team.members.find(item => item.teamLeader === true )
+        instance.post("/teamJoin", {
+          data : {
+            leaderFirstName : teamLeader.firstName,
+            teamName: team.teamName,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            emailID : currentUser.email
+          },
+          recipients: {
+            to: teamLeader.emailID
+          }
+        }).catch(function (error) {
+          console.log(error);
+        })
+        
         showAlert("success", `You have been successfully connected to the team ${teamName}`)
         connectTeam(teamID, false)
       } catch (e) {
-        //console.error("Error:", e);
+        console.error("Error:", e);
       }
     }
 
@@ -380,8 +367,7 @@ function AuthContextProvider({children}){
         showAlert,
         navigate,
         hideMessage,
-        makeSubmission,
-        sendMail
+        makeSubmission
     }
     
     return (

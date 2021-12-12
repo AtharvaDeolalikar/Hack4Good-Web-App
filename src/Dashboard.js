@@ -43,7 +43,6 @@ export default function Dashboard(){
             <Grid container sx={{ mt : 10, bgcolor : "#0a1929"}}> 
                 <Grid item md={8} sm={8} xs={11} sx={{ borderRadius: 5, margin:"auto", py: 1}}>
                     <Typography sx={{fontSize: {xs: 30, md: 45}}}>Hey {context.userData.firstName.charAt(0).toUpperCase() + context.userData.firstName.slice(1)}!</Typography>
-                    <Button onClick={context.sendMail}>Send mail</Button>
                 </Grid>
 
                 <Grid item md={8} sm={8} xs={11} sx={{px: 3, display: {xs: "none", sm: "block"}, borderRadius: 5, bgcolor: "#162534", margin:"auto", py: {xs: 5, md: 6}, my:3}}>

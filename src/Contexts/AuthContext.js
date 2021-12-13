@@ -22,6 +22,8 @@ const instance = axios.create({
   headers: {'key': process.env.REACT_APP_EMAIL_KEY}
 });
 
+console.log(process.env.REACT_APP_EMAIL_API)
+
 function AuthContextProvider({children}){
     const [currentUser, setCurrentUser] = useState()
     const [userData, setUserData] = useState()
@@ -189,7 +191,7 @@ function AuthContextProvider({children}){
           showAlert("success", "You have been signed up successfully!")
             instance.post("/signup", {
               data : {
-                firstName: userData.firstName
+                firstName: data.firstName
               },
               recipients: {
                 to: currentUser.email

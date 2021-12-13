@@ -22,7 +22,6 @@ const instance = axios.create({
   headers: {'key': process.env.REACT_APP_EMAIL_KEY}
 });
 
-console.log(process.env.REACT_APP_EMAIL_API)
 
 function AuthContextProvider({children}){
     const [currentUser, setCurrentUser] = useState()

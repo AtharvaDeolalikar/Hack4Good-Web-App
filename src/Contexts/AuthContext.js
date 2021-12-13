@@ -136,7 +136,7 @@ function AuthContextProvider({children}){
     async function makeSubmission(data){
       try {
         const tempData =  {
-          submission : {...data, submitted: true, lastUpdatedAt: serverTimestamp()}
+          submission : {...data, submitted: true, lastUpdatedAt: serverTimestamp(), lastUpdatedByUID: currentUser.uid}
         }
         await updateDoc(doc(db, "teams", userData.teamID), tempData)
         setTeam({...team, ...tempData})

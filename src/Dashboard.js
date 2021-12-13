@@ -15,7 +15,6 @@ export default function Dashboard(){
         var evaluation = new Date("Dec 25, 2021 23:59:59 GMT+0530").getTime()
         var deadline = new Date("Dec 20, 2021 23:59:59 GMT+0530").getTime()
         var current = new Date().getTime()
-
         if(!context.userData.connectedWithTeam){
             setActiveStep(1)
         }else if(deadline >= current && context.userData.connectedWithTeam){

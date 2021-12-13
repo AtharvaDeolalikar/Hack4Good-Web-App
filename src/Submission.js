@@ -13,7 +13,6 @@ function Submission(){
     const context = useContext(AuthContext)
     const submission = context.team.submission
     const [isSubmitted] = useState(submission.submitted)
-    //const [noLinks, setNoLinks] = useState((isSubmitted && context.team.submission.projectLinks) || [""])
     const [technologies, setTechnologies] = useState((isSubmitted && submission.technologiesUsed) || [])
     const [timer, setTimer] = useState()
     const [editable, setEditable] = useState(false)

@@ -42,7 +42,7 @@ function SignUp(){
         }
         for (const property in data) {
             if(data[property].length === 0){
-              context.showAlert("warning", `Kindly enter your${property}!`)
+              context.showAlert("warning", `Kindly enter your ${property}!`)
               setButtonLoading(false)
               return false
             } 

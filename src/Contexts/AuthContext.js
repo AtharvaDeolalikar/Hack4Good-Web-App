@@ -208,7 +208,7 @@ function AuthContextProvider({ children }) {
 
       var teamLeader = team.members.find((item) => item.teamLeader === true);
 
-      axios
+      /* axios
         .post(process.env.REACT_APP_EMAIL_API + "submission", {
           data: {
             teamName: team.teamName,
@@ -226,7 +226,7 @@ function AuthContextProvider({ children }) {
         })
         .catch(function (error) {
           console.log(error);
-        });
+        }); */
 
       showAlert(
         "success",
@@ -261,7 +261,7 @@ function AuthContextProvider({ children }) {
       setUserData(newUserData);
       showAlert("success", "You have been signed up successfully!");
 
-      axios
+      /* axios
         .post(process.env.REACT_APP_EMAIL_API + "signup", {
           data: {
             firstName: data.firstName,
@@ -272,7 +272,7 @@ function AuthContextProvider({ children }) {
         })
         .catch(function (error) {
           console.log(error);
-        });
+        }); */
       if (redirect.navigate) {
         navigate(redirect.navigate);
       } else {

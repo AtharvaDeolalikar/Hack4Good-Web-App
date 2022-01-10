@@ -4,7 +4,9 @@ import firebaseConfig from "../config";
 import {
   getAuth,
   signInWithPopup,
-  /* signInWithRedirect, getRedirectResult, */ GoogleAuthProvider,
+  signInWithRedirect,
+  getRedirectResult,
+  GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
@@ -110,21 +112,22 @@ function AuthContextProvider({ children }) {
   }, [auth, db, navigate]);
 
   function login() {
-    signInWithPopup(auth, provider)
+    /* signInWithPopup(auth, provider)
+      .then((result) => {
+        setCurrentUser(result.user);
+      })
+      .catch((error) => {
+        console.log(error);
+      }); */
+
+    signInWithRedirect(auth, provider);
+    getRedirectResult(auth)
       .then((result) => {
         setCurrentUser(result.user);
       })
       .catch((error) => {
         console.log(error);
       });
-    /* 
-      signInWithRedirect(auth, provider)
-      getRedirectResult(auth)
-      .then((result) => {
-      setCurrentUser(result.user)
-      }).catch((error) => {
-      console.log(error)
-      }) */
   }
 
   function logOut() {

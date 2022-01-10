@@ -86,7 +86,7 @@ function AuthContextProvider({ children }) {
           }
           showAlert("info", "Kindly sign up by filling your information");
           navigate("/signup");
-        } else if (temp.teamID) {
+        } else if (temp.connectedWithTeam) {
           await getUserTeam(temp.teamID);
         }
         /* if(temp){
@@ -293,8 +293,10 @@ function AuthContextProvider({ children }) {
       };
       await updateDoc(doc(db, "users", currentUser.uid), tempData);
       setUserData({ ...userData, ...tempData });
-      if (!window.location.pathname === "/team") {
+      if (window.location.pathname !== "/team") {
         navigate("/team");
+      } else {
+        window.location.reload();
       }
     } catch (e) {
       console.error("Error adding user: ", e);
@@ -347,7 +349,7 @@ function AuthContextProvider({ children }) {
     }
   }
 
-  async function updateTeam(newName) {
+  /* async function updateTeam(newName) {
     if (team.teamName !== newName) {
       try {
         await updateDoc(doc(db, "teams", userData.teamID), {
@@ -373,14 +375,14 @@ function AuthContextProvider({ children }) {
     } else {
       showAlert("error", "New team name cannot be same as current team name.");
     }
-  }
+  } */
 
   async function findTeam(teamID) {
     if (teamID.length === 0) {
       showAlert("error", "Enter the Team ID first!");
       return false;
     }
-    if (userData.teamID) {
+    if (userData.connectedWithTeam) {
       showAlert("error", "You are already a member of a team!");
       return false;
     }
@@ -415,7 +417,8 @@ function AuthContextProvider({ children }) {
           teamLeader: false,
         }),
       });
-      var teamLeader = team.members.find((item) => item.teamLeader === true);
+
+      /* var teamLeader = team.members.find((item) => item.teamLeader === true);
 
       axios
         .post(process.env.REACT_APP_EMAIL_API + "teamJoin", {
@@ -432,12 +435,9 @@ function AuthContextProvider({ children }) {
         })
         .catch(function (error) {
           console.log(error);
-        });
+        }); */
 
-      showAlert(
-        "success",
-        `You have been successfully connected to the team ${teamName}`
-      );
+      showAlert("success", `You have successfully joined the team ${teamName}`);
       connectTeam(teamID, false);
     } catch (e) {
       console.error("Error:", e);
@@ -464,7 +464,6 @@ function AuthContextProvider({ children }) {
     addUser,
     updateUser,
     addAddress,
-    updateTeam,
     team,
     userData,
     showAlert,

@@ -208,8 +208,7 @@ export default function Dashboard() {
                   Submission deadline ends in
                 </Typography>
 
-                <Typography>{countdown.subtitle}</Typography>
-                <Box sx={{ display: "block", my: 2 }}>
+                <Box sx={{ display: "block", mb: 2, mt: 1 }}>
                   <Chip
                     sx={{ px: 2 }}
                     label={`Deadline: January 21, 2022 at 11:59 PM (IST)`}
@@ -220,7 +219,7 @@ export default function Dashboard() {
                 <Button
                   variant="outlined"
                   disabled={countdown.expired}
-                  sx={{ minWidth: 200 }}
+                  sx={{ minWidth: 200, mt: 1 }}
                   onClick={() => {
                     context.navigate("/submission");
                   }}

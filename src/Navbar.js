@@ -1,12 +1,5 @@
-import {
-  AppBar,
-  Typography,
-  Toolbar,
-  Avatar,
-  Button,
-  IconButton,
-} from "@mui/material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { AppBar, Typography, Toolbar, Button, IconButton } from "@mui/material";
+
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useContext, useState } from "react";

@@ -243,8 +243,10 @@ function AuthContextProvider({ children }) {
   async function getAllTeams() {
     const querySnapshot = await getDocs(collection(db, "teams"));
     const teams = [];
+    var index = 0;
     querySnapshot.forEach((doc) => {
-      teams.push({ ...doc.data(), id: doc.id });
+      teams.push({ ...doc.data(), id: doc.id, index });
+      index = index + 1;
       //console.log(doc.id, " => ", doc.data());
     });
     return teams;

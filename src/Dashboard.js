@@ -246,11 +246,12 @@ export default function Dashboard() {
                 <Typography sx={{ fontSize: { xs: 25, md: 30 } }}>
                   {countdown.title}
                 </Typography>
+
+                <Typography>{countdown.subtitle}</Typography>
+                <Countdown time={countdown.timer} />
                 <Box sx={{ display: "block", my: 2 }}>
                   <Chip sx={{ px: 2 }} label={countdown.chip} />
                 </Box>
-                <Typography>{countdown.subtitle}</Typography>
-                <Countdown time={countdown.timer} />
                 {countdown.buttonShow && (
                   <Button
                     variant="outlined"

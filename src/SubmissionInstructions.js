@@ -35,23 +35,24 @@ export default function SubmissionInstructions({ open, close }) {
               Solutions to the OB (Out of Box) problem statements must
               contribute to the society.
             </li>
-            <Divider />
           </Stack>
         </DialogContentText>
+        <Divider sx={{ my: 2 }} />
         <Typography my={1}>Project Links</Typography>
         <DialogContentText>
           <Stack spacing={1}>
             <li>
-              You need to push your source code of the prototype in the assigned
-              GitHub repository only.{" "}
+              You need to push your source code of the prototype by creating a
+              GitHub repository and provide the link while making the
+              submission.
             </li>
             <li>
               The length of the project demonstration video must not exceed than
-              5 minutes.{" "}
+              5 minutes.
             </li>
             <li>
               You can upload your video on any Cloud Storage (eg. Google Drive)
-              and provide it's shareable link.{" "}
+              and provide it's shareable link.
             </li>
             <li>Make sure that your video is accessible to anyone.</li>
           </Stack>

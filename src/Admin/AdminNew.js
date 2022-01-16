@@ -85,6 +85,10 @@ export default function Admin() {
                 </Typography>
                 <Typography>{team.submission.projectDescription}</Typography>
                 <Typography color="white" mt={2}>
+                  Contribution to society
+                </Typography>
+                <Typography>{team.submission.contribution}</Typography>
+                <Typography color="white" mt={2}>
                   Technologies Used
                 </Typography>
                 <Stack
@@ -123,12 +127,12 @@ export default function Admin() {
                     </Link>
                   )}
                 </Stack>
-                {/* <Typography mt={2}>
+                <Typography mt={2}>
                   Last Updated at :{" "}
                   {new Date(
                     team.submission.lastUpdatedAt.seconds * 1000
                   ).toLocaleString("en-IN")}
-                </Typography> */}
+                </Typography>
               </DialogContentText>
               <Button
                 sx={{ float: "right" }}

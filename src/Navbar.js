@@ -65,8 +65,8 @@ function NavBar() {
           close={() => setSubmissionInstructions(false)}
         />
 
-        <IconButton>
-          <MenuIcon onClick={handleClick} />
+        <IconButton onClick={handleClick}>
+          <MenuIcon />
         </IconButton>
 
         <Menu

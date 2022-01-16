@@ -17,7 +17,7 @@ import Timer from "./Timer";
 
 export default function Dashboard() {
   const context = useContext(AuthContext);
-  const [countdown, setCountdown] = useState({ show: false });
+  const [countdown, setCountdown] = useState();
   const [activeStep, setActiveStep] = useState();
 
   useEffect(() => {
@@ -25,9 +25,6 @@ export default function Dashboard() {
       .toDate()
       .getTime();
     var evaluation = context.publicSettings.evaluationRound.toDate().getTime();
-    var registrationDeadline = context.publicSettings.registrationDeadline
-      .toDate()
-      .getTime();
     var submissionDeadline = context.publicSettings.submissionDeadline
       .toDate()
       .getTime();
@@ -58,46 +55,10 @@ export default function Dashboard() {
 
     const interval = setInterval(function () {
       current = current + 1000;
-      if (registrationDeadline >= current) {
-        setCountdown({
-          title: "Registration ends in",
-          show: true,
-          buttonShow: false,
-          chip: `Deadline: ${context.publicSettings.registrationDeadline
-            .toDate()
-            .toLocaleString("en-IN", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-            })}`,
-          timer: Timer(registrationDeadline, current),
-        });
-      } else if (submissionDeadline > current) {
-        setCountdown({
-          title: "Hackathon Submission",
-          message: "Submission deadline is over",
-          chip: `Deadline: ${context.publicSettings.submissionDeadline
-            .toDate()
-            .toLocaleString("en-IN", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-            })}`,
-          show: true,
-          buttonShow: true,
-          timer: Timer(submissionDeadline, current),
-        });
+      if (submissionDeadline > current) {
+        setCountdown(Timer(submissionDeadline, current));
       } else if (current >= submissionDeadline) {
-        console.log("B");
-        setCountdown({
-          message: "Submission deadline is over",
-          show: true,
-          buttonShow: true,
-        });
+        setCountdown(Timer(submissionDeadline, current));
       }
     }, 1000);
     return () => {
@@ -241,34 +202,45 @@ export default function Dashboard() {
               placeContent: "center",
             }}
           >
-            {countdown.show ? (
+            {countdown ? (
               <Box sx={{ borderRadius: 3, mx: { xs: 2, sm: 0 } }}>
-                <Typography sx={{ fontSize: { xs: 25, md: 30 } }}>
-                  {countdown.title}
+                <Typography sx={{ fontSize: { xs: 20, md: 25 } }}>
+                  Submission deadline ends in
                 </Typography>
 
                 <Typography>{countdown.subtitle}</Typography>
-                <Countdown time={countdown.timer} />
                 <Box sx={{ display: "block", my: 2 }}>
-                  <Chip sx={{ px: 2 }} label={countdown.chip} />
+                  <Chip
+                    sx={{ px: 2 }}
+                    label={`Deadline: January 21, 2022 at 11:59 PM (IST)`}
+                  />
                 </Box>
-                {countdown.buttonShow && (
-                  <Button
-                    variant="outlined"
-                    disabled={countdown.timer.expired}
-                    sx={{ minWidth: 200 }}
-                    onClick={() => {
-                      context.navigate("/submission");
-                    }}
-                  >
-                    {countdown.timer.expired
-                      ? "Submission deadline is over"
-                      : "Submit Now"}
-                  </Button>
-                )}
+                <Countdown time={countdown} />
+
+                <Button
+                  variant="outlined"
+                  disabled={countdown.expired}
+                  sx={{ minWidth: 200 }}
+                  onClick={() => {
+                    context.navigate("/submission");
+                  }}
+                >
+                  {countdown.expired
+                    ? "Submission deadline is over"
+                    : "Submit Now"}
+                </Button>
               </Box>
             ) : (
-              <CircularProgress />
+              <Box
+                sx={{
+                  minHeight: "20vh",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <CircularProgress />
+              </Box>
             )}
           </Box>
         </Grid>

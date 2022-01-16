@@ -1,6 +1,7 @@
-function TnC(){
-    
-    return (<></>)
+import "./tempStyles.css";
+
+function TnC() {
+  return <></>;
 }
 
-export default TnC
+export default TnC;

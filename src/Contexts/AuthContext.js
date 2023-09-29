@@ -120,10 +120,10 @@ function AuthContextProvider({ children }) {
         console.log(error);
       }); */
 
-    signInWithRedirect(auth, provider);
+    signInWithPopup(auth, provider);
     getRedirectResult(auth)
       .then((result) => {
-        setCurrentUser(result.user);
+        setCurrentUser(result?.user);
       })
       .catch((error) => {
         console.log(error);
